@@ -12,5 +12,6 @@ class Filter {
   List fragmentSrc = [];
 
   Filter() {
+    print("Filter");
   }
 }

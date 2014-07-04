@@ -4,7 +4,7 @@ import "package:pixi_dart/pixi.dart" as PIXI;
 
 main(){
   // create an new instance of a pixi stage
-  PIXI.Stage stage = new PIXI.Stage(0x66FF99);
+  PIXI.Stage stage = new PIXI.Stage(0x660099);
 
   // create a renderer instance
   PIXI.Renderer renderer =  new PIXI.WebGLRenderer(500, 300);

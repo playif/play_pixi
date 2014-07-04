@@ -11,7 +11,7 @@ class WebGLFilterManager {
   List<Texture> texturePool;
 
   RenderSession renderSession;
-  num width,height;
+  num width, height;
 
   var defaultShader;
 
@@ -50,13 +50,13 @@ class WebGLFilterManager {
     this.buffer = buffer;
   }
 
-  pushFilter(filterBlock) {
+  pushFilter(FilterBlock filterBlock) {
     var gl = this.gl;
 
     var projection = this.renderSession.projection;
     var offset = this.renderSession.offset;
 
-    filterBlock._filterArea = filterBlock.target.filterArea || filterBlock.target.getBounds();
+    filterBlock._filterArea = (filterBlock.target.filterArea == null) ? filterBlock.target.getBounds() : filterBlock.target.filterArea;
 
 
     // filter program

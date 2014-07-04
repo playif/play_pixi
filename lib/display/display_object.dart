@@ -108,7 +108,7 @@ class DisplayObject {
     return true;
   }
 
-  Map _filterBlock;
+  FilterBlock _filterBlock=new FilterBlock();
 
   List<Filter> _filters = [];
 
@@ -252,6 +252,7 @@ class DisplayObject {
   }
 
   void _renderWebGL(renderSession) {
+
     // OVERWRITE;
     // this line is just here to pass jshinting :)
     renderSession = renderSession;

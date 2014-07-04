@@ -98,10 +98,10 @@ class PixiShader {
 
     Program program = compileProgram(gl, (this.vertexSrc == null) ? PixiShader.defaultVertexSrc : this.vertexSrc, this.fragmentSrc);
 
-    window.console.log(1);
+    //window.console.log(1);
     gl.useProgram(program);
 
-    window.console.log(2);
+    //window.console.log(2);
 
     // get and store the uniforms for the shader
     this.uSampler = gl.getUniformLocation(program, 'uSampler');

@@ -116,7 +116,7 @@ class WebGLRenderer extends Renderer {
   }
 
   render(Stage stage) {
-    if (this.contextLost)return;
+    if (this.contextLost) return;
     //window.console.log(stage.children[0]);
 
     // if rendering a new stage clear the batches..
@@ -203,13 +203,15 @@ class WebGLRenderer extends Renderer {
   }
 
 
-  renderDisplayObject(displayObject, projection, [buffer]) {
+  renderDisplayObject(DisplayObject displayObject, Point projection, [buffer]) {
     // reset the render session data..
     this.renderSession.drawCount = 0;
     this.renderSession.currentBlendMode = 9999;
 
     this.renderSession.projection = projection;
     this.renderSession.offset = this.offset;
+
+
 
     // start the sprite batch
     this.spriteBatch.begin(this.renderSession);

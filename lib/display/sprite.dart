@@ -138,23 +138,24 @@ class Sprite extends DisplayObjectContainer {
   }
 
 
-  void _renderWebGL(renderSession) {
+  void _renderWebGL(RenderSession renderSession) {
+
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if (!this.visible || this.alpha <= 0)return;
 
-    var i, j;
+    int i, j;
 
     // do a quick check to see if this element has a mask or a filter.
-    if (this._mask || this._filters) {
-      var spriteBatch = renderSession.spriteBatch;
+    if (this._mask != null || this._filters != null) {
+      WebGLSpriteBatch spriteBatch = renderSession.spriteBatch;
 
-      if (this._mask) {
+      if (this._mask != null) {
         spriteBatch.stop();
         renderSession.maskManager.pushMask(this.mask, renderSession);
         spriteBatch.start();
       }
 
-      if (this._filters) {
+      if (this._filters != null) {
         spriteBatch.flush();
         renderSession.filterManager.pushFilter(this._filterBlock);
       }
@@ -170,8 +171,8 @@ class Sprite extends DisplayObjectContainer {
       // time to stop the sprite batch as either a mask element or a filter draw will happen next
       spriteBatch.stop();
 
-      if (this._filters)renderSession.filterManager.popFilter();
-      if (this._mask)renderSession.maskManager.popMask(renderSession);
+      if (this._filters != null)renderSession.filterManager.popFilter();
+      if (this._mask != null)renderSession.maskManager.popMask(renderSession);
 
       spriteBatch.start();
     }

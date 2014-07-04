@@ -23,6 +23,7 @@ part "display/sprite_batch.dart";
 part "display/stage.dart";
 
 part "filters/filter.dart";
+part "filters/filter_block.dart";
 
 part "primitives/graphics.dart";
 
@@ -104,8 +105,8 @@ class scaleModes {
 }
 
 Renderer defaultRenderer;
-List blendModesWebGL=null;
-//class  PIXI {
+List blendModesWebGL = null;
+
 const int WEBGL_RENDERER = 0;
 const int CANVAS_RENDERER = 0;
 const String VERSION = "v1.5.3";
@@ -116,10 +117,3 @@ const bool AUTO_PREVENT_DEFAULT = true;
 const num RAD_TO_DEG = 180 / PI;
 const num DEG_TO_RAD = PI / 180;
 
-//  PIXI();
-//
-//  factory PIXI.Rectangle([this.x=0, this.y=0, this.width=0, this.height=0]){
-//    return new PIXI.Rectangle();
-//  }
-
-//}
