@@ -43,9 +43,9 @@ class Stage extends DisplayObjectContainer {
 
   void setBackgroundColor([backgroundColor=0]) {
     this.backgroundColor = backgroundColor;
-    window.console.log(backgroundColor);
+    //window.console.log(backgroundColor);
     this.backgroundColorSplit = hex2rgb(this.backgroundColor);
-    window.console.log(backgroundColorSplit);
+    //window.console.log(backgroundColorSplit);
     var hex = this.backgroundColor.toRadixString(16);
     hex = '000000'.substring(0, 6 - hex.length) + hex;
     this.backgroundColorString = '#' + hex;

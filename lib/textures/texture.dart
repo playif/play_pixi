@@ -79,7 +79,7 @@ class Texture extends BaseTexture {
   }
 
   void _updateWebGLuvs() {
-    if (!this._uvs)this._uvs = new TextureUvs();
+    if (this._uvs ==null)this._uvs = new TextureUvs();
 
     Rectangle frame = this.frame;
     num tw = this.baseTexture.width;
@@ -101,7 +101,7 @@ class Texture extends BaseTexture {
   static Texture fromImage(String imageUrl, [bool crossorigin, scaleModes scaleMode]) {
     var texture = TextureCache[imageUrl];
 
-    if (!texture) {
+    if (texture == null) {
       texture = new Texture(BaseTexture.fromImage(imageUrl, crossorigin, scaleMode));
       TextureCache[imageUrl] = texture;
     }
@@ -111,7 +111,7 @@ class Texture extends BaseTexture {
 
   static Texture fromFrame(String frameId) {
     var texture = TextureCache[frameId];
-    if (!texture) throw new Exception('The frameId "$frameId" does not exist in the texture cache');
+    if (texture ==null) throw new Exception('The frameId "$frameId" does not exist in the texture cache');
     return texture;
   }
 

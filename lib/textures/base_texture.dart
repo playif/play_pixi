@@ -80,7 +80,7 @@ class BaseTexture extends EventTargetObj {
 
     if (crossorigin == null && imageUrl.indexOf('data:') == -1) crossorigin = true;
 
-    if (!baseTexture) {
+    if (baseTexture == null) {
       // new Image() breaks tex loading in some versions of Chrome.
       // See https://code.google.com/p/chromium/issues/detail?id=238071
       var image = new ImageElement();//document.createElement('img');
@@ -88,6 +88,7 @@ class BaseTexture extends EventTargetObj {
         image.crossOrigin = '';
       }
       image.src = imageUrl;
+      //print("here");
       baseTexture = new BaseTexture(image, scaleMode);
       baseTexture.imageUrl = imageUrl;
       BaseTextureCache[imageUrl] = baseTexture;
@@ -103,7 +104,7 @@ class BaseTexture extends EventTargetObj {
 
     var baseTexture = BaseTextureCache[canvas.dataset['_pixiId']];
 
-    if (!baseTexture) {
+    if (baseTexture == null) {
       baseTexture = new BaseTexture(canvas, scaleMode);
       BaseTextureCache[canvas.dataset['_pixiId']] = baseTexture;
     }

@@ -117,7 +117,7 @@ class WebGLRenderer extends Renderer {
 
   render(Stage stage) {
     if (this.contextLost)return;
-
+    //window.console.log(stage.children[0]);
 
     // if rendering a new stage clear the batches..
     if (this.__stage != stage) {
@@ -245,10 +245,10 @@ class WebGLRenderer extends Renderer {
   }
 
 
-  static destroyTexture(texture) {
+  static destroyTexture(Texture texture) {
     //TODO break this out into a texture manager...
 
-    for (var i = texture._glTextures.length - 1; i >= 0; i--) {
+    for (int i = texture._glTextures.length - 1; i >= 0; i--) {
       var glTexture = texture._glTextures[i];
       var gl = glContexts[i];
 
