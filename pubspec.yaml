@@ -1,0 +1,9 @@
+name: pixi_dart
+dependencies:
+  browser: any
+transformers:
+- $dart2js:
+    checked: true
+    minify: false
+    suppressWarnings: false
+    suppressHints: false
