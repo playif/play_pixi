@@ -4,16 +4,16 @@ class PolyK {
   PolyK._() {
   }
 
-  static Triangulate(p) {
-    var sign = true;
+  static List Triangulate(p) {
+    bool sign = true;
 
     var n = p.length >> 1;
     if (n < 3) return [];
 
-    var tgs = [];
-    var avl = [];
+    List tgs = [];
+    List avl = [];
     for (var i = 0; i < n; i++)
-      avl.push(i);
+      avl.add(i);
 
     int i = 0;
     var al = n;
@@ -41,8 +41,8 @@ class PolyK {
       }
 
       if (earFound) {
-        tgs.push(i0, i1, i2);
-        avl.splice((i + 1) % al, 1);
+        tgs.addAll([i0, i1, i2]);
+        avl.removeAt((i + 1) % al);
         al--;
         i = 0;
       }
@@ -53,7 +53,7 @@ class PolyK {
           tgs = [];
           avl = [];
           for (i = 0; i < n; i++)
-            avl.push(i);
+            avl.add(i);
 
           i = 0;
           al = n;
@@ -67,11 +67,11 @@ class PolyK {
       }
     }
 
-    tgs.push(avl[0], avl[1], avl[2]);
+    tgs.addAll([avl[0], avl[1], avl[2]]);
     return tgs;
   }
 
-  _PointInTriangle(px, py, ax, ay, bx, by, cx, cy) {
+  bool _PointInTriangle(px, py, ax, ay, bx, by, cx, cy) {
     var v0x = cx - ax;
     var v0y = cy - ay;
     var v1x = bx - ax;
@@ -93,7 +93,7 @@ class PolyK {
     return (u >= 0) && (v >= 0) && (u + v < 1);
   }
 
-  _convex(ax, ay, bx, by, cx, cy, sign) {
+  bool _convex(ax, ay, bx, by, cx, cy, sign) {
     return ((ay - by) * (cx - bx) + (bx - ax) * (cy - by) >= 0) == sign;
   }
 

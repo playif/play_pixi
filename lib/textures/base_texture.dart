@@ -33,8 +33,11 @@ class BaseTexture extends EventTargetObj {
   BaseTexture([ImageElement this.source, this.scaleMode=scaleModes.DEFAULT]) {
 
     if (source == null)return;
-  //
+
+
+    //
     if ((this.source.complete ) && this.source.width && this.source.height) {
+
       this._hasLoaded = true;
       this.width = this.source.width;
       this.height = this.source.height;
@@ -60,7 +63,7 @@ class BaseTexture extends EventTargetObj {
 
 
   void destroy() {
-    if (this.imageUrl) {
+    if (this.imageUrl != null) {
       BaseTextureCache.remove(this.imageUrl);
       this.imageUrl = null;
       this.source.src = null;
