@@ -80,7 +80,7 @@ class WebGLFastSpriteBatch {
     // if the uvs have not updated then no point rendering just yet!
 
     // check texture.
-    if (!sprite.texture._uvs)return;
+    if (sprite.texture._uvs == null)return;
 
     this.currentBaseTexture = sprite.texture.baseTexture;
     // check blend mode

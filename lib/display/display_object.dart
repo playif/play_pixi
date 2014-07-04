@@ -70,9 +70,9 @@ class DisplayObject {
   Rectangle get mask => _mask;
 
   set mask(Rectangle value) {
-    if (this._mask)this._mask.isMask = false;
+    if (this._mask != null)this._mask.isMask = false;
     this._mask = value;
-    if (this._mask)this._mask.isMask = true;
+    if (this._mask != null)this._mask.isMask = true;
   }
 
   bool _cacheAsBitmap = false;

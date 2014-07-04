@@ -10,7 +10,7 @@ class WebGLGraphics {
     offset = renderSession.offset,
     shader = renderSession.shaderManager.primitiveShader;
 
-    if (!graphics._webGL[gl.id])graphics._webGL[gl.id] = {
+    if (graphics._webGL[gl.id] == null)graphics._webGL[gl.id] = {
         'points':[],
         'indices':[],
         'lastIndex':0,

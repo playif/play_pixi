@@ -10,7 +10,7 @@ class WebGLRenderer extends Renderer {
   bool antialias;
 
   WebGLRenderer([int width=800, int height=600, CanvasElement view, this.transparent=false, this.antialias=false]) {
-    if (!defaultRenderer) defaultRenderer = this;
+    if (defaultRenderer == null) defaultRenderer = this;
     type = WEBGL_RENDERER;
     this.width = width;
     this.height = height;

@@ -41,7 +41,7 @@ class WebGLMaskManager {
 
     var maskData = this.maskStack.removeLast();
 
-    if (maskData) {
+    if (maskData != null) {
       gl.colorMask(false, false, false, false);
 
       //gl.stencilFunc(gl.ALWAYS,1,1);
