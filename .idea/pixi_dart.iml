@@ -2,7 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/packages/PixiDart" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/pixi_dart" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_1_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/packages" />
