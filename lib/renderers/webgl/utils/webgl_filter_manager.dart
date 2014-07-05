@@ -78,7 +78,7 @@ class WebGLFilterManager {
 
     gl.bindTexture(gl.TEXTURE_2D, texture.texture);
 
-    var filterArea = filterBlock._filterArea;// filterBlock.target.getBounds();///filterBlock.target.filterArea;
+    Rectangle filterArea = filterBlock._filterArea;// filterBlock.target.getBounds();///filterBlock.target.filterArea;
 
     var padding = filter.padding;
     filterArea.x -= padding;

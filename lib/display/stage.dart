@@ -26,7 +26,7 @@ class Stage extends DisplayObjectContainer {
   }
 
   void updateTransform() {
-    this.worldAlpha = 1;
+    this.worldAlpha = 1.0;
 
     for (var i = 0, j = this.children.length; i < j; i++) {
       this.children[i].updateTransform();

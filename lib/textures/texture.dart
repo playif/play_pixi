@@ -33,7 +33,9 @@ class Texture extends BaseTexture {
       baseTexture = (baseTexture as Texture).baseTexture;
     this.baseTexture = baseTexture;
 
+
     if (baseTexture.hasLoaded) {
+
       if (this.noFrame)frame = new Rectangle(0, 0, baseTexture.width, baseTexture.height);
 
       this.setFrame(frame);
@@ -48,7 +50,7 @@ class Texture extends BaseTexture {
 
   void onBaseTextureLoaded() {
     var baseTexture = this.baseTexture;
-    baseTexture.removeEventListener('loaded', this.onLoaded);
+    baseTexture.removeEventListener('loaded', this.onBaseTextureLoaded);
 
     if (this.noFrame)this.frame = new Rectangle(0, 0, baseTexture.width, baseTexture.height);
 
@@ -79,6 +81,7 @@ class Texture extends BaseTexture {
   }
 
   void _updateWebGLuvs() {
+
     if (this._uvs ==null)this._uvs = new TextureUvs();
 
     Rectangle frame = this.frame;

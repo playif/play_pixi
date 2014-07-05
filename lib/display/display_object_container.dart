@@ -74,7 +74,7 @@ class DisplayObjectContainer extends DisplayObject {
 
   removeChildren([int begin=0, int end]) {
     end = end == null ? children.length : end;
-    var range = end - begin;
+    int range = end - begin;
 
     if (range > 0 && range <= end) {
       var removed = children.removeRange(begin, range);
@@ -100,7 +100,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     if (this._cacheAsBitmap)return;
 
-    for (var i = 0, j = this.children.length; i < j; i++) {
+    for (int i = 0, j = this.children.length; i < j; i++) {
       this.children[i].updateTransform();
     }
   }
@@ -179,11 +179,11 @@ class DisplayObjectContainer extends DisplayObject {
     return bounds;
   }
 
-  void setStageReference(stage) {
+  void setStageReference(Stage stage) {
     this.stage = stage;
     if (this._interactive)this.stage.dirty = true;
 
-    for (var i = 0, j = this.children.length; i < j; i++) {
+    for (int i = 0, j = this.children.length; i < j; i++) {
       DisplayObject child = this.children[i];
       child.setStageReference(stage);
     }
@@ -196,12 +196,12 @@ class DisplayObjectContainer extends DisplayObject {
       child.removeStageReference();
     }
 
-    if (this._interactive)this.stage.dirty = true;
+    if (this._interactive) this.stage.dirty = true;
 
     this.stage = null;
   }
 
-  void _renderWebGL(renderSession) {
+  void _renderWebGL(RenderSession renderSession) {
     if (!this.visible || this.alpha <= 0)return;
 
     if (this._cacheAsBitmap) {
@@ -209,16 +209,17 @@ class DisplayObjectContainer extends DisplayObject {
       return;
     }
 
-    var i, j;
+    int i, j;
 
-    if (this._mask || this._filters) {
-      if (this._mask) {
+    if (this._mask != null || this._filters != null) {
+      if (this._mask != null) {
         renderSession.spriteBatch.stop();
         renderSession.maskManager.pushMask(this.mask, renderSession);
         renderSession.spriteBatch.start();
       }
 
-      if (this._filters) {
+      if (this._filters != null) {
+        window.console.log(this._filters);
         renderSession.spriteBatch.flush();
         renderSession.filterManager.pushFilter(this._filterBlock);
       }
@@ -230,8 +231,8 @@ class DisplayObjectContainer extends DisplayObject {
 
       renderSession.spriteBatch.stop();
 
-      if (this._filters)renderSession.filterManager.popFilter();
-      if (this._mask)renderSession.maskManager.popMask(renderSession);
+      if (this._filters != null)renderSession.filterManager.popFilter();
+      if (this._mask != null)renderSession.maskManager.popMask(renderSession);
 
       renderSession.spriteBatch.start();
     }
@@ -243,7 +244,7 @@ class DisplayObjectContainer extends DisplayObject {
     }
   }
 
-  void _renderCanvas(renderSession) {
+  void _renderCanvas(RenderSession renderSession) {
     if (this.visible == false || this.alpha == 0)return;
 
     if (this._cacheAsBitmap) {
@@ -252,16 +253,16 @@ class DisplayObjectContainer extends DisplayObject {
       return;
     }
 
-    if (this._mask) {
+    if (this._mask != null) {
       renderSession.maskManager.pushMask(this._mask, renderSession.context);
     }
 
-    for (var i = 0, j = this.children.length; i < j; i++) {
-      var child = this.children[i];
+    for (int i = 0, j = this.children.length; i < j; i++) {
+      DisplayObject child = this.children[i];
       child._renderCanvas(renderSession);
     }
 
-    if (this._mask) {
+    if (this._mask != null) {
       renderSession.maskManager.popMask(renderSession.context);
     }
   }

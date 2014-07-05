@@ -1,10 +1,12 @@
 part of PIXI;
 
-Map glContexts = {};
+Map glContexts = {
+};
 
 class WebGLRenderer extends Renderer {
   static int glContextId = 0;
   int glId = 0;
+
   //num width, height;
   bool transparent;
   bool antialias;
@@ -20,7 +22,7 @@ class WebGLRenderer extends Renderer {
     }
     //print(view);
 
-    this.view=view;
+    this.view = view;
     this.view.width = this.width;
     this.view.height = this.height;
 
@@ -54,13 +56,14 @@ class WebGLRenderer extends Renderer {
     }
 
     var gl = this.gl;
-    this.glId  = WebGLRenderer.glContextId ++;
+    this.glId = WebGLRenderer.glContextId ++;
 
     glContexts[this.glId] = gl;
     //window.console.log(gl);
 
     if (blendModesWebGL == null) {
-      blendModesWebGL = {};
+      blendModesWebGL = {
+      };
 
       blendModesWebGL[blendModes.NORMAL] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
       blendModesWebGL[blendModes.ADD] = [RenderingContext.SRC_ALPHA, RenderingContext.DST_ALPHA];
@@ -93,7 +96,7 @@ class WebGLRenderer extends Renderer {
 
     // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager = new WebGLShaderManager(gl); // deals with managing the shader programs and their attribs
-    this.spriteBatch = new WebGLSpriteBatch(gl); // manages the rendering of sprites
+    this.spriteBatch = new WebGLSpriteBatch(gl, glId); // manages the rendering of sprites
     this.maskManager = new WebGLMaskManager(gl); // manages the masks using the stencil buffer
     this.filterManager = new WebGLFilterManager(gl, this.transparent); // manages the filters
 
@@ -212,7 +215,6 @@ class WebGLRenderer extends Renderer {
     this.renderSession.offset = this.offset;
 
 
-
     // start the sprite batch
     this.spriteBatch.begin(this.renderSession);
 
@@ -234,7 +236,7 @@ class WebGLRenderer extends Renderer {
     //for (i = 0; i < PIXI.texturesToUpdate.length; i++)
     //    PIXI.WebGLRenderer.updateTexture(PIXI.texturesToUpdate[i]);
 
-
+    //print(Texture.frameUpdates);
     for (i = 0; i < Texture.frameUpdates.length; i++)
       WebGLRenderer.updateTextureFrame(Texture.frameUpdates[i]);
 
@@ -263,6 +265,7 @@ class WebGLRenderer extends Renderer {
   }
 
   static updateTextureFrame(Texture texture) {
+
     texture.updateFrame = false;
 
     // now set the uvs. Figured that the uv data sits with a texture rather than a sprite.
@@ -304,7 +307,7 @@ class WebGLRenderer extends Renderer {
     }
 
     var gl = this.gl;
-    gl.id = WebGLRenderer.glContextId ++;
+    this.glId = WebGLRenderer.glContextId ++;
 
 
     // need to set the context...
@@ -369,57 +372,59 @@ class WebGLRenderer extends Renderer {
 
 }
 
-createWebGLTexture(texture, gl) {
+createWebGLTexture(Texture texture, RenderingContext gl, glID) {
 
 
   if (texture.hasLoaded) {
-    texture._glTextures[gl.id] = gl.createTexture();
+    texture._glTextures[glID] = gl.createTexture();
 
-    gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode == scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[glID]);
+
+    gl.pixelStorei(RenderingContext.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+
+    gl.texImage2D(RenderingContext.TEXTURE_2D, 0, RenderingContext.RGBA, RenderingContext.RGBA, RenderingContext.UNSIGNED_BYTE, texture.source);
+    gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? RenderingContext.LINEAR : RenderingContext.NEAREST);
+    gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_MIN_FILTER, texture.scaleMode == scaleModes.LINEAR ? RenderingContext.LINEAR : RenderingContext.NEAREST);
 
     // reguler...
 
     if (!texture._powerOf2) {
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_S, RenderingContext.CLAMP_TO_EDGE);
+      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_T, RenderingContext.CLAMP_TO_EDGE);
     }
     else {
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_S, RenderingContext.REPEAT);
+      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_T, RenderingContext.REPEAT);
     }
 
-    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindTexture(RenderingContext.TEXTURE_2D, null);
   }
 
-  return texture._glTextures[gl.id];
+  return texture._glTextures[glID];
 }
 
-updateWebGLTexture(texture, gl) {
-  if (texture._glTextures[gl.id]) {
-    gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+updateWebGLTexture(Texture texture, RenderingContext gl, int glID) {
+  if (texture._glTextures[glID] != null) {
+    gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[glID]);
+    gl.pixelStorei(RenderingContext.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode == scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texImage2D(RenderingContext.TEXTURE_2D, 0, RenderingContext.RGBA, RenderingContext.RGBA, RenderingContext.UNSIGNED_BYTE, texture.source);
+    gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? RenderingContext.LINEAR : RenderingContext.NEAREST);
+    gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_MIN_FILTER, texture.scaleMode == scaleModes.LINEAR ? RenderingContext.LINEAR : RenderingContext.NEAREST);
 
     // reguler...
 
     if (!texture._powerOf2) {
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_S, RenderingContext.CLAMP_TO_EDGE);
+      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_T, RenderingContext.CLAMP_TO_EDGE);
     }
     else {
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_S, RenderingContext.REPEAT);
+      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_T, RenderingContext.REPEAT);
     }
 
-    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindTexture(RenderingContext.TEXTURE_2D, null);
   }
 
 }

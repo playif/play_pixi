@@ -33,7 +33,7 @@ class DisplayObject {
 
   //Stage get stage => _stage;
 
-  num worldAlpha = 1;
+  num worldAlpha = 1.0;
 
   //num get worldAlpha => _worldAlpha;
 
@@ -110,25 +110,26 @@ class DisplayObject {
 
   FilterBlock _filterBlock=new FilterBlock();
 
-  List<Filter> _filters = [];
+  List<Filter> _filters = null;
 
   List<Filter> get filters => _filters;
 
   set filters(List<Filter> value) {
     if (value) {
       // now put all the passes in one place..
-      var passes = [];
-      for (var i = 0; i < value.length; i++) {
-        var filterPasses = value[i].passes;
-        for (var j = 0; j < filterPasses.length; j++) {
-          passes.push(filterPasses[j]);
+      List<Filter> passes = [];
+      for (int i = 0; i < value.length; i++) {
+        List<Filter> filterPasses = value[i].passes;
+        for (int j = 0; j < filterPasses.length; j++) {
+          passes.add(filterPasses[j]);
         }
       }
 
       // TODO change this as it is legacy
-      this._filterBlock = {
-          'target':this, 'filterPasses':passes
-      };
+      this._filterBlock.target=this;
+      this._filterBlock.filterPasses=passes;
+//          'target':this, 'filterPasses':passes
+//      };
     }
 
     this._filters = value;

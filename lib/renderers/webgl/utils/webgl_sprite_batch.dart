@@ -2,6 +2,7 @@ part of PIXI;
 
 class WebGLSpriteBatch {
   RenderingContext gl;
+  int glID;
   int vertSize = 10;
   int maxSize = 6000;
   int size;
@@ -27,7 +28,7 @@ class WebGLSpriteBatch {
 
   Matrix matrix = null;
 
-  WebGLSpriteBatch(gl) {
+  WebGLSpriteBatch(RenderingContext gl, this.glID) {
 
     size = maxSize;
     numVerts = size * 4 * vertSize;
@@ -35,7 +36,7 @@ class WebGLSpriteBatch {
     vertices = new Float32List(numVerts);
     indices = new Uint16List(numIndices);
 
-    for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
+    for (int i = 0, j = 0; i < numIndices; i += 6, j += 4) {
       this.indices[i + 0] = j + 0;
       this.indices[i + 1] = j + 1;
       this.indices[i + 2] = j + 2;
@@ -79,7 +80,7 @@ class WebGLSpriteBatch {
   }
 
   render(Sprite sprite) {
-    var texture = sprite.texture;
+    Texture texture = sprite.texture;
 
     // check texture..
     if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size) {
@@ -96,24 +97,25 @@ class WebGLSpriteBatch {
     // get the uvs for the texture
     var uvs = (sprite._uvs == null) ? sprite.texture._uvs : sprite._uvs;
     // if the uvs have not updated then no point rendering just yet!
-    if (!uvs)return;
+    //print(sprite.texture._uvs);
+    if (uvs == null)return;
 
     // get the sprites current alpha
-    var alpha = sprite.worldAlpha;
-    var tint = sprite.tint;
+    num alpha = sprite.worldAlpha;
+    num tint = sprite.tint;
 
     var verticies = this.vertices;
 
 
     // TODO trim??
-    var aX = sprite.anchor.x;
-    var aY = sprite.anchor.y;
+    num aX = sprite.anchor.x;
+    num aY = sprite.anchor.y;
 
-    var w0, w1, h0, h1;
+    num w0, w1, h0, h1;
 
-    if (sprite.texture.trim) {
+    if (sprite.texture.trim != null) {
       // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
-      var trim = sprite.texture.trim;
+      Rectangle trim = sprite.texture.trim;
 
       w1 = trim.x - aX * trim.width;
       w0 = w1 + texture.frame.width;
@@ -130,17 +132,18 @@ class WebGLSpriteBatch {
       h1 = texture.frame.height * -aY;
     }
 
-    var index = this.currentBatchSize * 4 * this.vertSize;
+    int index = this.currentBatchSize * 4 * this.vertSize;
 
-    var worldTransform = sprite.worldTransform;//.toArray();
+    Matrix worldTransform = sprite.worldTransform;//.toArray();
 
-    var a = worldTransform.a;//[0];
-    var b = worldTransform.c;//[3];
-    var c = worldTransform.b;//[1];
-    var d = worldTransform.d;//[4];
-    var tx = worldTransform.tx;//[2];
-    var ty = worldTransform.ty;///[5];
+    num a = worldTransform.a;//[0];
+    num b = worldTransform.c;//[3];
+    num c = worldTransform.b;//[1];
+    num d = worldTransform.d;//[4];
+    num tx = worldTransform.tx;//[2];
+    num ty = worldTransform.ty;///[5];
 
+    //print("$a $tint ${uvs.x0} ${uvs.y0}");
     // xy
     verticies[index++] = a * w1 + c * h1 + tx;
     verticies[index++] = d * h1 + b * w1 + ty;
@@ -309,24 +312,28 @@ class WebGLSpriteBatch {
     var gl = this.gl;
 
     // bind the current texture
-    gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture._glTextures[gl.id] || createWebGLTexture(this.currentBaseTexture, gl));
+    Texture texture = this.currentBaseTexture._glTextures[glID];
+    if (texture == null) {
+      texture = createWebGLTexture(this.currentBaseTexture, gl, glID);
+    }
+    gl.bindTexture(RenderingContext.TEXTURE_2D, texture);
 
     // upload the verts to the buffer
 
     if (this.currentBatchSize > ( this.size * 0.5 )) {
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
+      gl.bufferSubData(RenderingContext.ARRAY_BUFFER, 0, this.vertices);
     }
     else {
       var view = this.vertices.sublist(0, this.currentBatchSize * 4 * this.vertSize);
 
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+      gl.bufferSubData(RenderingContext.ARRAY_BUFFER, 0, view);
     }
 
     // var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
     //gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
 
     // now draw those suckas!
-    gl.drawElements(gl.TRIANGLES, this.currentBatchSize * 6, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(RenderingContext.TRIANGLES, this.currentBatchSize * 6, RenderingContext.UNSIGNED_SHORT, 0);
 
     // then reset the batch!
     this.currentBatchSize = 0;

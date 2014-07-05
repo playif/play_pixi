@@ -6,5 +6,8 @@ class FilterBlock {
 
   bool visible = true;
   bool renderable = true;
-  var target;
+  DisplayObject target;
+  Rectangle _filterArea;
+  Rectangle filterArea;
+  List<Filter> filterPasses;
 }

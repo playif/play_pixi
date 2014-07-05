@@ -22,7 +22,7 @@ class Sprite extends DisplayObjectContainer {
     this._height = value;
   }
 
-  int tint = 0xFFFFFF;
+  num tint = 16777215.0;
   int cachedTint;
 
 //  bool renderable = true;
@@ -32,7 +32,7 @@ class Sprite extends DisplayObjectContainer {
 
   Sprite(this.texture) {
     if (texture.baseTexture.hasLoaded) {
-      this.onTextureUpdate();
+      this.onTextureUpdate(null);
     }
     else {
       //this.onTextureUpdateBind = this.onTextureUpdate.bind(this);
@@ -56,7 +56,7 @@ class Sprite extends DisplayObjectContainer {
     this.updateFrame = true;
   }
 
-  onTextureUpdate() {
+  onTextureUpdate(PixiEvent e) {
     // so if _width is 0 then width was not set..
     if (this._width)this.scale.x = this._width / this.texture.frame.width;
     if (this._height)this.scale.y = this._height / this.texture.frame.height;
@@ -65,18 +65,18 @@ class Sprite extends DisplayObjectContainer {
     this.updateFrame = true;
   }
 
-  void getBounds(matrix) {
+  void getBounds(Matrix matrix) {
 
-    var width = this.texture.frame.width;
-    var height = this.texture.frame.height;
+    num width = this.texture.frame.width;
+    num height = this.texture.frame.height;
 
-    var w0 = width * (1 - this.anchor.x);
-    var w1 = width * -this.anchor.x;
+    num w0 = width * (1 - this.anchor.x);
+    num w1 = width * -this.anchor.x;
 
-    var h0 = height * (1 - this.anchor.y);
-    var h1 = height * -this.anchor.y;
+    num h0 = height * (1 - this.anchor.y);
+    num h1 = height * -this.anchor.y;
 
-    var worldTransform = matrix || this.worldTransform ;
+    Matrix worldTransform = (matrix == null) ? this.worldTransform : matrix ;
 
     var a = worldTransform.a;
     var b = worldTransform.c;
@@ -254,8 +254,8 @@ class Sprite extends DisplayObjectContainer {
       else {
 
 
-        if (texture.trim) {
-          var trim = texture.trim;
+        if (texture.trim != null) {
+          Rectangle trim = texture.trim;
 
           context.drawImage(this.texture.baseTexture.source,
           frame.x,
@@ -284,12 +284,12 @@ class Sprite extends DisplayObjectContainer {
     }
 
     // OVERWRITE
-    for (var i = 0, j = this.children.length; i < j; i++) {
-      var child = this.children[i];
+    for (int i = 0, j = this.children.length; i < j; i++) {
+      DisplayObject child = this.children[i];
       child._renderCanvas(renderSession);
     }
 
-    if (this._mask) {
+    if (this._mask != null) {
       renderSession.maskManager.popMask(renderSession.context);
     }
   }

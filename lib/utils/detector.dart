@@ -81,15 +81,15 @@ class EventTargetObj {
 
   dispatchEvent(PixiEvent event) {
 
-    if (!listeners[ event.type] || !listeners[ event.type ].length) {
+    if (listeners[event.type] == null || listeners[event.type].length == 0) {
 
       return;
 
     }
 
-    for (var i = 0, l = listeners[ event.type ].length; i < l; i++) {
+    for (int i = 0, l = listeners[event.type].length; i < l; i++) {
 
-      listeners[ event.type ][ i ](event);
+      listeners[event.type][i](event);
 
     }
 
