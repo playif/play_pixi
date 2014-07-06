@@ -21,9 +21,9 @@ part "display/sprite.dart";
 part "display/sprite_batch.dart";
 part "display/stage.dart";
 
-part "extras/rope.dart";
-part "extras/spine.dart";
-part "extras/strip.dart";
+part 'extras/ext_rope.dart';
+part 'extras/ext_spine.dart';
+part 'extras/ext_strip.dart';
 part "extras/tiling_sprite.dart";
 
 part "filters/filter.dart";
