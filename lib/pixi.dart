@@ -25,6 +25,15 @@ part "display/stage.dart";
 part "filters/filter.dart";
 part "filters/filter_block.dart";
 
+part 'loaders/loader.dart';
+part "loaders/asset_loader.dart";
+part "loaders/atlas_loader.dart";
+part "loaders/bitmap_font_loader.dart";
+part "loaders/image_loader.dart";
+part "loaders/json_loader.dart";
+part "loaders/spine_loader.dart";
+part "loaders/sprite_sheet_loader.dart";
+
 part "primitives/graphics.dart";
 
 part "renderers/canvas/utils/canvas_mask_manager.dart";
@@ -47,6 +56,7 @@ part "renderers/webgl/utils/webgl_shader_utils.dart";
 part "renderers/webgl/utils/webgl_sprite_batch.dart";
 
 part "renderers/webgl/webgl_renderer.dart";
+part 'renderers/render_session.dart';
 part "renderers/renderer.dart";
 
 part "textures/base_texture.dart";
@@ -61,7 +71,6 @@ part "utils/utils.dart";
 part "interaction_data.dart";
 part "interaction_manager.dart";
 
-part "render_session.dart";
 
 typedef void EventFunc(Event e);
 
@@ -106,7 +115,7 @@ class scaleModes {
 
 Renderer defaultRenderer;
 List blendModesWebGL = null;
-
+List blendModesCanvas =null;
 const int WEBGL_RENDERER = 0;
 const int CANVAS_RENDERER = 0;
 const String VERSION = "v1.5.3";
@@ -116,4 +125,7 @@ const bool AUTO_PREVENT_DEFAULT = true;
 
 const num RAD_TO_DEG = 180 / PI;
 const num DEG_TO_RAD = PI / 180;
+
+Function requestAnimFrame=window.requestAnimationFrame;
+
 

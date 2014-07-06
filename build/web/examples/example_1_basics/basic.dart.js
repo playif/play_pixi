@@ -275,34 +275,6 @@ var $$ = {};
 })([
 ["PIXI", "package:pixi_dart/pixi.dart", , M, {
   "^": "",
-  WebGLGraphics_renderGraphics: function(graphics, renderSession) {
-    var gl, projection, offset, shader, t1, webGL, t2;
-    gl = renderSession.gl;
-    projection = renderSession.projection;
-    offset = renderSession.offset;
-    shader = renderSession.shaderManager.primitiveShader;
-    t1 = J.getInterceptor$x(gl);
-    graphics.get$_webGL().$index(0, t1.get$id(gl));
-    webGL = graphics.get$_webGL().$index(0, t1.get$id(gl));
-    if (graphics.get$dirty()) {
-      graphics.set$dirty(false);
-      if (graphics.get$clearDirty()) {
-        graphics.set$clearDirty(false);
-        webGL.set$lastIndex(0);
-        webGL.set$points(0, []);
-        webGL.set$indices([]);
-      }
-      H.throwNoSuchMethod("", "updateGraphics", [graphics, gl], null);
-    }
-    t2 = renderSession.shaderManager;
-    J.useProgram$1$x(t2.gl, t2.primitiveShader.program);
-    t2.setAttribs$1(t2.primitiveShader.attributes);
-    t1.blendFunc$2(gl, t1.get$ONE(gl), t1.get$ONE_MINUS_SRC_ALPHA(gl));
-    t1.uniformMatrix3fv$3(gl, shader.get$translationMatrix(), false, graphics.get$worldTransform().toArray$1(true));
-    t1.uniform2f$3(gl, shader.projectionVector, projection.x, -projection.y);
-    t1.uniform2f$3(gl, shader.offsetVector, -offset.x, -offset.y);
-    t1.uniform3fv$2(gl, shader.get$tintColor(), H.throwNoSuchMethod("", "get PIXI", [], null).hex2rgb$1(graphics.get$tint()));
-  },
   _CompileShader: function(gl, shaderSrc, shaderType) {
     var src, shader, t1;
     src = J.join$1$ax(H.assertSubtype(shaderSrc, "$isList", [P.String], "$asList"), "\n");
@@ -334,32 +306,6 @@ var $$ = {};
       H.voidTypeCheck(typeof console != "undefined" ? console.log("Could not initialise shaders") : null);
     }
     return shaderProgram;
-  },
-  createWebGLTexture: function(texture, gl) {
-    var t1, t2;
-    if (texture.get$hasLoaded()) {
-      texture.get$_glTextures().$indexSet(0, gl.get$id(gl), gl.createTexture$0(0));
-      gl.bindTexture$2(0, gl.get$TEXTURE_2D(gl), texture.get$_glTextures().$index(0, gl.get$id(gl)));
-      gl.pixelStorei$2(0, gl.get$UNPACK_PREMULTIPLY_ALPHA_WEBGL(gl), true);
-      gl.texImage2D$6(0, gl.get$TEXTURE_2D(gl), 0, gl.get$RGBA(gl), gl.get$RGBA(gl), gl.get$UNSIGNED_BYTE(gl), texture.get$source(texture));
-      t1 = gl.get$TEXTURE_2D(gl);
-      t2 = gl.get$TEXTURE_MAG_FILTER(gl);
-      texture.get$scaleMode();
-      gl.texParameteri$3(0, t1, t2, gl.get$NEAREST(gl));
-      t1 = gl.get$TEXTURE_2D(gl);
-      t2 = gl.get$TEXTURE_MIN_FILTER(gl);
-      texture.get$scaleMode();
-      gl.texParameteri$3(0, t1, t2, gl.get$NEAREST(gl));
-      if (!texture.get$_powerOf2()) {
-        gl.texParameteri$3(0, gl.get$TEXTURE_2D(gl), gl.get$TEXTURE_WRAP_S(gl), gl.get$CLAMP_TO_EDGE(gl));
-        gl.texParameteri$3(0, gl.get$TEXTURE_2D(gl), gl.get$TEXTURE_WRAP_T(gl), gl.get$CLAMP_TO_EDGE(gl));
-      } else {
-        gl.texParameteri$3(0, gl.get$TEXTURE_2D(gl), gl.get$TEXTURE_WRAP_S(gl), gl.get$REPEAT(gl));
-        gl.texParameteri$3(0, gl.get$TEXTURE_2D(gl), gl.get$TEXTURE_WRAP_T(gl), gl.get$REPEAT(gl));
-      }
-      gl.bindTexture$2(0, gl.get$TEXTURE_2D(gl), null);
-    }
-    return texture.get$_glTextures().$index(0, gl.get$id(gl));
   },
   Matrix: {
     "^": "Object;a,b,c,d,tx,ty",
@@ -524,50 +470,27 @@ var $$ = {};
       }
     },
     _renderWebGL$1: function(renderSession) {
-      var t1, t2, t3, j, i;
+      var t1, j, i;
       if (!this.visible || this.alpha <= 0)
         return;
       if (this._cacheAsBitmap) {
         this._renderCachedSprite$1(renderSession);
         return;
       }
-      t1 = H.boolConversionCheck(this._mask);
-      if (t1 || H.boolConversionCheck(this._filters)) {
-        if (t1) {
-          renderSession.spriteBatch.flush$0(0);
-          renderSession.maskManager.pushMask$2(true, renderSession);
-          renderSession.spriteBatch.start$0(0);
-        }
-        t2 = H.boolConversionCheck(this._filters);
-        if (t2) {
-          renderSession.spriteBatch.flush$0(0);
-          renderSession.filterManager.pushFilter$1(this._filterBlock);
-        }
-        for (t3 = this.children, j = t3.length, i = 0; i < j; ++i) {
-          if (i >= t3.length)
-            return H.ioore(t3, i);
-          t3[i]._renderWebGL$1(renderSession);
-        }
-        renderSession.spriteBatch.flush$0(0);
-        if (t2)
-          renderSession.filterManager.popFilter$0();
-        if (t1)
-          renderSession.maskManager.popMask$1(renderSession);
-        renderSession.spriteBatch.start$0(0);
-      } else
-        for (t1 = this.children, j = t1.length, i = 0; i < j; ++i) {
-          if (i >= t1.length)
-            return H.ioore(t1, i);
-          t1[i]._renderWebGL$1(renderSession);
-        }
+      for (t1 = this.children, j = t1.length, i = 0; i < j; ++i) {
+        if (i >= t1.length)
+          return H.ioore(t1, i);
+        t1[i]._renderWebGL$1(renderSession);
+      }
     },
     $isDisplayObjectContainer: true
   },
   Sprite: {
     "^": "DisplayObjectContainer;anchor,texture,updateFrame,textureChange,_width,_height,_uvs,tint,cachedTint,blendMode,children,position,scale,pivot,rotation,alpha,visible,hitArea,buttonMode,renderable,parent,__iParent,interactiveChildren,__hit,__isOver,__mouseIsDown,__isDown,click,mousemove,mousedown,mouseout,mouseover,mouseup,mouseupoutside,stage,worldAlpha,_interactive,defaultCursor,_worldTransform,color,dynamic,_sr,_cr,filterArea,_bounds,_currentBounds,_mask,_cacheAsBitmap,_cacheIsDirty,_filterBlock,_filters,rotationCache,_cachedSprite",
-    onTextureUpdate$0: [function() {
+    onTextureUpdate$1: [function(e) {
+      var t1;
       if (H.boolConversionCheck(this._width)) {
-        var t1 = this.texture.get$frame();
+        t1 = this.texture.get$frame();
         this.scale.x = C.JSBool_methods.$div(true, t1.get$width(t1));
       }
       if (H.boolConversionCheck(this._height)) {
@@ -575,50 +498,23 @@ var $$ = {};
         this.scale.y = C.JSBool_methods.$div(true, t1.get$height(t1));
       }
       this.updateFrame = true;
-    }, "call$0", "get$onTextureUpdate", 0, 0, 0],
+    }, "call$1", "get$onTextureUpdate", 2, 0, 9],
     _renderWebGL$1: function(renderSession) {
-      var t1, t2, spriteBatch, t3, j, i;
+      var spriteBatch, t1, j, i;
       if (!this.visible || this.alpha <= 0)
         return;
-      t1 = H.boolConversionCheck(this._mask);
-      t2 = t1 || H.boolConversionCheck(this._filters);
       spriteBatch = renderSession.spriteBatch;
-      if (t2) {
-        if (t1) {
-          spriteBatch.flush$0(0);
-          renderSession.maskManager.pushMask$2(true, renderSession);
-          spriteBatch.start$0(0);
-        }
-        t2 = H.boolConversionCheck(this._filters);
-        if (t2) {
-          spriteBatch.flush$0(0);
-          renderSession.filterManager.pushFilter$1(this._filterBlock);
-        }
-        spriteBatch.render$1(this);
-        for (t3 = this.children, j = t3.length, i = 0; i < j; ++i) {
-          if (i >= t3.length)
-            return H.ioore(t3, i);
-          t3[i]._renderWebGL$1(renderSession);
-        }
-        spriteBatch.flush$0(0);
-        if (t2)
-          renderSession.filterManager.popFilter$0();
-        if (t1)
-          renderSession.maskManager.popMask$1(renderSession);
-        spriteBatch.start$0(0);
-      } else {
-        spriteBatch.render$1(this);
-        for (t1 = this.children, j = t1.length, i = 0; i < j; ++i) {
-          if (i >= t1.length)
-            return H.ioore(t1, i);
-          t1[i]._renderWebGL$1(renderSession);
-        }
+      spriteBatch.render$1(this);
+      for (t1 = this.children, j = t1.length, i = 0; i < j; ++i) {
+        if (i >= t1.length)
+          return H.ioore(t1, i);
+        t1[i]._renderWebGL$1(renderSession);
       }
     },
     Sprite$1: function(texture) {
       H.interceptedTypeCheck(texture, "$isRenderTexture");
       if (this.texture.get$baseTexture().get$hasLoaded())
-        this.onTextureUpdate$0();
+        this.onTextureUpdate$1(null);
       else
         C.JSNull_methods.addEventListener$2(this.texture, "update", this.get$onTextureUpdate());
       this.renderable = true;
@@ -666,6 +562,10 @@ var $$ = {};
   },
   Filter: {
     "^": "Object;"
+  },
+  FilterBlock: {
+    "^": "Object;visible,renderable,target,_filterArea,filterArea,filterPasses",
+    $isFilterBlock: true
   },
   InteractionData: {
     "^": "Object;global,target,originalEvent",
@@ -818,7 +718,7 @@ var $$ = {};
         if (H.boolConversionCheck(item.get$mousemove()))
           item.mousemove$1(t1);
       }
-    }, "call$1", "get$onMouseMove", 2, 0, 9],
+    }, "call$1", "get$onMouseMove", 2, 0, 10],
     onMouseDown$1: [function(_, $event) {
       var t1, t2, $length, i, item, t3, t4;
       H.interceptedTypeCheck($event, "$isMouseEvent");
@@ -845,7 +745,7 @@ var $$ = {};
           }
         }
       }
-    }, "call$1", "get$onMouseDown", 2, 0, 10],
+    }, "call$1", "get$onMouseDown", 2, 0, 11],
     onMouseOut$0: [function(_) {
       var t1, $length, t2, i, item;
       t1 = this.interactiveItems;
@@ -892,7 +792,7 @@ var $$ = {};
             item.mouseupoutside$1(t1);
         item.__isDown = false;
       }
-    }, "call$1", "get$onMouseUp", 2, 0, 9],
+    }, "call$1", "get$onMouseUp", 2, 0, 10],
     hitTest$2: function(item, interactionData) {
       var global, worldTransform, a00, a01, a02, a10, a11, a12, t1, id, t2, t3, x, y, width, height, x1, y1, $length, i;
       global = interactionData.global;
@@ -980,7 +880,7 @@ var $$ = {};
             item.touchmove$1(touchData);
         }
       }
-    }, "call$1", "get$onTouchMove", 2, 0, 11],
+    }, "call$1", "get$onTouchMove", 2, 0, 12],
     onTouchStart$1: [function(_, $event) {
       var rect, changedTouches, t1, t2, t3, t4, i, touchEvent, touchData, t5, t6, t7, t8, $length, j, item;
       H.interceptedTypeCheck($event, "$isTouchEvent");
@@ -1028,7 +928,7 @@ var $$ = {};
           }
         }
       }
-    }, "call$1", "get$onTouchStart", 2, 0, 11],
+    }, "call$1", "get$onTouchStart", 2, 0, 12],
     onTouchEnd$1: [function(_, $event) {
       var rect, changedTouches, t1, t2, t3, t4, i, touchEvent, touchData, t5, t6, t7, t8, $length, up, j, item;
       H.interceptedTypeCheck($event, "$isTouchEvent");
@@ -1078,7 +978,7 @@ var $$ = {};
         C.JSArray_methods.add$1(t1, touchData);
         t2.$indexSet(0, touchEvent.get$identifier(touchEvent), null);
       }
-    }, "call$1", "get$onTouchEnd", 2, 0, 11],
+    }, "call$1", "get$onTouchEnd", 2, 0, 12],
     $isInteractionManager: true
   },
   blendModes: {
@@ -1129,9 +1029,6 @@ var $$ = {};
   },
   PixiShader: {
     "^": "Object;gl,program,fragmentSrc,vertexSrc,textureCount,uSampler,projectionVector,offsetVector,dimensions,uMatrix,aVertexPosition,aPositionCoord,aScale,aRotation,aTextureCoord,colorAttribute,attributes,uniforms",
-    set$fragmentSrc: function(fragmentSrc) {
-      this.fragmentSrc = H.assertSubtype(fragmentSrc, "$isList", [P.String], "$asList");
-    },
     init$0: function() {
       var gl, t1, program, t2, t3, key;
       gl = this.gl;
@@ -1237,19 +1134,6 @@ var $$ = {};
       uniform.set$_init(true);
       ++this.textureCount;
     },
-    syncUniforms$0: function() {
-      var t1, key, uniform;
-      this.textureCount = 1;
-      for (t1 = this.uniforms, t1 = t1.get$iterator(t1); t1.moveNext$0();) {
-        key = t1.get$current();
-        uniform = this.uniforms.$index(0, key);
-        uniform.get$glValueLength();
-        uniform.get$glValueLength();
-        uniform.get$glValueLength();
-        uniform.get$glValueLength();
-        uniform.get$type(uniform);
-      }
-    },
     $isPixiShader: true,
     static: {"^": "PixiShader_defaultVertexSrc"}
   },
@@ -1280,82 +1164,6 @@ var $$ = {};
       this.program = program;
     },
     $isPrimitiveShader: true
-  },
-  FilterTexture: {
-    "^": "Object;gl,frameBuffer,renderBuffer,texture,width,height",
-    resize$2: function(_, width, height) {
-      var t1, gl;
-      t1 = this.width;
-      if (t1 == null ? width == null : t1 === width) {
-        t1 = this.height;
-        t1 = t1 == null ? height == null : t1 === height;
-      } else
-        t1 = false;
-      if (t1)
-        return;
-      this.width = H.intTypeCheck(width);
-      this.height = H.intTypeCheck(height);
-      gl = this.gl;
-      t1 = J.getInterceptor$x(gl);
-      t1.bindTexture$2(gl, t1.get$TEXTURE_2D(gl), this.texture);
-      t1.texImage2D$9(gl, t1.get$TEXTURE_2D(gl), 0, t1.get$RGBA(gl), width, height, 0, t1.get$RGBA(gl), t1.get$UNSIGNED_BYTE(gl), null);
-      t1.bindRenderbuffer$2(gl, t1.get$RENDERBUFFER(gl), this.renderBuffer);
-      t1.renderbufferStorage$4(gl, t1.get$RENDERBUFFER(gl), t1.get$DEPTH_STENCIL(gl), width, height);
-    },
-    FilterTexture$4: function(gl, width, height, scaleMode) {
-      var t1, t2, t3, t4, t5, t6;
-      H.intTypeCheck(width);
-      H.intTypeCheck(height);
-      this.frameBuffer = this.gl.createFramebuffer();
-      this.texture = H.interceptedTypeCheck(this.gl.createTexture(), "$isTexture");
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t2.bindTexture$2(t1, t2.get$TEXTURE_2D(t1), this.texture);
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t3 = t2.get$TEXTURE_2D(t1);
-      t4 = J.get$TEXTURE_MAG_FILTER$x(this.gl);
-      t5 = scaleMode === C.scaleModes_1;
-      t6 = this.gl;
-      t2.texParameteri$3(t1, t3, t4, t5 ? J.get$LINEAR$x(t6) : J.get$NEAREST$x(t6));
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t3 = t2.get$TEXTURE_2D(t1);
-      t4 = J.get$TEXTURE_MIN_FILTER$x(this.gl);
-      t6 = this.gl;
-      t2.texParameteri$3(t1, t3, t4, t5 ? J.get$LINEAR$x(t6) : J.get$NEAREST$x(t6));
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t2.texParameteri$3(t1, t2.get$TEXTURE_2D(t1), J.get$TEXTURE_WRAP_S$x(this.gl), J.get$CLAMP_TO_EDGE$x(this.gl));
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t2.texParameteri$3(t1, t2.get$TEXTURE_2D(t1), J.get$TEXTURE_WRAP_T$x(this.gl), J.get$CLAMP_TO_EDGE$x(this.gl));
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t2.bindFramebuffer$2(t1, t2.get$FRAMEBUFFER(t1), this.frameBuffer);
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t2.bindFramebuffer$2(t1, t2.get$FRAMEBUFFER(t1), this.frameBuffer);
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t2.framebufferTexture2D$5(t1, t2.get$FRAMEBUFFER(t1), J.get$COLOR_ATTACHMENT0$x(this.gl), J.get$TEXTURE_2D$x(this.gl), this.texture, 0);
-      this.renderBuffer = this.gl.createRenderbuffer();
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t2.bindRenderbuffer$2(t1, t2.get$RENDERBUFFER(t1), this.renderBuffer);
-      t1 = this.gl;
-      t2 = J.getInterceptor$x(t1);
-      t2.framebufferRenderbuffer$4(t1, t2.get$FRAMEBUFFER(t1), J.get$DEPTH_STENCIL_ATTACHMENT$x(this.gl), J.get$RENDERBUFFER$x(this.gl), this.renderBuffer);
-      this.resize$2(0, this.width, this.height);
-    },
-    static: {FilterTexture$: function(gl, width, height, scaleMode) {
-        var t1;
-        H.intTypeCheck(width);
-        H.intTypeCheck(height);
-        t1 = new M.FilterTexture(gl, null, null, null, width, height);
-        t1.FilterTexture$4(gl, width, height, scaleMode);
-        return t1;
-      }}
   },
   WebGLFilterManager: {
     "^": "Object;gl,transparent,filterStack,offsetX,offsetY,texturePool,renderSession,width,height,defaultShader,vertexBuffer,vertexArray,uvBuffer,buffer,uvArray,colorBuffer,indexBuffer,colorArray",
@@ -1395,340 +1203,10 @@ var $$ = {};
       H.assertSubtype(t1, "$isList", [P.$int], "$asList");
       C.RenderingContext_methods.bufferData$3(gl, 34963, new Uint16Array(H._ensureNativeList(t1)), 35044);
     },
-    pushFilter$1: function(filterBlock) {
-      var gl, t1, projection, offset, filter, t2, texture, filterArea, padding;
-      gl = this.gl;
-      t1 = this.renderSession;
-      projection = t1.projection;
-      offset = t1.offset;
-      filterBlock.set$_filterArea(C.JSNull_methods.get$target(filterBlock).get$filterArea() || C.JSNull_methods.get$target(filterBlock).getBounds$0());
-      C.JSArray_methods.add$1(this.filterStack, filterBlock);
-      filter = filterBlock.get$filterPasses().$index(0, 0);
-      t1 = this.offsetX;
-      t2 = filterBlock.get$_filterArea();
-      this.offsetX = C.JSInt_methods.$add(t1, t2.get$x(t2));
-      t2 = this.offsetY;
-      t1 = filterBlock.get$_filterArea();
-      this.offsetY = C.JSInt_methods.$add(t2, t1.get$y(t1));
-      t1 = this.texturePool;
-      if (0 >= t1.length)
-        return H.ioore(t1, 0);
-      texture = t1.pop();
-      texture.resize$2(0, this.width, this.height);
-      t1 = J.getInterceptor$x(gl);
-      t1.bindTexture$2(gl, t1.get$TEXTURE_2D(gl), texture.texture);
-      filterArea = filterBlock.get$_filterArea();
-      padding = filter.get$padding(filter);
-      filterArea.set$x(0, filterArea.get$x(filterArea).$sub(0, padding));
-      filterArea.set$y(0, filterArea.get$y(filterArea).$sub(0, padding));
-      filterArea.set$width(0, filterArea.get$width(filterArea).$add(0, padding.$mul(0, 2)));
-      filterArea.set$height(0, filterArea.get$height(filterArea).$add(0, padding.$mul(0, 2)));
-      if (filterArea.get$x(filterArea).$lt(0, 0))
-        filterArea.set$x(0, 0);
-      if (filterArea.get$width(filterArea).$gt(0, this.width))
-        filterArea.set$width(0, this.width);
-      if (filterArea.get$y(filterArea).$lt(0, 0))
-        filterArea.set$y(0, 0);
-      if (filterArea.get$height(filterArea).$gt(0, this.height))
-        filterArea.set$height(0, this.height);
-      t1.bindFramebuffer$2(gl, t1.get$FRAMEBUFFER(gl), texture.frameBuffer);
-      t1.viewport$4(gl, 0, 0, filterArea.get$width(filterArea), filterArea.get$height(filterArea));
-      projection.x = filterArea.get$width(filterArea).$div(0, 2);
-      projection.y = filterArea.get$height(filterArea).$negate(0).$div(0, 2);
-      offset.x = filterArea.get$x(filterArea).$negate(0);
-      offset.y = filterArea.get$y(filterArea).$negate(0);
-      t1.uniform2f$3(gl, this.defaultShader.projectionVector, filterArea.get$width(filterArea).$div(0, 2), filterArea.get$height(filterArea).$negate(0).$div(0, 2));
-      t1.uniform2f$3(gl, this.defaultShader.offsetVector, filterArea.get$x(filterArea).$negate(0), filterArea.get$y(filterArea).$negate(0));
-      t1.colorMask$4(gl, true, true, true, true);
-      t1.clearColor$4(gl, 0, 0, 0, 0);
-      t1.clear$1(gl, t1.get$COLOR_BUFFER_BIT(gl));
-      filterBlock.set$_glFilterTexture(texture);
-    },
-    popFilter$0: function() {
-      var gl, t1, filterBlock, filterArea, texture, t2, projection, offset, t3, t4, t5, outputTexture, inputTexture, i, t0, filterPass, filter, sizeX, sizeY, buffer, offsetX, offsetY, currentFilter, x, y, t6;
-      gl = this.gl;
-      t1 = this.filterStack;
-      if (0 >= t1.length)
-        return H.ioore(t1, 0);
-      filterBlock = t1.pop();
-      filterArea = filterBlock.get$_filterArea();
-      texture = filterBlock.get$_glFilterTexture();
-      t2 = this.renderSession;
-      projection = t2.projection;
-      offset = t2.offset;
-      t2 = filterBlock.get$filterPasses();
-      if (t2.get$length(t2).$gt(0, 1)) {
-        t2 = J.getInterceptor$x(gl);
-        t2.viewport$4(gl, 0, 0, filterArea.get$width(filterArea), filterArea.get$height(filterArea));
-        t2.bindBuffer$2(gl, C.RenderingContext_methods.get$ARRAY_BUFFER(gl), this.vertexBuffer);
-        t3 = this.vertexArray;
-        t4 = t3.length;
-        if (0 >= t4)
-          return H.ioore(t3, 0);
-        t3[0] = 0;
-        t5 = filterArea.get$height(filterArea);
-        if (1 >= t4)
-          return H.ioore(t3, 1);
-        t3[1] = t5;
-        t5 = this.vertexArray;
-        t3 = filterArea.get$width(filterArea);
-        if (2 >= t5.length)
-          return H.ioore(t5, 2);
-        t5[2] = t3;
-        t3 = this.vertexArray;
-        t5 = filterArea.get$height(filterArea);
-        if (3 >= t3.length)
-          return H.ioore(t3, 3);
-        t3[3] = t5;
-        t5 = this.vertexArray;
-        t3 = t5.length;
-        if (4 >= t3)
-          return H.ioore(t5, 4);
-        t5[4] = 0;
-        if (5 >= t3)
-          return H.ioore(t5, 5);
-        t5[5] = 0;
-        t4 = filterArea.get$width(filterArea);
-        if (6 >= t3)
-          return H.ioore(t5, 6);
-        t5[6] = t4;
-        t4 = this.vertexArray;
-        if (7 >= t4.length)
-          return H.ioore(t4, 7);
-        t4[7] = 0;
-        t2.bufferSubData$3(gl, t2.get$ARRAY_BUFFER(gl), 0, this.vertexArray);
-        t2.bindBuffer$2(gl, t2.get$ARRAY_BUFFER(gl), this.uvBuffer);
-        t4 = this.uvArray;
-        t5 = filterArea.get$width(filterArea).$div(0, this.width);
-        if (2 >= t4.length)
-          return H.ioore(t4, 2);
-        t4[2] = t5;
-        t5 = this.uvArray;
-        t4 = filterArea.get$height(filterArea).$div(0, this.height);
-        if (5 >= t5.length)
-          return H.ioore(t5, 5);
-        t5[5] = t4;
-        t4 = this.uvArray;
-        t5 = filterArea.get$width(filterArea).$div(0, this.width);
-        if (6 >= t4.length)
-          return H.ioore(t4, 6);
-        t4[6] = t5;
-        t5 = this.uvArray;
-        t4 = filterArea.get$height(filterArea).$div(0, this.height);
-        if (7 >= t5.length)
-          return H.ioore(t5, 7);
-        t5[7] = t4;
-        t2.bufferSubData$3(gl, t2.get$ARRAY_BUFFER(gl), 0, this.uvArray);
-        t4 = this.texturePool;
-        if (0 >= t4.length)
-          return H.ioore(t4, 0);
-        outputTexture = t4.pop();
-        if (!H.boolConversionCheck(outputTexture))
-          outputTexture = M.FilterTexture$(this.gl, this.width, this.height, C.scaleModes_0);
-        outputTexture.resize$2(0, this.width, this.height);
-        t2.bindFramebuffer$2(gl, t2.get$FRAMEBUFFER(gl), outputTexture.frameBuffer);
-        t2.clear$1(gl, t2.get$COLOR_BUFFER_BIT(gl));
-        t2.disable$1(gl, t2.get$BLEND(gl));
-        for (inputTexture = texture, i = 0; t3 = filterBlock.get$filterPasses(), C.JSInt_methods.$lt(i, t3.get$length(t3).$sub(0, 1)); ++i, t0 = outputTexture, outputTexture = inputTexture, inputTexture = t0) {
-          filterPass = filterBlock.get$filterPasses().$index(0, i);
-          t2.bindFramebuffer$2(gl, t2.get$FRAMEBUFFER(gl), outputTexture.frameBuffer);
-          t2.activeTexture$1(gl, t2.get$TEXTURE0(gl));
-          t2.bindTexture$2(gl, t2.get$TEXTURE_2D(gl), inputTexture.texture);
-          this.applyFilterPass$4(filterPass, filterArea, filterArea.get$width(filterArea), filterArea.get$height(filterArea));
-        }
-        t2.enable$1(gl, t2.get$BLEND(gl));
-        J.add$1$ax(this.texturePool, outputTexture);
-        texture = inputTexture;
-      }
-      t2 = filterBlock.get$filterPasses();
-      t3 = filterBlock.get$filterPasses();
-      filter = t2.$index(0, t3.get$length(t3).$sub(0, 1));
-      this.offsetX = C.JSInt_methods.$sub(this.offsetX, filterArea.get$x(filterArea));
-      this.offsetY = C.JSInt_methods.$sub(this.offsetY, filterArea.get$y(filterArea));
-      sizeX = this.width;
-      sizeY = this.height;
-      buffer = this.buffer;
-      t2 = t1.length;
-      if (t2 === 0) {
-        J.colorMask$4$x(gl, true, true, true, true);
-        offsetX = 0;
-        offsetY = 0;
-      } else {
-        t3 = t2 - 1;
-        if (t3 < 0)
-          return H.ioore(t1, t3);
-        currentFilter = t1[t3];
-        filterArea = currentFilter.get$_filterArea();
-        sizeX = filterArea.get$width(filterArea);
-        sizeY = filterArea.get$height(filterArea);
-        offsetX = filterArea.get$x(filterArea);
-        offsetY = filterArea.get$y(filterArea);
-        buffer = currentFilter.get$_glFilterTexture().get$frameBuffer();
-      }
-      if (typeof sizeX !== "number")
-        return sizeX.$div();
-      t1 = sizeX / 2;
-      projection.x = t1;
-      if (typeof sizeY !== "number")
-        return sizeY.$negate();
-      t2 = -sizeY / 2;
-      projection.y = t2;
-      offset.x = offsetX;
-      offset.y = offsetY;
-      filterArea = filterBlock.get$_filterArea();
-      x = filterArea.get$x(filterArea).$sub(0, offsetX);
-      y = filterArea.get$y(filterArea).$sub(0, offsetY);
-      t3 = J.getInterceptor$x(gl);
-      t3.bindBuffer$2(gl, t3.get$ARRAY_BUFFER(gl), this.vertexBuffer);
-      t4 = this.vertexArray;
-      t5 = t4.length;
-      if (0 >= t5)
-        return H.ioore(t4, 0);
-      t4[0] = x;
-      t6 = y.$add(0, filterArea.get$height(filterArea));
-      if (1 >= t5)
-        return H.ioore(t4, 1);
-      t4[1] = t6;
-      t6 = this.vertexArray;
-      t4 = x.$add(0, filterArea.get$width(filterArea));
-      if (2 >= t6.length)
-        return H.ioore(t6, 2);
-      t6[2] = t4;
-      t4 = this.vertexArray;
-      t6 = y.$add(0, filterArea.get$height(filterArea));
-      if (3 >= t4.length)
-        return H.ioore(t4, 3);
-      t4[3] = t6;
-      t6 = this.vertexArray;
-      t4 = t6.length;
-      if (4 >= t4)
-        return H.ioore(t6, 4);
-      t6[4] = x;
-      if (5 >= t4)
-        return H.ioore(t6, 5);
-      t6[5] = y;
-      t5 = x.$add(0, filterArea.get$width(filterArea));
-      if (6 >= t4)
-        return H.ioore(t6, 6);
-      t6[6] = t5;
-      t5 = this.vertexArray;
-      if (7 >= t5.length)
-        return H.ioore(t5, 7);
-      t5[7] = y;
-      t3.bufferSubData$3(gl, t3.get$ARRAY_BUFFER(gl), 0, this.vertexArray);
-      t3.bindBuffer$2(gl, t3.get$ARRAY_BUFFER(gl), this.uvBuffer);
-      t5 = this.uvArray;
-      t6 = filterArea.get$width(filterArea).$div(0, this.width);
-      if (2 >= t5.length)
-        return H.ioore(t5, 2);
-      t5[2] = t6;
-      t6 = this.uvArray;
-      t5 = filterArea.get$height(filterArea).$div(0, this.height);
-      if (5 >= t6.length)
-        return H.ioore(t6, 5);
-      t6[5] = t5;
-      t5 = this.uvArray;
-      t6 = filterArea.get$width(filterArea).$div(0, this.width);
-      if (6 >= t5.length)
-        return H.ioore(t5, 6);
-      t5[6] = t6;
-      t6 = this.uvArray;
-      t5 = filterArea.get$height(filterArea).$div(0, this.height);
-      if (7 >= t6.length)
-        return H.ioore(t6, 7);
-      t6[7] = t5;
-      t3.bufferSubData$3(gl, t3.get$ARRAY_BUFFER(gl), 0, this.uvArray);
-      t3.viewport$4(gl, 0, 0, sizeX, sizeY);
-      t3.bindFramebuffer$2(gl, t3.get$FRAMEBUFFER(gl), buffer);
-      t3.activeTexture$1(gl, t3.get$TEXTURE0(gl));
-      t3.bindTexture$2(gl, t3.get$TEXTURE_2D(gl), texture.texture);
-      this.applyFilterPass$4(filter, filterArea, sizeX, sizeY);
-      t3.useProgram$1(gl, this.defaultShader.program);
-      t3.uniform2f$3(gl, this.defaultShader.projectionVector, t1, t2);
-      t3.uniform2f$3(gl, this.defaultShader.offsetVector, -offsetX, -offsetY);
-      J.add$1$ax(this.texturePool, texture);
-      filterBlock.set$_glFilterTexture(null);
-    },
-    applyFilterPass$4: function(filter, filterArea, width, height) {
-      var gl, t1, shader, t2, t3;
-      gl = this.gl;
-      t1 = J.getInterceptor$x(gl);
-      shader = filter.get$shaders().$index(0, t1.get$id(gl));
-      if (!shader) {
-        t2 = P.LinkedHashMap_LinkedHashMap$_empty(null, null);
-        shader = new M.PixiShader(gl, null, H.assertSubtype(["precision lowp float;", "varying vec2 vTextureCoord;", "varying vec4 vColor;", "uniform sampler2D uSampler;", "void main(void) {", "   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;", "}"], "$isList", [P.String], "$asList"), H.assertSubtype(null, "$isList", [P.String], "$asList"), 0, null, null, null, null, null, null, null, null, null, null, null, null, t2);
-        shader.init$0();
-        shader.set$fragmentSrc(filter.get$fragmentSrc());
-        shader.uniforms = filter.get$uniforms();
-        shader.init$0();
-        filter.get$shaders().$indexSet(0, t1.get$id(gl), shader);
-      }
-      t1.useProgram$1(gl, shader.program);
-      t1.uniform2f$3(gl, shader.projectionVector, width / 2, -height / 2);
-      t1.uniform2f$3(gl, shader.offsetVector, 0, 0);
-      if (filter.get$uniforms().get$dimensions()) {
-        t2 = filter.get$uniforms().get$dimensions();
-        t2.get$value(t2).$indexSet(0, 0, this.width);
-        t2 = filter.get$uniforms().get$dimensions();
-        t2.get$value(t2).$indexSet(0, 1, this.height);
-        t2 = filter.get$uniforms().get$dimensions();
-        t2 = t2.get$value(t2);
-        t3 = this.vertexArray;
-        if (0 >= t3.length)
-          return H.ioore(t3, 0);
-        t2.$indexSet(0, 2, t3[0]);
-        t3 = filter.get$uniforms().get$dimensions();
-        t3 = t3.get$value(t3);
-        t2 = this.vertexArray;
-        if (5 >= t2.length)
-          return H.ioore(t2, 5);
-        t3.$indexSet(0, 3, t2[5]);
-      }
-      shader.syncUniforms$0();
-      t1.bindBuffer$2(gl, t1.get$ARRAY_BUFFER(gl), this.vertexBuffer);
-      t1.vertexAttribPointer$6(gl, shader.aVertexPosition, 2, t1.get$FLOAT(gl), false, 0, 0);
-      t1.bindBuffer$2(gl, t1.get$ARRAY_BUFFER(gl), this.uvBuffer);
-      t1.vertexAttribPointer$6(gl, shader.aTextureCoord, 2, t1.get$FLOAT(gl), false, 0, 0);
-      t1.bindBuffer$2(gl, t1.get$ARRAY_BUFFER(gl), this.colorBuffer);
-      t1.vertexAttribPointer$6(gl, shader.colorAttribute, 2, t1.get$FLOAT(gl), false, 0, 0);
-      t1.bindBuffer$2(gl, t1.get$ELEMENT_ARRAY_BUFFER(gl), this.indexBuffer);
-      t1.drawElements$4(gl, t1.get$TRIANGLES(gl), 6, t1.get$UNSIGNED_SHORT(gl), 0);
-      ++this.renderSession.drawCount;
-    },
     $isWebGLFilterManager: true
   },
   WebGLMaskManager: {
     "^": "Object;maskStack,maskPosition,gl",
-    pushMask$2: function(maskData, renderSession) {
-      var gl, t1, t2;
-      gl = this.gl;
-      t1 = this.maskStack;
-      if (t1.length === 0) {
-        t2 = J.getInterceptor$x(gl);
-        t2.enable$1(gl, t2.get$STENCIL_TEST(gl));
-        t2.stencilFunc$3(gl, t2.get$ALWAYS(gl), 1, 1);
-      }
-      C.JSArray_methods.add$1(t1, maskData);
-      t2 = J.getInterceptor$x(gl);
-      t2.colorMask$4(gl, false, false, false, false);
-      t2.stencilOp$3(gl, C.RenderingContext_methods.get$KEEP(gl), t2.get$KEEP(gl), t2.get$INCR(gl));
-      M.WebGLGraphics_renderGraphics(maskData, renderSession);
-      t2.colorMask$4(gl, true, true, true, true);
-      t2.stencilFunc$3(gl, t2.get$NOTEQUAL(gl), 0, t1.length);
-      t2.stencilOp$3(gl, t2.get$KEEP(gl), t2.get$KEEP(gl), t2.get$KEEP(gl));
-    },
-    popMask$1: function(renderSession) {
-      var gl, t1;
-      gl = this.gl;
-      t1 = this.maskStack;
-      if (0 >= t1.length)
-        return H.ioore(t1, 0);
-      t1.pop();
-      if (t1.length === 0) {
-        t1 = J.getInterceptor$x(gl);
-        t1.disable$1(gl, t1.get$STENCIL_TEST(gl));
-      }
-    },
     $isWebGLMaskManager: true
   },
   WebGLShaderManager: {
@@ -1787,7 +1265,7 @@ var $$ = {};
       }}
   },
   WebGLSpriteBatch: {
-    "^": "Object;gl,vertSize,maxSize,size,numVerts,numIndices,vertices,indices,vertexBuffer,indexBuffer,lastIndexCount,drawing,currentBatchSize,currentBaseTexture,currentBlendMode,renderSession,shader,matrix",
+    "^": "Object;gl,glID,vertSize,maxSize,size,numVerts,numIndices,vertices,indices,vertexBuffer,indexBuffer,lastIndexCount,drawing,currentBatchSize,currentBaseTexture,currentBlendMode,renderSession,shader,matrix",
     setContext$1: function(gl) {
       var t1;
       this.gl = gl;
@@ -1801,7 +1279,7 @@ var $$ = {};
       this.currentBlendMode = H.interceptedTypeCheck(99999, "$isblendModes");
     },
     render$1: function(sprite) {
-      var texture, t1, alpha, tint, verticies, aX, aY, trim, w1, w0, h1, h0, index, worldTransform, a, b, c, d, tx, ty, index0, t2, t3;
+      var texture, t1;
       texture = sprite.texture;
       texture.get$baseTexture();
       this.flush$0(0);
@@ -1809,179 +1287,24 @@ var $$ = {};
       t1 = sprite.blendMode;
       if (t1 !== this.currentBlendMode)
         this.setBlendMode$1(t1);
-      if (!sprite.texture.get$_uvs())
-        return;
-      alpha = sprite.worldAlpha;
-      tint = sprite.tint;
-      verticies = this.vertices;
-      t1 = sprite.anchor;
-      aX = t1.x;
-      aY = t1.y;
-      if (C.JSNull_methods.get$trim(sprite.texture)) {
-        trim = C.JSNull_methods.get$trim(sprite.texture);
-        w1 = trim.get$x(trim).$sub(0, C.JSNumber_methods.$mul(aX, trim.get$width(trim)));
-        t1 = texture.get$frame();
-        w0 = w1.$add(0, t1.get$width(t1));
-        h1 = trim.get$y(trim).$sub(0, C.JSNumber_methods.$mul(aY, trim.get$height(trim)));
-        t1 = texture.get$frame();
-        h0 = h1.$add(0, t1.get$height(t1));
-      } else {
-        t1 = texture.get$frame();
-        w0 = t1.get$width(t1).$mul(0, 1 - aX);
-        t1 = texture.get$frame();
-        w1 = t1.get$width(t1).$mul(0, -aX);
-        t1 = texture.get$frame();
-        h0 = t1.get$height(t1).$mul(0, 1 - aY);
-        t1 = texture.get$frame();
-        h1 = t1.get$height(t1).$mul(0, -aY);
-      }
-      index = this.currentBatchSize * 4 * this.vertSize;
-      worldTransform = sprite._worldTransform;
-      a = worldTransform.a;
-      b = worldTransform.c;
-      c = worldTransform.b;
-      d = worldTransform.d;
-      tx = worldTransform.tx;
-      ty = worldTransform.ty;
-      index0 = index + 1;
-      t1 = C.JSNumber_methods.$mul(a, w1);
-      t2 = C.JSNumber_methods.$mul(c, h1);
-      t3 = verticies.length;
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = t1 + t2 + tx;
-      index = index0 + 1;
-      t2 = C.JSNumber_methods.$mul(d, h1);
-      t1 = C.JSNumber_methods.$mul(b, w1);
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = t2 + t1 + ty;
-      index0 = index + 1;
-      t1 = true.get$x0();
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = t1;
-      index = index0 + 1;
-      t1 = true.get$y0();
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = t1;
-      index0 = index + 1;
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = alpha;
-      index = index0 + 1;
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = tint;
-      index0 = index + 1;
-      t1 = C.JSNumber_methods.$mul(a, w0);
-      t2 = C.JSNumber_methods.$mul(c, h1);
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = t1 + t2 + tx;
-      index = index0 + 1;
-      t2 = C.JSNumber_methods.$mul(d, h1);
-      t1 = C.JSNumber_methods.$mul(b, w0);
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = t2 + t1 + ty;
-      index0 = index + 1;
-      t1 = true.get$x1(true);
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = t1;
-      index = index0 + 1;
-      t1 = true.get$y1(true);
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = t1;
-      index0 = index + 1;
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = alpha;
-      index = index0 + 1;
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = tint;
-      index0 = index + 1;
-      t1 = C.JSNumber_methods.$mul(a, w0);
-      t2 = C.JSNumber_methods.$mul(c, h0);
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = t1 + t2 + tx;
-      index = index0 + 1;
-      t2 = C.JSNumber_methods.$mul(d, h0);
-      t1 = C.JSNumber_methods.$mul(b, w0);
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = t2 + t1 + ty;
-      index0 = index + 1;
-      t1 = true.get$x2(true);
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = t1;
-      index = index0 + 1;
-      t1 = true.get$y2(true);
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = t1;
-      index0 = index + 1;
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = alpha;
-      index = index0 + 1;
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = tint;
-      index0 = index + 1;
-      t1 = C.JSNumber_methods.$mul(a, w1);
-      t2 = C.JSNumber_methods.$mul(c, h0);
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = t1 + t2 + tx;
-      index = index0 + 1;
-      t2 = C.JSNumber_methods.$mul(d, h0);
-      t1 = C.JSNumber_methods.$mul(b, w1);
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = t2 + t1 + ty;
-      index0 = index + 1;
-      t1 = true.get$x3();
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = t1;
-      index = index0 + 1;
-      t1 = true.get$y3();
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = t1;
-      index0 = index + 1;
-      if (index >= t3)
-        return H.ioore(verticies, index);
-      verticies[index] = alpha;
-      if (index0 >= t3)
-        return H.ioore(verticies, index0);
-      verticies[index0] = tint;
-      ++this.currentBatchSize;
+      sprite.texture.get$_uvs();
+      return;
     },
     flush$0: function(_) {
-      var gl, t1, t2, t3, view;
+      var gl, texture, t1, t2, t3;
       if (this.currentBatchSize === 0)
         return;
       gl = this.gl;
-      t1 = J.getInterceptor$x(gl);
-      t2 = t1.get$TEXTURE_2D(gl);
-      t1.bindTexture$2(gl, t2, this.currentBaseTexture.get$_glTextures().$index(0, t1.get$id(gl)) || M.createWebGLTexture(this.currentBaseTexture, gl));
-      t2 = this.currentBatchSize;
-      if (t2 > this.size * 0.5)
-        t1.bufferSubData$3(gl, t1.get$ARRAY_BUFFER(gl), 0, this.vertices);
-      else {
-        t3 = this.vertices;
-        view = H.assertSubtype(new Float32Array(t3.subarray(0, C.NativeFloat32List_methods._checkSublistArguments$3(t3, 0, t2 * 4 * this.vertSize, t3.length))), "$isList", [P.$double], "$asList");
-        t1.bufferSubData$3(gl, t1.get$ARRAY_BUFFER(gl), 0, view);
-      }
-      t1.drawElements$4(gl, t1.get$TRIANGLES(gl), this.currentBatchSize * 6, t1.get$UNSIGNED_SHORT(gl), 0);
+      texture = this.currentBaseTexture.get$_glTextures().$index(0, this.glID);
+      J.getInterceptor$x(gl).bindTexture$2(gl, 3553, texture);
+      t1 = this.currentBatchSize;
+      t2 = this.size;
+      t3 = this.vertices;
+      if (t1 > t2 * 0.5)
+        C.RenderingContext_methods.bufferSubData$3(gl, 34962, 0, t3);
+      else
+        C.RenderingContext_methods.bufferSubData$3(gl, 34962, 0, H.assertSubtype(new Float32Array(t3.subarray(0, C.NativeFloat32List_methods._checkSublistArguments$3(t3, 0, t1 * 4 * this.vertSize, t3.length))), "$isList", [P.$double], "$asList"));
+      C.RenderingContext_methods.drawElements$4(gl, 4, this.currentBatchSize * 6, 5123, 0);
       this.currentBatchSize = 0;
       ++this.renderSession.drawCount;
     },
@@ -2007,7 +1330,7 @@ var $$ = {};
       blendModeWebGL = C.JSNull_methods.$index($.blendModesWebGL, blendMode);
       J.blendFunc$2$x(this.gl, blendModeWebGL.$index(0, 0), blendModeWebGL.$index(0, 1));
     },
-    WebGLSpriteBatch$1: function(gl) {
+    WebGLSpriteBatch$2: function(gl, glID) {
       var t1, t2, i, j, t3, t4;
       t1 = this.maxSize;
       this.size = t1;
@@ -2050,9 +1373,9 @@ var $$ = {};
       this.setContext$1(gl);
     },
     $isWebGLSpriteBatch: true,
-    static: {WebGLSpriteBatch$: function(gl) {
-        var t1 = new M.WebGLSpriteBatch(null, 10, 6000, null, null, null, null, null, null, null, 0, false, 0, null, C.blendModes_0, null, null, null);
-        t1.WebGLSpriteBatch$1(gl);
+    static: {WebGLSpriteBatch$: function(gl, glID) {
+        var t1 = new M.WebGLSpriteBatch(null, glID, 10, 6000, null, null, null, null, null, null, null, 0, false, 0, null, C.blendModes_0, null, null, null);
+        t1.WebGLSpriteBatch$2(gl, glID);
         return t1;
       }}
   },
@@ -2126,9 +1449,9 @@ var $$ = {};
     handleContextLost$1: [function($event) {
       J.preventDefault$0$x($event);
       this.contextLost = true;
-    }, "call$1", "get$handleContextLost", 2, 0, 12],
+    }, "call$1", "get$handleContextLost", 2, 0, 13],
     handleContextRestored$0: [function() {
-      var exception, gl, t1, t2, key;
+      var exception, gl, t1, key;
       try {
         this.gl = H.interceptedTypeCheck(J.getContext$2$x(this.view, "experimental-webgl", this.options), "$isRenderingContext");
       } catch (exception) {
@@ -2145,21 +1468,21 @@ var $$ = {};
       gl = this.gl;
       t1 = $.WebGLRenderer_glContextId;
       $.WebGLRenderer_glContextId = t1 + 1;
-      t2 = J.getInterceptor$x(gl);
-      t2.set$id(gl, t1);
+      this.glId = t1;
       this.shaderManager.setContext$1(gl);
       this.spriteBatch.setContext$1(gl);
       this.maskManager.gl = gl;
       this.filterManager.setContext$1(gl);
       this.renderSession.gl = this.gl;
-      t2.disable$1(gl, t2.get$DEPTH_TEST(gl));
-      t2.disable$1(gl, t2.get$CULL_FACE(gl));
-      t2.enable$1(gl, t2.get$BLEND(gl));
-      t2.colorMask$4(gl, true, true, true, this.PIXI$WebGLRenderer$transparent);
+      t1 = J.getInterceptor$x(gl);
+      t1.disable$1(gl, t1.get$DEPTH_TEST(gl));
+      t1.disable$1(gl, t1.get$CULL_FACE(gl));
+      t1.enable$1(gl, t1.get$BLEND(gl));
+      t1.colorMask$4(gl, true, true, true, this.PIXI$WebGLRenderer$transparent);
       J.viewport$4$x(this.gl, 0, 0, this.width, this.height);
       for (t1 = $.get$TextureCache(), t1 = t1.get$iterator(t1); t1.moveNext$0();) {
         key = t1.get$current();
-        $.get$TextureCache().$index(0, key).get$baseTexture()._glTextures = [];
+        $.get$TextureCache().$index(0, key).get$baseTexture().set$_glTextures([]);
       }
       this.contextLost = false;
     }, "call$0", "get$handleContextRestored", 0, 0, 0],
@@ -2246,7 +1569,7 @@ var $$ = {};
       t4.y = -t3 / 2;
       this.contextLost = false;
       this.shaderManager = M.WebGLShaderManager$(gl);
-      this.spriteBatch = M.WebGLSpriteBatch$(gl);
+      this.spriteBatch = M.WebGLSpriteBatch$(gl, this.glId);
       t3 = new M.WebGLMaskManager([], 0, null);
       t3.gl = gl;
       this.maskManager = t3;
@@ -2314,6 +1637,9 @@ var $$ = {};
   },
   BaseTexture: {
     "^": "EventTargetObj;id,width,height,scaleMode,_hasLoaded,source,_glTextures,imageUrl,_powerOf2,onLoaded,listeners",
+    set$_glTextures: function(_glTextures) {
+      this._glTextures = H.assertSubtype(_glTextures, "$isMap", [P.$int, M.Texture], "$asMap");
+    },
     BaseTexture$2: function(source, scaleMode) {
       var t1, t2, t3;
       H.interceptedTypeCheck(source, "$isImageElement");
@@ -2339,18 +1665,19 @@ var $$ = {};
     },
     $isBaseTexture: true,
     static: {BaseTexture$: function(source, scaleMode) {
-        var t1, t2;
+        var t1, t2, t3;
         H.interceptedTypeCheck(source, "$isImageElement");
         t1 = $.BaseTextureCacheIdGenerator;
         $.BaseTextureCacheIdGenerator = t1 + 1;
-        t2 = P.LinkedHashMap_LinkedHashMap$_empty(null, null);
-        t2 = new M.BaseTexture(t1, 100, 100, scaleMode, false, source, [], null, false, H.buildFunctionType(H.getVoidRuntimeType(), [H.buildInterfaceType(W.Event)])._assertCheck$1(null), H.assertSubtype(t2, "$isMap", [P.String, [P.List, {func: "void__Event", void: true, args: [W.Event]}]], "$asMap"));
-        t2.BaseTexture$2(source, scaleMode);
-        return t2;
+        t2 = H.assertSubtype(P.LinkedHashMap_LinkedHashMap(null, null, null, P.$int, M.Texture), "$isMap", [P.$int, M.Texture], "$asMap");
+        t3 = P.LinkedHashMap_LinkedHashMap$_empty(null, null);
+        t3 = new M.BaseTexture(t1, 100, 100, scaleMode, false, source, H.assertSubtype(t2, "$isMap", [P.$int, M.Texture], "$asMap"), null, false, H.buildFunctionType(H.getVoidRuntimeType(), [H.buildInterfaceType(W.Event)])._assertCheck$1(null), H.assertSubtype(t3, "$isMap", [P.String, [P.List, {func: "void__Event", void: true, args: [W.Event]}]], "$asMap"));
+        t3.BaseTexture$2(source, scaleMode);
+        return t3;
       }}
   },
   BaseTexture_closure: {
-    "^": "Closure:12;scope_0",
+    "^": "Closure:13;scope_0",
     call$1: function(e) {
       var t1, t2;
       t1 = this.scope_0;
@@ -2365,6 +1692,20 @@ var $$ = {};
   },
   Texture: {
     "^": "BaseTexture;noFrame,updateFrame,frame,trim,scope,_uvs,baseTexture<,render,id,width,height,scaleMode,_hasLoaded,source,_glTextures,imageUrl,_powerOf2,onLoaded,listeners",
+    onBaseTextureLoaded$0: [function() {
+      var baseTexture, t1, t2, t3, index;
+      baseTexture = this.baseTexture;
+      t1 = this.get$onBaseTextureLoaded();
+      t2 = baseTexture.listeners;
+      t3 = t2.$index(0, "loaded");
+      index = H.Lists_indexOf(t3, t1, 0, t3.length);
+      if (index !== -1)
+        J.removeAt$1$ax(t2.$index(0, "loaded"), index);
+      if (this.noFrame)
+        this.frame = new M.Rectangle(0, 0, baseTexture.width, baseTexture.height, false);
+      this.setFrame$1(this.frame);
+      this.scope.dispatchEvent$1(0, new M.PixiEvent("update", this, null));
+    }, "call$0", "get$onBaseTextureLoaded", 0, 0, 2],
     setFrame$1: function(frame) {
       var t1;
       this.frame = frame;
@@ -2404,32 +1745,22 @@ var $$ = {};
     },
     $isTexture: true,
     static: {"^": "Texture_frameUpdates", Texture$: function(baseTexture, frame) {
-        var t1, t2, t3;
+        var t1, t2, t3, t4;
         t1 = $.BaseTextureCacheIdGenerator;
         $.BaseTextureCacheIdGenerator = t1 + 1;
-        t2 = P.LinkedHashMap_LinkedHashMap$_empty(null, null);
-        t3 = H.getVoidRuntimeType();
-        t2 = new M.Texture(false, false, frame, null, null, null, null, H.buildFunctionType(t3, [H.buildInterfaceType(M.DisplayObject), H.buildInterfaceType(M.Point), H.buildInterfaceType(P.bool)])._assertCheck$1(null), t1, 100, 100, C.scaleModes_0, false, null, [], null, false, H.buildFunctionType(t3, [H.buildInterfaceType(W.Event)])._assertCheck$1(null), H.assertSubtype(t2, "$isMap", [P.String, [P.List, {func: "void__Event", void: true, args: [W.Event]}]], "$asMap"));
-        t2.BaseTexture$2(null, C.scaleModes_0);
-        t2.Texture$2(baseTexture, frame);
-        return t2;
+        t2 = H.assertSubtype(P.LinkedHashMap_LinkedHashMap(null, null, null, P.$int, M.Texture), "$isMap", [P.$int, M.Texture], "$asMap");
+        t3 = P.LinkedHashMap_LinkedHashMap$_empty(null, null);
+        t4 = H.getVoidRuntimeType();
+        t3 = new M.Texture(false, false, frame, null, null, null, null, H.buildFunctionType(t4, [H.buildInterfaceType(M.DisplayObject), H.buildInterfaceType(M.Point), H.buildInterfaceType(P.bool)])._assertCheck$1(null), t1, 100, 100, C.scaleModes_0, false, null, H.assertSubtype(t2, "$isMap", [P.$int, M.Texture], "$asMap"), null, false, H.buildFunctionType(t4, [H.buildInterfaceType(W.Event)])._assertCheck$1(null), H.assertSubtype(t3, "$isMap", [P.String, [P.List, {func: "void__Event", void: true, args: [W.Event]}]], "$asMap"));
+        t3.BaseTexture$2(null, C.scaleModes_0);
+        t3.Texture$2(baseTexture, frame);
+        return t3;
       }}
   },
   Texture_closure: {
-    "^": "Closure:12;scope_0",
+    "^": "Closure:13;scope_0",
     call$1: function(e) {
-      var t1, baseTexture, t2, t3, index;
-      t1 = this.scope_0;
-      baseTexture = t1.baseTexture;
-      t2 = baseTexture.listeners;
-      t3 = t2.$index(0, "loaded");
-      index = H.Lists_indexOf(t3, t1.onLoaded, 0, t3.length);
-      if (index !== -1)
-        J.removeAt$1$ax(t2.$index(0, "loaded"), index);
-      if (t1.noFrame)
-        t1.frame = new M.Rectangle(0, 0, baseTexture.width, baseTexture.height, false);
-      t1.setFrame$1(t1.frame);
-      t1.scope.dispatchEvent$1(0, new M.PixiEvent("update", t1, null));
+      this.scope_0.onBaseTextureLoaded$0();
     },
     $isFunction: true
   },
@@ -2446,7 +1777,7 @@ var $$ = {};
     dispatchEvent$1: function(_, $event) {
       var t1, l, i, t2;
       t1 = this.listeners;
-      if (!H.boolConversionCheck(t1.$index(0, $event.type)) || !H.boolConversionCheck(t1.$index(0, $event.type).length))
+      if (t1.$index(0, $event.type) == null || t1.$index(0, $event.type).length === 0)
         return;
       for (l = t1.$index(0, $event.type).length, i = 0; i < l; ++i) {
         t2 = t1.$index(0, $event.type);
@@ -2512,7 +1843,7 @@ var $$ = {};
     toString$0: function(receiver) {
       return H.Primitives_objectToString(receiver);
     },
-    "%": "ArrayBuffer|DOMError|FileError|MediaKeyError|Navigator|NavigatorUserMediaError|PositionError|SQLError|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGRect"
+    "%": "ArrayBuffer|DOMError|FileError|MediaKeyError|Navigator|NavigatorUserMediaError|PositionError|SQLError|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGRect|WebGLRenderbuffer"
   },
   JSBool: {
     "^": "Interceptor;",
@@ -2705,9 +2036,6 @@ var $$ = {};
       if (typeof other !== "number")
         throw H.wrapException(P.ArgumentError$(other));
       return receiver / other;
-    },
-    $mul: function(receiver, other) {
-      return receiver * other;
     },
     _tdivFast$1: function(receiver, other) {
       return (receiver | 0) === receiver ? receiver / other | 0 : this.toInt$0(receiver / other);
@@ -3783,7 +3111,7 @@ var $$ = {};
     }
   },
   _Copier_visitMap_closure: {
-    "^": "Closure:13;box_0,this_1",
+    "^": "Closure:14;box_0,this_1",
     call$2: function(key, val) {
       var t1 = this.this_1;
       this.box_0.copy_0.$indexSet(0, t1._dispatch$1(key), t1._dispatch$1(val));
@@ -4569,11 +3897,14 @@ var $$ = {};
     throw H.wrapException(H.TypeErrorImplementation$(value, "void"));
   },
   assertHelper: function(condition) {
-    if (!condition)
+    if (typeof condition !== "boolean") {
+      if (!!J.getInterceptor(condition).$isFunction)
+        condition = condition.call$0();
+      if (typeof condition !== "boolean")
+        throw H.wrapException(H.TypeErrorImplementation$(condition, "bool"));
+    }
+    if (true !== condition)
       throw H.wrapException(P.AssertionError$());
-  },
-  throwNoSuchMethod: function(obj, $name, $arguments, expectedArgumentNames) {
-    throw H.wrapException(P.NoSuchMethodError$(obj, new H.Symbol0(H.stringTypeCheck($name)), $arguments, H.assertSubtype(P.LinkedHashMap_LinkedHashMap(null, null, null, P.Symbol, null), "$isMap", [P.Symbol, null], "$asMap"), expectedArgumentNames));
   },
   throwCyclicInit: function(staticName) {
     throw H.wrapException(P.CyclicInitializationError$("Cyclic initialization for static " + H.S(H.stringTypeCheck(staticName))));
@@ -5233,7 +4564,7 @@ var $$ = {};
     }
   },
   unwrapException_saveStackTrace: {
-    "^": "Closure:12;ex_0",
+    "^": "Closure:13;ex_0",
     call$1: function(error) {
       if (!!J.getInterceptor(error).$isError)
         if (error.$thrownJsError == null)
@@ -5636,21 +4967,21 @@ var $$ = {};
     $isType: true
   },
   initHooks_closure: {
-    "^": "Closure:12;getTag_0",
+    "^": "Closure:13;getTag_0",
     call$1: function(o) {
       return this.getTag_0(o);
     },
     $isFunction: true
   },
   initHooks_closure0: {
-    "^": "Closure:14;getUnknownTag_1",
+    "^": "Closure:15;getUnknownTag_1",
     call$2: function(o, tag) {
       return this.getUnknownTag_1(o, tag);
     },
     $isFunction: true
   },
   initHooks_closure1: {
-    "^": "Closure:15;prototypeForTag_2",
+    "^": "Closure:16;prototypeForTag_2",
     call$1: function(tag) {
       return this.prototypeForTag_2(H.stringTypeCheck(tag));
     },
@@ -5661,9 +4992,10 @@ var $$ = {};
   "^": "",
   main: [function() {
     var t1, t2, stage, renderer, texture, baseTexture, crossorigin, e, t3, bunny, t4, child;
+    H.assertSubtype(null, "$isList", [M.Filter], "$asList");
     t1 = H.assertSubtype([], "$isList", [P.num], "$asList");
     t2 = H.assertSubtype([], "$isList", [M.DisplayObject], "$asList");
-    stage = new M.Stage(null, false, new M.Rectangle(0, 0, 100000, 100000, false), 6684825, t1, null, new M.Matrix(1, 0, 0, 1, 0, 0), null, t2, new M.Point(0, 0), new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, null, H.assertSubtype([], "$isList", [M.Filter], "$asList"), 0, null);
+    stage = new M.Stage(null, false, new M.Rectangle(0, 0, 100000, 100000, false), 6684825, t1, null, new M.Matrix(1, 0, 0, 1, 0, 0), null, t2, new M.Point(0, 0), new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, null), H.assertSubtype(null, "$isList", [M.Filter], "$asList"), 0, null);
     stage.Stage$1(6684825);
     renderer = M.WebGLRenderer$(500, 300, null, false, false);
     J.append$1$x(document.body, renderer.view);
@@ -5685,9 +5017,11 @@ var $$ = {};
       $.get$TextureCache().$indexSet(0, "bunny.png", texture);
     }
     H.interceptedTypeCheck(texture, "$isTexture");
+    H.interceptedTypeCheck(texture, "$isRenderTexture");
     t1 = new M.Point(0, 0);
     t3 = new M.Point(0, 0);
-    bunny = new M.Sprite(t1, H.interceptedTypeCheck(texture, "$isRenderTexture"), false, false, 0, 0, null, 16777215, null, C.blendModes_0, H.assertSubtype([], "$isList", [M.DisplayObject], "$asList"), t3, new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, null, H.assertSubtype([], "$isList", [M.Filter], "$asList"), 0, null);
+    H.assertSubtype(null, "$isList", [M.Filter], "$asList");
+    bunny = new M.Sprite(t1, texture, false, false, 0, 0, null, 16777215, null, C.blendModes_0, H.assertSubtype([], "$isList", [M.DisplayObject], "$asList"), t3, new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, null), H.assertSubtype(null, "$isList", [M.Filter], "$asList"), 0, null);
     bunny.Sprite$1(texture);
     t1.x = 0.5;
     t1.y = 0.5;
@@ -5721,7 +5055,7 @@ var $$ = {};
     C.Window_methods._requestAnimationFrame$1(t2, W._wrapZone(t1));
   }, "call$0", "main$closure", 0, 0, 0],
   main_animate: {
-    "^": "Closure:16;stage_0,renderer_1,bunny_2",
+    "^": "Closure:17;stage_0,renderer_1,bunny_2",
     call$1: function(delta) {
       var t1;
       H.numTypeCheck(delta);
@@ -5921,31 +5255,6 @@ var $$ = {};
   },
   FixedLengthListMixin: {
     "^": "Object;"
-  },
-  Symbol0: {
-    "^": "Object;_name<",
-    $eq: function(_, other) {
-      var t1, t2;
-      if (other == null)
-        return false;
-      if (!!J.getInterceptor(other).$isSymbol0) {
-        t1 = this._name;
-        t2 = other._name;
-        t2 = t1 == null ? t2 == null : t1 === t2;
-        t1 = t2;
-      } else
-        t1 = false;
-      return t1;
-    },
-    get$hashCode: function(_) {
-      return 536870911 & 664597 * J.get$hashCode$(this._name);
-    },
-    toString$0: function(_) {
-      return "Symbol(\"" + H.S(this._name) + "\")";
-    },
-    $isSymbol0: true,
-    $isSymbol: true,
-    static: {"^": "Symbol_reservedWordRE,Symbol_publicIdentifierRE,Symbol_identifierRE,Symbol_operatorRE,Symbol_publicSymbolPattern,Symbol_symbolPattern"}
   }
 }],
 ["dart._js_names", "dart:_js_names", , H, {
@@ -5976,7 +5285,7 @@ var $$ = {};
     self.scheduleImmediate(H.convertDartClosureToJS(new P._AsyncRun__scheduleImmediateJsOverride_internalCallback(t1), 0));
   }, "call$1", "_AsyncRun__scheduleImmediateJsOverride$closure", 2, 0, 1],
   _AsyncRun__scheduleImmediateWithTimer: [function(callback) {
-    P._createTimer(C.Duration_0, H.buildFunctionType(H.getVoidRuntimeType())._assertCheck$1(callback));
+    P.Timer__createTimer(C.Duration_0, H.buildFunctionType(H.getVoidRuntimeType())._assertCheck$1(callback));
   }, "call$1", "_AsyncRun__scheduleImmediateWithTimer$closure", 2, 0, 1],
   _registerErrorHandler: function(errorHandler, zone) {
     var t1, t2, t3;
@@ -5986,14 +5295,12 @@ var $$ = {};
     if (t3) {
       zone.toString;
       t2._assertCheck$1(errorHandler);
-      t2._assertCheck$1(errorHandler);
-      return t2._assertCheck$1(t2._assertCheck$1(errorHandler));
+      return t2._assertCheck$1(errorHandler);
     } else {
       zone.toString;
       t1 = H.buildFunctionType(t1, [t1]);
       t1._assertCheck$1(errorHandler);
-      t1._assertCheck$1(errorHandler);
-      return t1._assertCheck$1(t1._assertCheck$1(errorHandler));
+      return t1._assertCheck$1(errorHandler);
     }
   },
   _asyncRunCallbackLoop: function() {
@@ -6018,26 +5325,6 @@ var $$ = {};
     }
 
   }, "call$0", "_asyncRunCallback$closure", 0, 0, 2],
-  _scheduleAsyncCallback: function(callback) {
-    var t1, t2;
-    t1 = $._lastCallback;
-    t2 = H.getVoidRuntimeType();
-    if (t1 == null) {
-      t1 = H.buildFunctionType(t2);
-      t1._assertCheck$1(callback);
-      t2 = new P._AsyncCallbackEntry(t1._assertCheck$1(callback), null);
-      $._lastCallback = t2;
-      $._nextCallback = t2;
-      t1._assertCheck$1(P._asyncRunCallback$closure());
-      $.get$_AsyncRun_scheduleImmediateClosure().call$1(P._asyncRunCallback$closure());
-    } else {
-      t2 = H.buildFunctionType(t2);
-      t2._assertCheck$1(callback);
-      t2 = new P._AsyncCallbackEntry(t2._assertCheck$1(callback), null);
-      t1.next = t2;
-      $._lastCallback = t2;
-    }
-  },
   _runUserCode: function(userCode, onSuccess, onError) {
     var e, s, t1, exception;
     t1 = H.getDynamicRuntimeType();
@@ -6072,13 +5359,13 @@ var $$ = {};
     if (t3 === C.C__RootZone) {
       t3.toString;
       t1._assertCheck$1(t2);
-      return P._rootCreateTimer(t3, null, t3, duration, t2);
+      return P.Timer__createTimer(duration, t2);
     }
     t2 = t3.bindCallback$2$runGuarded(t2, true);
     t1._assertCheck$1(t2);
-    return P._rootCreateTimer(t3, null, t3, duration, t2);
+    return P.Timer__createTimer(duration, t2);
   },
-  _createTimer: function(duration, callback) {
+  Timer__createTimer: function(duration, callback) {
     var t1, milliseconds;
     t1 = H.buildFunctionType(H.getVoidRuntimeType())._assertCheck$1(callback);
     milliseconds = C.JSInt_methods._tdivFast$1(duration._duration, 1000);
@@ -6094,9 +5381,7 @@ var $$ = {};
     return previous;
   },
   _rootHandleUncaughtError: function($self, $parent, zone, error, stackTrace) {
-    var t1 = new P._rootHandleUncaughtError_closure(error, stackTrace);
-    H.buildFunctionType(H.getDynamicRuntimeType())._assertCheck$1(t1);
-    P._rootRun($self, null, $self, t1);
+    P._rootScheduleMicrotask(null, null, C.C__RootZone, new P._rootHandleUncaughtError_closure(error, stackTrace));
   },
   _rootRun: function($self, $parent, zone, f) {
     var old, t1;
@@ -6149,14 +5434,28 @@ var $$ = {};
     }
   },
   _rootScheduleMicrotask: function($self, $parent, zone, f) {
-    var t1 = H.buildFunctionType(H.getDynamicRuntimeType());
+    var t1, t2;
+    t1 = H.buildFunctionType(H.getDynamicRuntimeType());
     f = t1._assertCheck$1(f);
-    P._scheduleAsyncCallback(C.C__RootZone !== zone ? t1._assertCheck$1(zone.bindCallback$1(f)) : f);
-  },
-  _rootCreateTimer: function($self, $parent, zone, duration, callback) {
-    var t1 = H.buildFunctionType(H.getVoidRuntimeType());
-    callback = t1._assertCheck$1(callback);
-    return P._createTimer(duration, C.C__RootZone !== zone ? t1._assertCheck$1(zone.bindCallback$1(callback)) : callback);
+    if (C.C__RootZone !== zone)
+      f = t1._assertCheck$1(zone.bindCallback$1(f));
+    t1 = $._lastCallback;
+    t2 = H.getVoidRuntimeType();
+    if (t1 == null) {
+      t1 = H.buildFunctionType(t2);
+      t1._assertCheck$1(f);
+      t2 = new P._AsyncCallbackEntry(t1._assertCheck$1(f), null);
+      $._lastCallback = t2;
+      $._nextCallback = t2;
+      t1._assertCheck$1(P._asyncRunCallback$closure());
+      $.get$_AsyncRun_scheduleImmediateClosure().call$1(P._asyncRunCallback$closure());
+    } else {
+      t2 = H.buildFunctionType(t2);
+      t2._assertCheck$1(f);
+      t2 = new P._AsyncCallbackEntry(t2._assertCheck$1(f), null);
+      t1.next = t2;
+      $._lastCallback = t2;
+    }
   },
   _AsyncRun__scheduleImmediateJsOverride_internalCallback: {
     "^": "Closure:0;callback_0",
@@ -6196,8 +5495,7 @@ var $$ = {};
       t4 = $.Zone__current;
       t4.toString;
       t3._assertCheck$1(t2);
-      t3._assertCheck$1(t2);
-      t2 = t3._assertCheck$1(t3._assertCheck$1(t2));
+      t2 = t3._assertCheck$1(t2);
       t5 = P._registerErrorHandler(onError, $.Zone__current);
       result = H.setRuntimeTypeInfo(new P._Future(0, t4, null, null, t3._assertCheck$1(t2), H.buildFunctionType(H.buildInterfaceType(P.bool), [t1])._assertCheck$1(null), t5, H.buildFunctionType(t1)._assertCheck$1(null)), [null]);
       this._addListener$1(result);
@@ -6212,8 +5510,7 @@ var $$ = {};
       t4 = $.Zone__current;
       t4.toString;
       t2._assertCheck$1(t3);
-      t2._assertCheck$1(t3);
-      t3 = t2._assertCheck$1(t2._assertCheck$1(t3));
+      t3 = t2._assertCheck$1(t3);
       result = new P._Future(0, t4, null, null, H.buildFunctionType(t1, [t1])._assertCheck$1(null), H.buildFunctionType(H.buildInterfaceType(P.bool), [t1])._assertCheck$1(null), null, t2._assertCheck$1(t3));
       result.$builtinTypeInfo = this.$builtinTypeInfo;
       this._addListener$1(result);
@@ -6239,7 +5536,7 @@ var $$ = {};
         t2 = new P._Future__addListener_closure(this, listener);
         t1.toString;
         H.buildFunctionType(H.getVoidRuntimeType())._assertCheck$1(t2);
-        P._rootScheduleMicrotask(t1, null, t1, t2);
+        P._rootScheduleMicrotask(null, null, t1, t2);
       } else {
         listener._nextListener = H.interceptedTypeCheck(this._resultOrListeners, "$is_Future");
         this._resultOrListeners = listener;
@@ -6312,7 +5609,7 @@ var $$ = {};
       P._Future__propagateToListeners(this, listeners);
     }, function(error) {
       return this._completeError$2(error, null);
-    }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 17, 18],
+    }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 18, 19],
     $is_Future: true,
     $isFuture: true,
     $tv_T: function() {
@@ -6368,7 +5665,7 @@ var $$ = {};
             t3 = asyncError.error;
             t4 = asyncError.stackTrace;
             t2.toString;
-            P._rootHandleUncaughtError(t2, null, t2, t3, t4);
+            P._rootHandleUncaughtError(null, null, t2, t3, t4);
             return;
           }
           if (listeners == null)
@@ -6396,10 +5693,9 @@ var $$ = {};
           if (t6) {
             zone = listeners._zone;
             if (hasError) {
-              t6 = t1.source_4._zone;
-              t6.toString;
+              t6 = t1.source_4._zone.get$errorZone();
               zone.toString;
-              t6 = zone == null ? t6 != null : zone !== t6;
+              t6 = t6 !== zone;
             } else
               t6 = false;
             if (t6) {
@@ -6411,7 +5707,7 @@ var $$ = {};
               t3 = asyncError.error;
               t4 = asyncError.stackTrace;
               t2.toString;
-              P._rootHandleUncaughtError(t2, null, t2, t3, t4);
+              P._rootHandleUncaughtError(null, null, t2, t3, t4);
               return;
             }
             t6 = $.Zone__current;
@@ -6492,7 +5788,7 @@ var $$ = {};
     $isFunction: true
   },
   _Future__chainForeignFuture_closure: {
-    "^": "Closure:12;target_0",
+    "^": "Closure:13;target_0",
     call$1: function(value) {
       var t1 = this.target_0;
       H.assertHelper(t1._state === 2);
@@ -6501,7 +5797,7 @@ var $$ = {};
     $isFunction: true
   },
   _Future__chainForeignFuture_closure0: {
-    "^": "Closure:19;target_1",
+    "^": "Closure:20;target_1",
     call$2: function(error, stackTrace) {
       var t1 = this.target_1;
       H.assertHelper(t1._state === 2);
@@ -6513,19 +5809,14 @@ var $$ = {};
     $isFunction: true
   },
   _Future__propagateToListeners_handleValueCallback: {
-    "^": "Closure:20;box_1,listener_3,sourceValue_4,zone_5",
+    "^": "Closure:21;box_1,listener_3,sourceValue_4,zone_5",
     call$0: function() {
-      var e, s, t1, t2, t3, exception;
+      var e, s, t1, t2, exception;
       try {
-        t1 = this.zone_5;
-        t2 = this.listener_3;
-        t2 = t2._state === 2 ? null : t2._onValueCallback;
-        t3 = H.getDynamicRuntimeType();
-        t3 = H.buildFunctionType(t3, [t3]);
-        t2 = t3._assertCheck$1(t2);
-        t1.toString;
-        t3._assertCheck$1(t2);
-        this.box_1.listenerValueOrError_2 = P._rootRunUnary(t1, null, t1, t2, this.sourceValue_4);
+        t1 = this.listener_3;
+        t1 = t1._state === 2 ? null : t1._onValueCallback;
+        t2 = H.getDynamicRuntimeType();
+        this.box_1.listenerValueOrError_2 = this.zone_5.runUnary$2(H.buildFunctionType(t2, [t2])._assertCheck$1(t1), this.sourceValue_4);
         return true;
       } catch (exception) {
         t1 = H.unwrapException(exception);
@@ -6541,7 +5832,7 @@ var $$ = {};
   _Future__propagateToListeners_handleError: {
     "^": "Closure:2;box_2,box_1,listener_6,zone_7",
     call$0: function() {
-      var asyncError, test, matchesTest, e, s, errorCallback, e0, s0, t1, t2, t3, t4, t5, exception, listenerValueOrError, t6;
+      var asyncError, test, matchesTest, e, s, errorCallback, e0, s0, t1, t2, t3, t4, exception, listenerValueOrError;
       t1 = this.box_2.source_4;
       t2 = t1._state;
       H.assertHelper(t2 >= 4 && t2 === 8);
@@ -6554,12 +5845,7 @@ var $$ = {};
       matchesTest = true;
       if (test != null)
         try {
-          t2 = this.zone_7;
-          t4 = test;
-          t5 = J.get$error$x(asyncError);
-          t2.toString;
-          H.buildFunctionType(t3, [t3])._assertCheck$1(t4);
-          matchesTest = H.boolTypeCheck(P._rootRunUnary(t2, null, t2, t4, t5));
+          matchesTest = H.boolTypeCheck(this.zone_7.runUnary$2(test, J.get$error$x(asyncError)));
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e = t1;
@@ -6577,24 +5863,13 @@ var $$ = {};
       if (H.boolConversionCheck(matchesTest) && errorCallback != null) {
         try {
           t1 = errorCallback;
-          t2 = H.buildFunctionType(t3, [t3, t3]);
-          t4 = t2._isTest$1(t1);
-          t5 = this.zone_7;
-          t6 = this.box_1;
-          if (t4) {
-            t1 = errorCallback;
-            t3 = J.get$error$x(asyncError);
-            t4 = asyncError.get$stackTrace();
-            t5.toString;
-            t2._assertCheck$1(t1);
-            t6.listenerValueOrError_2 = P._rootRunBinary(t5, null, t5, t1, t3, t4);
-          } else {
-            t1 = errorCallback;
-            t2 = J.get$error$x(asyncError);
-            t5.toString;
-            H.buildFunctionType(t3, [t3])._assertCheck$1(t1);
-            t6.listenerValueOrError_2 = P._rootRunUnary(t5, null, t5, t1, t2);
-          }
+          t3 = H.buildFunctionType(t3, [t3, t3])._isTest$1(t1);
+          t2 = this.zone_7;
+          t4 = this.box_1;
+          if (t3)
+            t4.listenerValueOrError_2 = t2.runBinary$3(errorCallback, J.get$error$x(asyncError), asyncError.get$stackTrace());
+          else
+            t4.listenerValueOrError_2 = t2.runUnary$2(errorCallback, J.get$error$x(asyncError));
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e0 = t1;
@@ -6620,18 +5895,13 @@ var $$ = {};
   _Future__propagateToListeners_handleWhenCompleteCallback: {
     "^": "Closure:2;box_2,box_1,hasError_8,listener_9,zone_10",
     call$0: function() {
-      var t1, e, s, t2, t3, t4, exception;
+      var t1, e, s, t2, exception, t3;
       t1 = {};
       t1.completeResult_0 = null;
       try {
-        t2 = this.zone_10;
-        t3 = this.listener_9;
-        t3 = t3._state === 2 ? null : t3._whenCompleteActionCallback;
-        t4 = H.buildFunctionType(H.getDynamicRuntimeType());
-        t3 = t4._assertCheck$1(t3);
-        t2.toString;
-        t4._assertCheck$1(t3);
-        t1.completeResult_0 = P._rootRun(t2, null, t2, t3);
+        t2 = this.listener_9;
+        t2 = t2._state === 2 ? null : t2._whenCompleteActionCallback;
+        t1.completeResult_0 = this.zone_10.run$1(H.buildFunctionType(H.getDynamicRuntimeType())._assertCheck$1(t2));
       } catch (exception) {
         t2 = H.unwrapException(exception);
         e = t2;
@@ -6670,14 +5940,14 @@ var $$ = {};
     $isFunction: true
   },
   _Future__propagateToListeners_handleWhenCompleteCallback_closure: {
-    "^": "Closure:12;box_2,listener_11",
+    "^": "Closure:13;box_2,listener_11",
     call$1: function(ignored) {
       P._Future__propagateToListeners(this.box_2.source_4, this.listener_11);
     },
     $isFunction: true
   },
   _Future__propagateToListeners_handleWhenCompleteCallback_closure0: {
-    "^": "Closure:19;box_0,listener_12",
+    "^": "Closure:20;box_0,listener_12",
     call$2: function(error, stackTrace) {
       var t1, completeResult;
       t1 = this.box_0;
@@ -6743,7 +6013,7 @@ var $$ = {};
     $isFunction: true
   },
   Stream_forEach__closure0: {
-    "^": "Closure:12;",
+    "^": "Closure:13;",
     call$1: function(_) {
     },
     $isFunction: true
@@ -6756,7 +6026,7 @@ var $$ = {};
     $isFunction: true
   },
   Stream_length_closure: {
-    "^": "Closure:12;box_0",
+    "^": "Closure:13;box_0",
     call$1: function(_) {
       ++this.box_0.count_0;
     },
@@ -6787,109 +6057,23 @@ var $$ = {};
     $isFunction: true
   },
   _cancelAndErrorClosure_closure: {
-    "^": "Closure:21;subscription_0,future_1",
+    "^": "Closure:22;subscription_0,future_1",
     call$2: function(error, stackTrace) {
       return P._cancelAndError(this.subscription_0, this.future_1, error, stackTrace);
     },
     $isFunction: true
   },
-  _BaseZone: {
+  _Zone: {
     "^": "Object;",
-    runGuarded$1: function(f) {
-      var e, s, t1, exception;
-      H.buildFunctionType(H.getDynamicRuntimeType())._assertCheck$1(f);
-      try {
-        t1 = this.run$1(f);
-        return t1;
-      } catch (exception) {
-        t1 = H.unwrapException(exception);
-        e = t1;
-        s = new H._StackTrace(exception, null);
-        return this.handleUncaughtError$2(e, s);
-      }
-
-    },
-    runUnaryGuarded$2: function(f, arg) {
-      var e, s, t1, exception;
-      t1 = H.getDynamicRuntimeType();
-      H.buildFunctionType(t1, [t1])._assertCheck$1(f);
-      try {
-        t1 = this.runUnary$2(f, arg);
-        return t1;
-      } catch (exception) {
-        t1 = H.unwrapException(exception);
-        e = t1;
-        s = new H._StackTrace(exception, null);
-        return this.handleUncaughtError$2(e, s);
-      }
-
-    },
-    bindCallback$2$runGuarded: function(f, runGuarded) {
-      var t1, t2;
-      t1 = H.buildFunctionType(H.getDynamicRuntimeType());
-      t2 = t1._assertCheck$1(this.registerCallback$1(t1._assertCheck$1(f)));
-      if (runGuarded)
-        return t1._assertCheck$1(new P._BaseZone_bindCallback_closure(this, t2));
-      else
-        return t1._assertCheck$1(new P._BaseZone_bindCallback_closure0(this, t2));
-    },
-    bindCallback$1: function(f) {
-      return this.bindCallback$2$runGuarded(f, true);
-    },
-    bindUnaryCallback$2$runGuarded: function(f, runGuarded) {
-      var t1, t2;
-      t1 = H.getDynamicRuntimeType();
-      t1 = H.buildFunctionType(t1, [t1]);
-      t2 = t1._assertCheck$1(this.registerUnaryCallback$1(t1._assertCheck$1(f)));
-      if (runGuarded)
-        return t1._assertCheck$1(new P._BaseZone_bindUnaryCallback_closure(this, t2));
-      else
-        return t1._assertCheck$1(new P._BaseZone_bindUnaryCallback_closure0(this, t2));
-    },
     $isZone: true
-  },
-  _BaseZone_bindCallback_closure: {
-    "^": "Closure:0;this_0,registered_1",
-    call$0: function() {
-      return this.this_0.runGuarded$1(this.registered_1);
-    },
-    $isFunction: true
-  },
-  _BaseZone_bindCallback_closure0: {
-    "^": "Closure:0;this_2,registered_3",
-    call$0: function() {
-      return this.this_2.run$1(this.registered_3);
-    },
-    $isFunction: true
-  },
-  _BaseZone_bindUnaryCallback_closure: {
-    "^": "Closure:12;this_0,registered_1",
-    call$1: function(arg) {
-      return this.this_0.runUnaryGuarded$2(this.registered_1, arg);
-    },
-    $isFunction: true
-  },
-  _BaseZone_bindUnaryCallback_closure0: {
-    "^": "Closure:12;this_2,registered_3",
-    call$1: function(arg) {
-      return this.this_2.runUnary$2(this.registered_3, arg);
-    },
-    $isFunction: true
   },
   _rootHandleUncaughtError_closure: {
     "^": "Closure:0;error_0,stackTrace_1",
     call$0: function() {
-      P._scheduleAsyncCallback(new P._rootHandleUncaughtError__closure(this.error_0, this.stackTrace_1));
-    },
-    $isFunction: true
-  },
-  _rootHandleUncaughtError__closure: {
-    "^": "Closure:0;error_2,stackTrace_3",
-    call$0: function() {
       var t1, trace;
-      t1 = this.error_2;
+      t1 = this.error_0;
       P.print("Uncaught Error: " + H.S(t1));
-      trace = this.stackTrace_3;
+      trace = this.stackTrace_1;
       if (trace == null && !!J.getInterceptor(t1).$isError)
         trace = t1.get$stackTrace();
       if (trace != null)
@@ -6899,35 +6083,125 @@ var $$ = {};
     $isFunction: true
   },
   _RootZone: {
-    "^": "_BaseZone;",
-    $index: function(_, key) {
-      return;
+    "^": "_Zone;",
+    get$errorZone: function() {
+      return this;
     },
-    handleUncaughtError$2: function(error, stackTrace) {
-      return P._rootHandleUncaughtError(this, null, this, error, stackTrace);
+    runGuarded$1: function(f) {
+      var e, s, t1, exception;
+      H.buildFunctionType(H.getDynamicRuntimeType())._assertCheck$1(f);
+      try {
+        if (C.C__RootZone === $.Zone__current) {
+          t1 = f.call$0();
+          return t1;
+        }
+        t1 = P._rootRun(null, null, this, f);
+        return t1;
+      } catch (exception) {
+        t1 = H.unwrapException(exception);
+        e = t1;
+        s = new H._StackTrace(exception, null);
+        t1 = s;
+        H.interceptedTypeCheck(t1, "$isStackTrace");
+        return P._rootHandleUncaughtError(null, null, this, e, t1);
+      }
+
     },
-    run$1: function(f) {
-      return P._rootRun(this, null, this, H.buildFunctionType(H.getDynamicRuntimeType())._assertCheck$1(f));
+    runUnaryGuarded$2: function(f, arg) {
+      var e, s, t1, exception;
+      t1 = H.getDynamicRuntimeType();
+      H.buildFunctionType(t1, [t1])._assertCheck$1(f);
+      try {
+        if (C.C__RootZone === $.Zone__current) {
+          t1 = f.call$1(arg);
+          return t1;
+        }
+        t1 = P._rootRunUnary(null, null, this, f, arg);
+        return t1;
+      } catch (exception) {
+        t1 = H.unwrapException(exception);
+        e = t1;
+        s = new H._StackTrace(exception, null);
+        t1 = s;
+        H.interceptedTypeCheck(t1, "$isStackTrace");
+        return P._rootHandleUncaughtError(null, null, this, e, t1);
+      }
+
     },
-    runUnary$2: function(f, arg) {
-      var t1 = H.getDynamicRuntimeType();
-      return P._rootRunUnary(this, null, this, H.buildFunctionType(t1, [t1])._assertCheck$1(f), arg);
-    },
-    registerCallback$1: function(f) {
+    bindCallback$2$runGuarded: function(f, runGuarded) {
       var t1, t2;
       t1 = H.buildFunctionType(H.getDynamicRuntimeType());
       t2 = t1._assertCheck$1(f);
-      t1._assertCheck$1(t2);
-      return t1._assertCheck$1(t1._assertCheck$1(t2));
+      if (runGuarded)
+        return t1._assertCheck$1(new P._RootZone_bindCallback_closure(this, t2));
+      else
+        return t1._assertCheck$1(new P._RootZone_bindCallback_closure0(this, t2));
     },
-    registerUnaryCallback$1: function(f) {
+    bindCallback$1: function(f) {
+      return this.bindCallback$2$runGuarded(f, true);
+    },
+    bindUnaryCallback$2$runGuarded: function(f, runGuarded) {
       var t1, t2;
       t1 = H.getDynamicRuntimeType();
       t1 = H.buildFunctionType(t1, [t1]);
       t2 = t1._assertCheck$1(f);
-      t1._assertCheck$1(t2);
-      return t1._assertCheck$1(t1._assertCheck$1(t2));
-    }
+      if (runGuarded)
+        return t1._assertCheck$1(new P._RootZone_bindUnaryCallback_closure(this, t2));
+      else
+        return t1._assertCheck$1(new P._RootZone_bindUnaryCallback_closure0(this, t2));
+    },
+    $index: function(_, key) {
+      return;
+    },
+    run$1: function(f) {
+      var t1 = H.buildFunctionType(H.getDynamicRuntimeType())._assertCheck$1(f);
+      if ($.Zone__current === C.C__RootZone)
+        return t1.call$0();
+      return P._rootRun(null, null, this, t1);
+    },
+    runUnary$2: function(f, arg) {
+      var t1 = H.getDynamicRuntimeType();
+      t1 = H.buildFunctionType(t1, [t1])._assertCheck$1(f);
+      if ($.Zone__current === C.C__RootZone)
+        return t1.call$1(arg);
+      return P._rootRunUnary(null, null, this, t1, arg);
+    },
+    runBinary$3: function(f, arg1, arg2) {
+      var t1 = H.getDynamicRuntimeType();
+      t1 = H.buildFunctionType(t1, [t1, t1])._assertCheck$1(f);
+      if ($.Zone__current === C.C__RootZone)
+        return t1.call$2(arg1, arg2);
+      return P._rootRunBinary(null, null, this, t1, arg1, arg2);
+    },
+    static: {"^": "_RootZone__rootMap,_RootZone__rootDelegate"}
+  },
+  _RootZone_bindCallback_closure: {
+    "^": "Closure:0;this_0,f_1",
+    call$0: function() {
+      return this.this_0.runGuarded$1(this.f_1);
+    },
+    $isFunction: true
+  },
+  _RootZone_bindCallback_closure0: {
+    "^": "Closure:0;this_2,f_3",
+    call$0: function() {
+      return this.this_2.run$1(this.f_3);
+    },
+    $isFunction: true
+  },
+  _RootZone_bindUnaryCallback_closure: {
+    "^": "Closure:13;this_0,f_1",
+    call$1: function(arg) {
+      return this.this_0.runUnaryGuarded$2(this.f_1, arg);
+    },
+    $isFunction: true
+  },
+  _RootZone_bindUnaryCallback_closure0: {
+    "^": "Closure:13;this_2,f_3",
+    call$1: function(arg) {
+      return this.this_2.runUnary$2(this.f_3, arg);
+    },
+    $isFunction: true
   }
 }],
 ["dart.collection", "dart:collection", , P, {
@@ -7319,7 +6593,7 @@ var $$ = {};
       }}
   },
   _HashMap_values_closure: {
-    "^": "Closure:12;this_0",
+    "^": "Closure:13;this_0",
     call$1: function(each) {
       return this.this_0.$index(0, each);
     },
@@ -7618,7 +6892,7 @@ var $$ = {};
       }}
   },
   _LinkedHashMap_values_closure: {
-    "^": "Closure:12;this_0",
+    "^": "Closure:13;this_0",
     call$1: function(each) {
       return this.this_0.$index(0, each);
     },
@@ -8043,7 +7317,7 @@ var $$ = {};
     $asIterable: null
   },
   Maps_mapToString_closure: {
-    "^": "Closure:13;box_0,result_1",
+    "^": "Closure:14;box_0,result_1",
     call$2: function(k, v) {
       var t1 = this.box_0;
       if (!t1.first_0)
@@ -8292,7 +7566,7 @@ var $$ = {};
     H.printString(line);
   },
   NoSuchMethodError_toString_closure: {
-    "^": "Closure:22;box_0",
+    "^": "Closure:23;box_0",
     call$2: function(key, value) {
       var t1, t2;
       H.interceptedTypeCheck(key, "$isSymbol");
@@ -8401,7 +7675,7 @@ var $$ = {};
       }}
   },
   Duration_toString_sixDigits: {
-    "^": "Closure:23;",
+    "^": "Closure:24;",
     call$1: function(n) {
       if (n >= 100000)
         return "" + n;
@@ -8418,7 +7692,7 @@ var $$ = {};
     $isFunction: true
   },
   Duration_toString_twoDigits: {
-    "^": "Closure:23;",
+    "^": "Closure:24;",
     call$1: function(n) {
       if (n >= 10)
         return "" + n;
@@ -8466,53 +7740,6 @@ var $$ = {};
         return new P.RangeError("value " + H.S(H.numTypeCheck(value)));
       }, RangeError$range: function(value, start, end) {
         return new P.RangeError("value " + value + " not in range " + start + ".." + H.S(end));
-      }}
-  },
-  NoSuchMethodError: {
-    "^": "Error;_core$_receiver,_memberName,_core$_arguments,_namedArguments,_existingArgumentNames",
-    toString$0: function(_) {
-      var t1, t2, t3, t4, t5, str, actualParameters, i, formalParameters;
-      t1 = {};
-      t1.sb_0 = P.StringBuffer$("");
-      t1.i_1 = 0;
-      t2 = this._core$_arguments;
-      if (t2 != null)
-        for (t3 = J.getInterceptor$asx(t2), t4 = 0; t4 < t3.get$length(t2); t4 = ++t1.i_1) {
-          t4 = t1.i_1;
-          if (t4 > 0) {
-            t5 = t1.sb_0;
-            t5._contents += ", ";
-          }
-          t5 = t1.sb_0;
-          str = P.Error_safeToString(t3.$index(t2, t4));
-          t5._contents += typeof str === "string" ? str : H.S(str);
-        }
-      this._namedArguments.forEach$1(0, new P.NoSuchMethodError_toString_closure(t1));
-      t2 = this._existingArgumentNames;
-      if (t2 == null)
-        return "NoSuchMethodError : method not found: '" + ("Symbol(\"" + H.S(this._memberName._name) + "\")") + "'\nReceiver: " + H.S(P.Error_safeToString(this._core$_receiver)) + "\nArguments: [" + t1.sb_0._contents + "]";
-      else {
-        actualParameters = t1.sb_0._contents;
-        t1.sb_0 = P.StringBuffer$("");
-        for (t3 = J.getInterceptor$asx(t2), i = 0; i < t3.get$length(t2); ++i) {
-          if (i > 0) {
-            t4 = t1.sb_0;
-            t4._contents += ", ";
-          }
-          t4 = t1.sb_0;
-          str = t3.$index(t2, i);
-          t4._contents += H.stringTypeCheck(typeof str === "string" ? str : H.S(str));
-        }
-        formalParameters = t1.sb_0._contents;
-        t1 = this._memberName._name;
-        return "NoSuchMethodError: incorrect number of arguments passed to method named '" + ("Symbol(\"" + H.S(t1) + "\")") + "'\nReceiver: " + H.S(P.Error_safeToString(this._core$_receiver)) + "\nTried calling: " + ("Symbol(\"" + H.S(t1) + "\")") + "(" + actualParameters + ")\nFound: " + ("Symbol(\"" + H.S(t1) + "\")") + "(" + formalParameters + ")";
-      }
-    },
-    static: {NoSuchMethodError$: function(receiver, memberName, positionalArguments, namedArguments, existingArgumentNames) {
-        H.listTypeCheck(positionalArguments);
-        H.assertSubtype(namedArguments, "$isMap", [P.Symbol, null], "$asMap");
-        H.listTypeCheck(existingArgumentNames);
-        return new P.NoSuchMethodError(receiver, memberName, positionalArguments, H.assertSubtype(namedArguments, "$isMap", [P.Symbol, null], "$asMap"), existingArgumentNames);
       }}
   },
   UnsupportedError: {
@@ -8841,7 +8068,7 @@ var $$ = {};
       return receiver.preventDefault();
     },
     $isEvent: true,
-    "%": "AudioProcessingEvent|AutocompleteErrorEvent|BeforeLoadEvent|BeforeUnloadEvent|CSSFontFaceLoadEvent|CloseEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|HashChangeEvent|IDBVersionChangeEvent|InstallEvent|InstallPhaseEvent|MIDIConnectionEvent|MIDIMessageEvent|MediaKeyEvent|MediaKeyMessageEvent|MediaKeyNeededEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MutationEvent|OfflineAudioCompletionEvent|OverflowEvent|PageTransitionEvent|PopStateEvent|ProgressEvent|RTCDTMFToneChangeEvent|RTCDataChannelEvent|RTCIceCandidateEvent|ResourceProgressEvent|SecurityPolicyViolationEvent|SpeechInputEvent|SpeechRecognitionEvent|SpeechSynthesisEvent|StorageEvent|TrackEvent|TransitionEvent|WebGLContextEvent|WebKitAnimationEvent|WebKitTransitionEvent|XMLHttpRequestProgressEvent;Event"
+    "%": "AudioProcessingEvent|AutocompleteErrorEvent|BeforeLoadEvent|BeforeUnloadEvent|CSSFontFaceLoadEvent|CloseEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|HashChangeEvent|IDBVersionChangeEvent|InstallEvent|InstallPhaseEvent|MIDIConnectionEvent|MIDIMessageEvent|MediaKeyEvent|MediaKeyMessageEvent|MediaKeyNeededEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MutationEvent|OfflineAudioCompletionEvent|OverflowEvent|PageTransitionEvent|PopStateEvent|ProgressEvent|RTCDTMFToneChangeEvent|RTCDataChannelEvent|RTCIceCandidateEvent|ResourceProgressEvent|SecurityPolicyViolationEvent|SpeechInputEvent|SpeechRecognitionEvent|SpeechSynthesisEvent|StorageEvent|TrackEvent|TransitionEvent|WebGLContextEvent|WebKitAnimationEvent|WebKitTransitionEvent|XMLHttpRequestProgressEvent;Event|InputEvent"
   },
   EventTarget: {
     "^": "Interceptor;",
@@ -9439,11 +8666,6 @@ var $$ = {};
     $isProgram: true,
     "%": "WebGLProgram"
   },
-  Renderbuffer: {
-    "^": "Interceptor;",
-    $isRenderbuffer: true,
-    "%": "WebGLRenderbuffer"
-  },
   RenderingContext: {
     "^": "CanvasRenderingContext;",
     activeTexture$1: function(receiver, texture) {
@@ -9458,11 +8680,17 @@ var $$ = {};
     bindFramebuffer$2: function(receiver, target, framebuffer) {
       return receiver.bindFramebuffer(target, framebuffer);
     },
+    bindTexture$2: function(receiver, target, texture) {
+      return receiver.bindTexture(target, H.interceptedTypeCheck(texture, "$isTexture0"));
+    },
     blendFunc$2: function(receiver, sfactor, dfactor) {
       return receiver.blendFunc(sfactor, dfactor);
     },
     bufferData$3: function(receiver, target, data_OR_size, usage) {
       return receiver.bufferData(target, data_OR_size, usage);
+    },
+    bufferSubData$3: function(receiver, target, offset, data) {
+      return receiver.bufferSubData(target, offset, data);
     },
     clear$1: function(receiver, mask) {
       return receiver.clear(mask);
@@ -9487,6 +8715,9 @@ var $$ = {};
     },
     disableVertexAttribArray$1: function(receiver, index) {
       return receiver.disableVertexAttribArray(index);
+    },
+    drawElements$4: function(receiver, mode, count, type, offset) {
+      return receiver.drawElements(mode, count, type, offset);
     },
     enable$1: function(receiver, cap) {
       return receiver.enable(cap);
@@ -9543,7 +8774,7 @@ var $$ = {};
     },
     $isRenderingContext: true,
     "%": "WebGLRenderingContext",
-    static: {"^": "RenderingContext_ARRAY_BUFFER<,RenderingContext_CLAMP_TO_EDGE<,RenderingContext_COLOR_ATTACHMENT0<,RenderingContext_DEPTH_STENCIL_ATTACHMENT<,RenderingContext_FRAMEBUFFER<,RenderingContext_KEEP<,RenderingContext_LINEAR<,RenderingContext_NEAREST<,RenderingContext_RENDERBUFFER<,RenderingContext_STENCIL_TEST<,RenderingContext_TEXTURE_2D<,RenderingContext_TEXTURE_MAG_FILTER<,RenderingContext_TEXTURE_MIN_FILTER<,RenderingContext_TEXTURE_WRAP_S<,RenderingContext_TEXTURE_WRAP_T<"}
+    static: {"^": "RenderingContext_DEPTH_TEST<"}
   },
   Shader: {
     "^": "Interceptor;",
@@ -9978,7 +9209,7 @@ var $$ = {};
     return object;
   },
   convertDartToNative_Dictionary_closure: {
-    "^": "Closure:24;object_0",
+    "^": "Closure:25;object_0",
     call$2: function(key, value) {
       this.object_0[H.stringTypeCheck(key)] = value;
     },
@@ -10014,11 +9245,12 @@ $$ = null;
   _ = P.Duration;
   _.$isDuration = TRUE;
   _.$isObject = TRUE;
+  _ = M.Texture;
+  _.$isTexture = TRUE;
+  _.$isBaseTexture = TRUE;
+  _.$isObject = TRUE;
   _ = W.Event;
   _.$isEvent = TRUE;
-  _.$isObject = TRUE;
-  _ = P.Symbol;
-  _.$isSymbol = TRUE;
   _.$isObject = TRUE;
   _ = H.RawReceivePortImpl;
   _.$isRawReceivePortImpl = TRUE;
@@ -10028,6 +9260,9 @@ $$ = null;
   _.$isObject = TRUE;
   _ = H._IsolateContext;
   _.$is_IsolateContext = TRUE;
+  _.$isObject = TRUE;
+  _ = P.Symbol;
+  _.$isSymbol = TRUE;
   _.$isObject = TRUE;
   _ = P.bool;
   _.$isbool = TRUE;
@@ -10051,6 +9286,9 @@ $$ = null;
   _ = W.Element;
   _.$isElement = TRUE;
   _.$isNode = TRUE;
+  _.$isObject = TRUE;
+  _ = M.PixiEvent;
+  _.$isPixiEvent = TRUE;
   _.$isObject = TRUE;
   _ = P.UniformLocation;
   _.$isUniformLocation = TRUE;
@@ -10173,9 +9411,6 @@ J.append$1$x = function(receiver, a0) {
 J.blendFunc$2$x = function(receiver, a0, a1) {
   return J.getInterceptor$x(receiver).blendFunc$2(receiver, a0, a1);
 };
-J.colorMask$4$x = function(receiver, a0, a1, a2, a3) {
-  return J.getInterceptor$x(receiver).colorMask$4(receiver, a0, a1, a2, a3);
-};
 J.contains$1$asx = function(receiver, a0) {
   return J.getInterceptor$asx(receiver).contains$1(receiver, a0);
 };
@@ -10184,39 +9419,6 @@ J.deleteTexture$1$x = function(receiver, a0) {
 };
 J.forEach$1$ax = function(receiver, a0) {
   return J.getInterceptor$ax(receiver).forEach$1(receiver, a0);
-};
-J.get$CLAMP_TO_EDGE$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$CLAMP_TO_EDGE(receiver);
-};
-J.get$COLOR_ATTACHMENT0$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$COLOR_ATTACHMENT0(receiver);
-};
-J.get$DEPTH_STENCIL_ATTACHMENT$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$DEPTH_STENCIL_ATTACHMENT(receiver);
-};
-J.get$LINEAR$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$LINEAR(receiver);
-};
-J.get$NEAREST$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$NEAREST(receiver);
-};
-J.get$RENDERBUFFER$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$RENDERBUFFER(receiver);
-};
-J.get$TEXTURE_2D$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$TEXTURE_2D(receiver);
-};
-J.get$TEXTURE_MAG_FILTER$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$TEXTURE_MAG_FILTER(receiver);
-};
-J.get$TEXTURE_MIN_FILTER$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$TEXTURE_MIN_FILTER(receiver);
-};
-J.get$TEXTURE_WRAP_S$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$TEXTURE_WRAP_S(receiver);
-};
-J.get$TEXTURE_WRAP_T$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$TEXTURE_WRAP_T(receiver);
 };
 J.get$error$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$error(receiver);
@@ -10437,7 +9639,6 @@ C.blendModes_7 = new M.blendModes(7);
 C.blendModes_8 = new M.blendModes(8);
 C.blendModes_9 = new M.blendModes(9);
 C.scaleModes_0 = new M.scaleModes(0);
-C.scaleModes_1 = new M.scaleModes(1);
 $.libraries_to_load = {};
 $.defaultRenderer = null;
 $.blendModesWebGL = null;
@@ -10577,6 +9778,7 @@ init.metadata = [{func: "args0"},
 {func: "int__Object", ret: P.$int, args: [P.Object]},
 {func: "void__UniformLocation_bool_Float32List", void: true, args: [P.UniformLocation, P.bool, P.Float32List]},
 {func: "bool__num_num", ret: P.bool, args: [P.num, P.num]},
+{func: "dynamic__PixiEvent", args: [M.PixiEvent]},
 {func: "dynamic__MouseEvent", args: [W.MouseEvent]},
 {func: "void__MouseEvent", void: true, args: [W.MouseEvent]},
 {func: "void__TouchEvent", void: true, args: [W.TouchEvent]},

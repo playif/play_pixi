@@ -62,26 +62,28 @@ class WebGLRenderer extends Renderer {
     //window.console.log(gl);
 
     if (blendModesWebGL == null) {
+
+      //TODO improve the performance
       blendModesWebGL = {
       };
 
-      blendModesWebGL[blendModes.NORMAL] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.ADD] = [RenderingContext.SRC_ALPHA, RenderingContext.DST_ALPHA];
-      blendModesWebGL[blendModes.MULTIPLY] = [RenderingContext.DST_COLOR, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.SCREEN] = [RenderingContext.SRC_ALPHA, RenderingContext.ONE];
-      blendModesWebGL[blendModes.OVERLAY] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.DARKEN] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.LIGHTEN] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.COLOR_DODGE] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.COLOR_BURN] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.HARD_LIGHT] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.SOFT_LIGHT] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.DIFFERENCE] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.EXCLUSION] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.HUE] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.SATURATION] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.COLOR] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.LUMINOSITY] = [RenderingContext.ONE, RenderingContext.ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.NORMAL] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.ADD] = [SRC_ALPHA, DST_ALPHA];
+      blendModesWebGL[blendModes.MULTIPLY] = [DST_COLOR, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.SCREEN] = [SRC_ALPHA, ONE];
+      blendModesWebGL[blendModes.OVERLAY] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.DARKEN] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.LIGHTEN] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.COLOR_DODGE] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.COLOR_BURN] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.HARD_LIGHT] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.SOFT_LIGHT] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.DIFFERENCE] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.EXCLUSION] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.HUE] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.SATURATION] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.COLOR] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[blendModes.LUMINOSITY] = [ONE, ONE_MINUS_SRC_ALPHA];
     }
 
 

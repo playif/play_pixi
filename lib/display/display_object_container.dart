@@ -9,11 +9,11 @@ class DisplayObjectContainer extends DisplayObject {
   DisplayObjectContainer() {
   }
 
-  void addChild(child) {
+  void addChild(DisplayObject child) {
     addChildAt(child, children.length);
   }
 
-  void addChildAt(DisplayObject child, index) {
+  void addChildAt(DisplayObject child, int index) {
     if (index >= 0 && index <= children.length) {
       if (child.parent) {
         child.parent.removeChild(child);
@@ -31,13 +31,13 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
 
-  void swapChildren(child, child2) {
+  void swapChildren(DisplayObject child,DisplayObject child2) {
     if (child == child2) {
       return;
     }
 
-    var index1 = children.indexOf(child);
-    var index2 = children.indexOf(child2);
+    int index1 = children.indexOf(child);
+    int index2 = children.indexOf(child2);
 
     if (index1 < 0 || index2 < 0) {
       throw new Exception('swapChildren: Both the supplied DisplayObjects must be a child of the caller.');
@@ -48,7 +48,7 @@ class DisplayObjectContainer extends DisplayObject {
 
   }
 
-  getChildAt(index) {
+  getChildAt(int index) {
     if (index >= 0 && index < children.length) {
       return children[index];
     }
@@ -57,11 +57,11 @@ class DisplayObjectContainer extends DisplayObject {
     }
   }
 
-  removeChild(child) {
+  removeChild(DisplayObject child) {
     return removeChildAt(children.indexOf(child));
   }
 
-  removeChildAt(index) {
+  removeChildAt(int index) {
     var child = getChildAt(index);
     if (stage != null)
       child.removeStageReference();
@@ -94,11 +94,11 @@ class DisplayObjectContainer extends DisplayObject {
   updateTransform() {
     //this._currentBounds = null;
 
-    if (!this.visible)return;
+    if (!this.visible) return;
 
     super.updateTransform();
 
-    if (this._cacheAsBitmap)return;
+    if (this._cacheAsBitmap) return;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
       this.children[i].updateTransform();

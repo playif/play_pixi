@@ -11,8 +11,8 @@ class WebGLFastSpriteBatch {
   Float32List vertices = new Float32List(numVerts);
   Uint16List indices = new Uint16List(numIndices);
 
-  var vertexBuffer = null;
-  var indexBuffer = null;
+  Buffer vertexBuffer = null;
+  Buffer indexBuffer = null;
 
   int lastIndexCount = 0;
 

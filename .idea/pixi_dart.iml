@@ -3,7 +3,9 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/packages/pixi_dart" />
-      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_1_basics/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_01_basics/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_02_SpriteSheet/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_02_SpriteSheet/tp/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/packages" />
     </content>

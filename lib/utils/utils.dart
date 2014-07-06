@@ -8,7 +8,7 @@ List rgb2hex(rgb) {
   return ((rgb[0] * 255 << 16) + (rgb[1] * 255 << 8) + rgb[2] * 255);
 }
 
-AjaxRequest() {
+HttpRequest AjaxRequest() {
   return new HttpRequest();
 //  List<String> activexmodes = ['Msxml2.XMLHTTP.6.0', 'Msxml2.XMLHTTP.3.0', 'Microsoft.XMLHTTP']; //activeX versions to check for in IE
 //

@@ -57,9 +57,10 @@ class Sprite extends DisplayObjectContainer {
   }
 
   onTextureUpdate(PixiEvent e) {
+    //print('update');
     // so if _width is 0 then width was not set..
-    if (this._width)this.scale.x = this._width / this.texture.frame.width;
-    if (this._height)this.scale.y = this._height / this.texture.frame.height;
+    if (this._width == 0) this.scale.x = this._width / this.texture.frame.width;
+    if (this._height == 0) this.scale.y = this._height / this.texture.frame.height;
 
 
     this.updateFrame = true;
@@ -194,38 +195,39 @@ class Sprite extends DisplayObjectContainer {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if (this.visible == false || this.alpha == 0)return;
 
-    var frame = this.texture.frame;
-    var context = renderSession.context;
-    var texture = this.texture;
+    Rectangle frame = this.texture.frame;
+    CanvasRenderingContext2D context = renderSession.context;
+    Texture texture = this.texture;
 
     if (this.blendMode != renderSession.currentBlendMode) {
       renderSession.currentBlendMode = this.blendMode;
       context.globalCompositeOperation = blendModesCanvas[renderSession.currentBlendMode];
     }
 
-    if (this._mask) {
+    if (this._mask != null) {
       renderSession.maskManager.pushMask(this._mask, renderSession.context);
     }
 
 
     //ignore null sources
-    if (frame && frame.width && frame.height && texture.baseTexture.source) {
+    if (frame != null && frame.width != 0 && frame.height != 0 && texture.baseTexture.source != null) {
       context.globalAlpha = this.worldAlpha;
 
-      var transform = this.worldTransform;
+      Matrix transform = this.worldTransform;
 
       // allow for trimming
-      if (renderSession.roundPixels) {
+      if (renderSession.roundPixels != null) {
         context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx | 0, transform.ty | 0);
       }
       else {
         context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
       }
 
+
       //if smoothingEnabled is supported and we need to change the smoothing property for this texture
-      if (renderSession.smoothProperty && renderSession.scaleMode != this.texture.baseTexture.scaleMode) {
+      if (renderSession.scaleMode != this.texture.baseTexture.scaleMode) {
         renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-        context[renderSession.smoothProperty] = (renderSession.scaleMode == scaleModes.LINEAR);
+        context.imageSmoothingEnabled = (renderSession.scaleMode == scaleModes.LINEAR);
       }
 
       if (this.tint != 0xFFFFFF) {
@@ -241,7 +243,7 @@ class Sprite extends DisplayObjectContainer {
 
         }
 
-        context.drawImage(this.tintedTexture,
+        context.drawImageScaledFromSource(this.tintedTexture,
         0,
         0,
         frame.width,
@@ -257,7 +259,7 @@ class Sprite extends DisplayObjectContainer {
         if (texture.trim != null) {
           Rectangle trim = texture.trim;
 
-          context.drawImage(this.texture.baseTexture.source,
+          context.drawImageScaledFromSource(this.texture.baseTexture.source,
           frame.x,
           frame.y,
           frame.width,
@@ -269,7 +271,7 @@ class Sprite extends DisplayObjectContainer {
         }
         else {
 
-          context.drawImage(this.texture.baseTexture.source,
+          context.drawImageScaledFromSource(this.texture.baseTexture.source,
           frame.x,
           frame.y,
           frame.width,
@@ -295,15 +297,13 @@ class Sprite extends DisplayObjectContainer {
   }
 
 
-  factory Sprite.fromFrame(String frameId)
-  {
+  static Sprite fromFrame(String frameId) {
     var texture = TextureCache[frameId];
-    if (!texture) throw new Exception('The frameId "$frameId" does not exist in the texture cache ${this.toString()}');
+    if (texture == null) throw new Exception('The frameId "$frameId" does not exist in the texture cache.');
     return new Sprite(texture);
   }
 
-  factory Sprite.fromImage(String imageId, bool crossorigin, scaleModes scaleMode)
-  {
+  static Sprite fromImage(String imageId, bool crossorigin, scaleModes scaleMode) {
     var texture = new Texture.fromImage(imageId, crossorigin, scaleMode);
     return new Sprite(texture);
   }

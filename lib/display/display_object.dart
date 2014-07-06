@@ -145,7 +145,7 @@ class DisplayObject {
       this._sr = sin(this.rotation);
       this._cr = cos(this.rotation);
     }
-
+  //print("updated");
 
     Matrix parentTransform = this.parent.worldTransform;
     Matrix worldTransform = this.worldTransform;
@@ -182,12 +182,12 @@ class DisplayObject {
     return this.getBounds(IdentityMatrix);
   }
 
-  setStageReference(stage) {
+  setStageReference(Stage stage) {
     this.stage = stage;
     if (this._interactive)this.stage.dirty = true;
   }
 
-  generateTexture(renderer) {
+  generateTexture(Renderer renderer) {
     var bounds = this.getLocalBounds();
 
     var renderTexture = new RenderTexture(bounds.width | 0, bounds.height | 0, renderer);
@@ -252,7 +252,7 @@ class DisplayObject {
     this._cachedSprite = null;
   }
 
-  void _renderWebGL(renderSession) {
+  void _renderWebGL(RenderSession renderSession) {
 
     // OVERWRITE;
     // this line is just here to pass jshinting :)

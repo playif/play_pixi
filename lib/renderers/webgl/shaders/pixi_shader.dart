@@ -194,6 +194,7 @@ class PixiShader {
   }
 
   initSampler2D(uniform) {
+
     if (!uniform.value || !uniform.value.baseTexture || !uniform.value.baseTexture.hasLoaded) {
       return;
     }

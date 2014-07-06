@@ -1,6 +1,8 @@
 part of PIXI;
 
 class RenderSession {
+
+
   RenderingContext gl;
   Point projection;
   Point offset;
@@ -12,5 +14,10 @@ class RenderSession {
   Renderer renderer;
 
   blendModes currentBlendMode;
+  scaleModes scaleMode;
+  //String smoothProperty;
 
+  CanvasRenderingContext2D context;
+
+  var roundPixels = null;
 }
