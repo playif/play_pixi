@@ -30,7 +30,8 @@
         var stage = new PIXI.Stage(0xFFFFFF);
 
         // create a renderer instance.
-        var renderer = PIXI.autoDetectRenderer(800, 600);
+        //var renderer = PIXI.autoDetectRenderer(800, 600);
+        var renderer =  new PIXI.CanvasRenderer(400, 300);
 
         // add the renderer view element to the DOM
         document.body.append(renderer.view);
@@ -69,7 +70,6 @@
             // add a bunch of aliens with textures from image paths
             for (var i = 0; i < 100; i++) {
                 var frameName = alienFrames[i % 4];
-
                 // create an alien using the frame name..
                 var alien = PIXI.Sprite.fromFrame(frameName);
                 alien.tint = random.nextInt(0xFFFFFF);

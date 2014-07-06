@@ -235,7 +235,7 @@ class WebGLSpriteBatch {
 
     // get the tilingSprites current alpha
     var alpha = tilingSprite.worldAlpha;
-    var tint = tilingSprite.tint;
+    var tint = tilingSprite.tint.toDouble();
 
     var verticies = this.vertices;
 

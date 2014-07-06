@@ -7,6 +7,7 @@ class Sprite extends DisplayObjectContainer {
   bool textureChange = false;
   num _width = 0, _height = 0;
   TextureUvs _uvs = null;
+  Texture tintedTexture;
 
   num get width => scale.x * texture.frame.width;
 
@@ -23,7 +24,7 @@ class Sprite extends DisplayObjectContainer {
   }
 
   num tint = 16777215.0;
-  int cachedTint;
+  num cachedTint;
 
 //  bool renderable = true;
 
@@ -59,8 +60,8 @@ class Sprite extends DisplayObjectContainer {
   onTextureUpdate(PixiEvent e) {
     //print('update');
     // so if _width is 0 then width was not set..
-    if (this._width == 0) this.scale.x = this._width / this.texture.frame.width;
-    if (this._height == 0) this.scale.y = this._height / this.texture.frame.height;
+    if (this._width != 0) this.scale.x = this._width / this.texture.frame.width;
+    if (this._height != 0) this.scale.y = this._height / this.texture.frame.height;
 
 
     this.updateFrame = true;
@@ -195,6 +196,7 @@ class Sprite extends DisplayObjectContainer {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if (this.visible == false || this.alpha == 0)return;
 
+
     Rectangle frame = this.texture.frame;
     CanvasRenderingContext2D context = renderSession.context;
     Texture texture = this.texture;
@@ -217,7 +219,7 @@ class Sprite extends DisplayObjectContainer {
 
       // allow for trimming
       if (renderSession.roundPixels != null) {
-        context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx | 0, transform.ty | 0);
+        context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());
       }
       else {
         context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
@@ -270,7 +272,7 @@ class Sprite extends DisplayObjectContainer {
           frame.height);
         }
         else {
-
+          //window.console.log(this.texture.baseTexture.source);
           context.drawImageScaledFromSource(this.texture.baseTexture.source,
           frame.x,
           frame.y,

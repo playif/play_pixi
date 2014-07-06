@@ -1,11 +1,12 @@
 part of PIXI;
 
-List hex2rgb(hex) {
+List<num> hex2rgb(int hex) {
   return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF) / 255];
 }
 
-List rgb2hex(rgb) {
-  return ((rgb[0] * 255 << 16) + (rgb[1] * 255 << 8) + rgb[2] * 255);
+int rgb2hex(List<num> rgb) {
+
+  return (((rgb[0] * 255).floor() << 16) + ((rgb[1] * 255).floor() << 8) + rgb[2] * 255);
 }
 
 HttpRequest AjaxRequest() {

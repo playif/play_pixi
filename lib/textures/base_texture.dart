@@ -30,6 +30,8 @@ class BaseTexture extends EventTarget {
 
   EventFunc onLoaded;
 
+
+
   BaseTexture([ImageElement this.source, this.scaleMode=scaleModes.DEFAULT]) {
 
     if (source == null)return;

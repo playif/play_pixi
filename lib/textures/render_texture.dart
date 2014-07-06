@@ -14,6 +14,7 @@ class RenderTexture extends Texture{
   Point projection;
 
 
+
   Matrix tempMatrix=new Matrix();
 
   RenderTexture([num this.width=100, num this.height=100, this.renderer = defaultRenderer, scaleModes this.scaleMode=scaleModes.DEFAULT]) {

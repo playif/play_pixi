@@ -20,6 +20,8 @@ class Texture extends BaseTexture {
 
   Render render;
 
+  Map tintCache;
+
   Texture(BaseTexture baseTexture, [this.frame]) {
 
     scope = this;

@@ -16,6 +16,7 @@
 
 <script type="application/dart">
     import "dart:html";
+    import "dart:math";
     import "package:pixi_dart/pixi.dart" as PIXI;
 
     main() {
@@ -23,9 +24,9 @@
         var stage = new PIXI.Stage(0x660099);
 
         // create a renderer instance
-        //var renderer =  new PIXI.CanvasRenderer(400, 300);
+        var renderer =  new PIXI.CanvasRenderer(400, 300);
         //var renderer = new PIXI.WebGLRenderer(400, 300);
-        var renderer = PIXI.autoDetectRenderer(400, 300);
+        //var renderer = PIXI.autoDetectRenderer(400, 300);
 
         // add the renderer view element to the DOM
         document.body.append(renderer.view);
@@ -36,6 +37,9 @@
         //window.console.log(texture.baseTexture);
         // create a new Sprite using the texture
         var bunny = new PIXI.Sprite(texture);
+
+        Random random = new Random();
+        //bunny.tint = random.nextInt(0xFFFFFF);
 
         // center the sprites anchor point
         bunny.anchor.x = 0.5;
