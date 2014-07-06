@@ -3,6 +3,7 @@ part of PIXI;
 
 class DisplayObjectContainer extends DisplayObject {
   final List<DisplayObject> children = [];
+
 //  Stage stage = null;
 //  bool visible = true;
 
@@ -31,7 +32,7 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
 
-  void swapChildren(DisplayObject child,DisplayObject child2) {
+  void swapChildren(DisplayObject child, DisplayObject child2) {
     if (child == child2) {
       return;
     }
@@ -77,11 +78,12 @@ class DisplayObjectContainer extends DisplayObject {
     int range = end - begin;
 
     if (range > 0 && range <= end) {
-      var removed = children.removeRange(begin, range);
-      for (var i = 0; i < removed.length; i++) {
-        var child = removed[i];
-        if (stage != null)
-          child.removeStageReference();
+      var removed = children.getRange(begin, range);
+      children.removeRange(begin, range);
+      for (DisplayObject child in removed) {
+        child.stage = null;
+        //if (stage != null)
+        //  child.removeStageReference();
         child.parent = null;
       }
       return removed;

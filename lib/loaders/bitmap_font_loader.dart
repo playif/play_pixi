@@ -16,30 +16,29 @@ class BitmapFontLoader extends Loader {
 
   load() {
     this.ajaxRequest = AjaxRequest();
-    this.ajaxRequest.onReadyStateChange.listen((e) {
-      this.onXMLLoaded();
-    });
+    this.ajaxRequest.onReadyStateChange.listen(onXMLLoaded);
 
     this.ajaxRequest.open('GET', this.url, async: true);
     if (this.ajaxRequest.overrideMimeType) this.ajaxRequest.overrideMimeType('application/xml');
     this.ajaxRequest.send(null);
   }
 
-  onXMLLoaded() {
+  onXMLLoaded(PixiEvent e) {
     if (this.ajaxRequest.readyState == 4) {
       if (this.ajaxRequest.status == 200 || window.location.protocol.indexOf('http') == -1) {
         var responseXML = this.ajaxRequest.responseXml;
+        if(responseXML == null) throw Exception("can not load font.");
         //|| /MSIE 9/i.test(navigator.userAgent) || navigator.isCocoonJS
-        if (responseXML == null) {
-          if (typeof(window.DOMParser) == 'function') {
-            var domparser = new DOMParser();
-            responseXML = domparser.parseFromString(this.ajaxRequest.responseText, 'text/xml');
-          } else {
-            var div = document.createElement('div');
-            div.innerHTML = this.ajaxRequest.responseText;
-            responseXML = div;
-          }
-        }
+//        if (responseXML == null) {
+//          if (typeof(window.DOMParser) == 'function') {
+//            var domparser = new DOMParser();
+//            responseXML = domparser.parseFromString(this.ajaxRequest.responseText, 'text/xml');
+//          } else {
+//            var div = document.createElement('div');
+//            div.innerHTML = this.ajaxRequest.responseText;
+//            responseXML = div;
+//          }
+//        }
 
         var textureUrl = this.baseUrl + responseXML.getElementsByTagName('page')[0].getAttribute('file');
         var image = new ImageLoader(textureUrl, this.crossorigin);
@@ -85,11 +84,11 @@ class BitmapFontLoader extends Loader {
           var second = int.parse(kernings[i].getAttribute('second'));
           var amount = int.parse(kernings[i].getAttribute('amount'));
 
-          data['chars'][second].kerning[first] = amount;
+          data['chars'][second]['kerning'][first] = amount;
 
         }
 
-        BitmapText.fonts[data.font] = data;
+        BitmapText.fonts[data['font']] = data;
 
         var scope = this;
         image.addEventListener('loaded', () {

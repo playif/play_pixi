@@ -31,16 +31,20 @@ class Sprite extends DisplayObjectContainer {
   blendModes blendMode = blendModes.NORMAL;
 
 
+  Sprite._(){
+    renderable = true;
+  }
   Sprite(this.texture) {
+    _setupTexture();
+  }
+
+  void _setupTexture(){
     if (texture.baseTexture.hasLoaded) {
       this.onTextureUpdate(null);
     }
     else {
-      //this.onTextureUpdateBind = this.onTextureUpdate.bind(this);
       this.texture.addEventListener('update', this.onTextureUpdate);
     }
-
-    renderable = true;
   }
 
   void setTexture(Texture texture) {
