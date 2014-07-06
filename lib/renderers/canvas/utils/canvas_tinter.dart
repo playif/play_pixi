@@ -156,15 +156,15 @@ class CanvasTinter {
     context.putImageData(pixelData, 0, 0);
   }
 
-  static roundColor(color) {
+  static int roundColor(color) {
     var step = CanvasTinter.cacheStepsPerColorChannel;
 
     var rgbValues = hex2rgb(color);
-
-    rgbValues[0] = min(255, (rgbValues[0] / step) * step).floor();
-    rgbValues[1] = min(255, (rgbValues[1] / step) * step).floor();
-    rgbValues[2] = min(255, (rgbValues[2] / step) * step).floor();
-
-    return rgb2hex(rgbValues);
+    //print(rgbValues);
+    rgbValues[0] = min(255, (rgbValues[0] / step) * step);
+    rgbValues[1] = min(255, (rgbValues[1] / step) * step);
+    rgbValues[2] = min(255, (rgbValues[2] / step) * step);
+    //print(rgbValues);
+    return rgb2hex(rgbValues).floor();
   }
 }

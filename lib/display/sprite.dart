@@ -23,8 +23,8 @@ class Sprite extends DisplayObjectContainer {
     this._height = value;
   }
 
-  num tint = 16777215.0;
-  num cachedTint;
+  int tint = 0xFFFFFF;
+  int cachedTint;
 
 //  bool renderable = true;
 

@@ -24,9 +24,9 @@
         var stage = new PIXI.Stage(0x660099);
 
         // create a renderer instance
-        var renderer =  new PIXI.CanvasRenderer(400, 300);
+        //var renderer =  new PIXI.CanvasRenderer(400, 300);
         //var renderer = new PIXI.WebGLRenderer(400, 300);
-        //var renderer = PIXI.autoDetectRenderer(400, 300);
+        var renderer = PIXI.autoDetectRenderer(400, 300);
 
         // add the renderer view element to the DOM
         document.body.append(renderer.view);
@@ -39,7 +39,7 @@
         var bunny = new PIXI.Sprite(texture);
 
         Random random = new Random();
-        //bunny.tint = random.nextInt(0xFFFFFF);
+        bunny.tint = random.nextInt(0xFFFFFF);
 
         // center the sprites anchor point
         bunny.anchor.x = 0.5;
