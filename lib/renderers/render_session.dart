@@ -2,7 +2,7 @@ part of PIXI;
 
 class RenderSession {
 
-  RenderingContext glID;
+//  RenderingContext glID;
   RenderingContext gl;
   Point projection;
   Point offset;

@@ -374,11 +374,11 @@ class WebGLRenderer extends Renderer {
 
 }
 
-createWebGLTexture(Texture texture, RenderingContext gl, glID) {
+createWebGLTexture(Texture texture, RenderingContext gl) {
 
 
   if (texture.hasLoaded) {
-    texture._glTextures[glID] = gl.createTexture();
+    texture._glTextures[gl] = gl.createTexture();
 
 
     gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[glID]);
@@ -403,11 +403,11 @@ createWebGLTexture(Texture texture, RenderingContext gl, glID) {
     gl.bindTexture(RenderingContext.TEXTURE_2D, null);
   }
 
-  return texture._glTextures[glID];
+  return texture._glTextures[gl];
 }
 
-updateWebGLTexture(Texture texture, RenderingContext gl, int glID) {
-  if (texture._glTextures[glID] != null) {
+updateWebGLTexture(Texture texture, RenderingContext gl) {
+  if (texture._glTextures[gl] != null) {
     gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[glID]);
     gl.pixelStorei(RenderingContext.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 

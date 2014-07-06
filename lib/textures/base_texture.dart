@@ -22,7 +22,7 @@ class BaseTexture extends EventTarget {
 
   ImageElement source;
 
-  Map<int, Texture> _glTextures = new Map<int, Texture>();
+  Map<RenderingContext, Texture> _glTextures = new Map<RenderingContext, Texture>();
 
   String imageUrl = null;
 
