@@ -13,7 +13,7 @@ class DisplayObject {
   bool renderable = false;
   DisplayObjectContainer parent = null;
   DisplayObjectContainer __iParent =null;
-  bool interactiveChildren=true;
+  bool interactiveChildren=false;
   bool __hit;
   bool __isOver;
   bool __mouseIsDown;

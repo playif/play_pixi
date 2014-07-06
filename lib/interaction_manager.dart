@@ -210,7 +210,7 @@ class InteractionManager {
     for (var i = 0; i < length; i++) {
       var item = this.interactiveItems[i];
 
-      if (item.mousemove) {
+      if (item.mousemove != null) {
         //call the function!
         item.mousemove(this.mouse);
       }
