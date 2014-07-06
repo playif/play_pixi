@@ -145,8 +145,10 @@ class WebGLSpriteBatch {
     //print(tint);
     //print("${uvs.x0} ${uvs.y0} ${uvs.x1} ${uvs.y1} ${uvs.x2} ${uvs.y2} ${uvs.x3} ${uvs.y3}");
     //print("$alpha $tint");
-    //print("${a * w1 + c * h1 + tx}");
+    //print("$a * $w1 + $c * $h1 + $tx");
     // xy
+
+
     verticies[index++] =  a * w1 + c * h1 + tx;
     verticies[index++] =  d * h1 + b * w1 + ty;
     // uv

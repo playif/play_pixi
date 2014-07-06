@@ -5,7 +5,7 @@ part of PIXI;
 const Matrix IdentityMatrix = const Matrix();
 
 class Matrix {
-  num a = 1, b = 0, c = 0, d = 1, tx = 0, ty = 0;
+  num a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0;
 
   //Float32List array =null;
 

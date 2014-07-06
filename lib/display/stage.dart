@@ -2,21 +2,21 @@ part of PIXI;
 
 class Stage extends DisplayObjectContainer {
   bool dirty;
-  bool _interactiveEventsAdded=false;
+  bool _interactiveEventsAdded = false;
 
   Rectangle hitArea = new Rectangle(0, 0, 100000, 100000);
   int backgroundColor;
-  List<num> backgroundColorSplit=[];
+  List<num> backgroundColorSplit = [];
   String backgroundColorString;
 
   Matrix worldTransform = new Matrix();
 
   InteractionManager interactionManager;
 
-  Stage([this.backgroundColor=0,this.interactive=true]) {
+  Stage([this.backgroundColor=0, bool interactive=true]) {
     dirty = true;
     this.stage = this;
-//    interactive = true;
+    this.interactive = interactive;
     interactionManager = new InteractionManager(this);
     setBackgroundColor(backgroundColor);
   }

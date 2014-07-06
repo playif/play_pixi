@@ -39,6 +39,8 @@
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_03_movie_clip/tp/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_04_balls/assets/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_04_balls/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_5_morph/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_6_interactive/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/packages" />
     </content>

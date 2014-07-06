@@ -1,7 +1,7 @@
 part of PIXI;
 
 class DisplayObject {
-  final List<DisplayObject> children = [];
+
   Point position = new Point();
   Point scale = new Point(1, 1);
   Point pivot = new Point(0, 0);
@@ -9,11 +9,11 @@ class DisplayObject {
   num alpha = 1;
   bool visible = true;
   Rectangle hitArea = null;
-  bool buttonMode = false;
+
   bool renderable = false;
   DisplayObjectContainer parent = null;
   DisplayObjectContainer __iParent =null;
-  bool interactiveChildren=false;
+  bool interactiveChildren=true;
   bool __hit;
   bool __isOver;
   bool __mouseIsDown;
@@ -26,11 +26,13 @@ class DisplayObject {
   Function mouseover;
   Function mouseup;
   Function mouseupoutside;
+
+
   //bool buttonMode = false;
   //DisplayObjectContainer get parent => _parent;
 
   Stage stage = null;
-
+  bool buttonMode = false;
   //Stage get stage => _stage;
 
   num worldAlpha = 1.0;

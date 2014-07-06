@@ -28,13 +28,15 @@ class InteractionManager {
 
   }
 
-  void collectInteractiveSprite(DisplayObject displayObject, iParent) {
-    List<DisplayObject> children = displayObject.children;
+  void collectInteractiveSprite(Sprite displayObject, iParent) {
+
+
+    List<Sprite> children = displayObject.children;
     int length = children.length;
 
     // make an interaction tree... {item.__interactiveParent}
     for (var i = length - 1; i >= 0; i--) {
-      DisplayObject child = children[i];
+      Sprite child = children[i];
 
       // push all interactive bits
       if (child._interactive) {
@@ -152,10 +154,10 @@ class InteractionManager {
     int length = this.interactiveItems.length;
     String cursor = 'inherit';
     bool over = false;
-
+    //print(length);
     for (i = 0; i < length; i++) {
       DisplayObject item = this.interactiveItems[i];
-
+      //print(item);
       // OPTIMISATION - only calculate every time if the mousemove function exists..
       // OK so.. does the object have any other interactive functions?
       // hit-test the clip!
@@ -164,22 +166,26 @@ class InteractionManager {
       // ok so there are some functions so lets hit test it..
       item.__hit = this.hitTest(item, this.mouse);
       this.mouse.target = item;
+
       // ok so deal with interactions..
       // looks like there was a hit!
       if (item.__hit && !over) {
+
         if (item.buttonMode) cursor = item.defaultCursor;
 
         if (!item.interactiveChildren)over = true;
 
         if (!item.__isOver) {
-          if (item.mouseover)item.mouseover(this.mouse);
+          //print(item);
+          //print(item.mouseover);
+          if (item.mouseover != null) item.mouseover(this.mouse);
           item.__isOver = true;
         }
       }
       else {
         if (item.__isOver) {
           // roll out!
-          if (item.mouseout)item.mouseout(this.mouse);
+          if (item.mouseout != null) item.mouseout(this.mouse);
           item.__isOver = false;
         }
       }
@@ -227,13 +233,13 @@ class InteractionManager {
     for (var i = 0; i < length; i++) {
       DisplayObject item = this.interactiveItems[i];
 
-      if (item.mousedown || item.click) {
+      if (item.mousedown != null || item.click !=null) {
         item.__mouseIsDown = true;
         item.__hit = this.hitTest(item, this.mouse);
 
         if (item.__hit) {
           //call the function!
-          if (item.mousedown)item.mousedown(this.mouse);
+          if (item.mousedown != null)item.mousedown(this.mouse);
           item.__isDown = true;
 
           // just the one!
@@ -278,18 +284,18 @@ class InteractionManager {
 
       if (item.__hit && !up) {
         //call the function!
-        if (item.mouseup) {
+        if (item.mouseup !=null) {
           item.mouseup(this.mouse);
         }
         if (item.__isDown) {
-          if (item.click)item.click(this.mouse);
+          if (item.click != null)item.click(this.mouse);
         }
 
         if (!item.interactiveChildren)up = true;
       }
       else {
         if (item.__isDown) {
-          if (item.mouseupoutside)item.mouseupoutside(this.mouse);
+          if (item.mouseupoutside !=null)item.mouseupoutside(this.mouse);
         }
       }
 
@@ -317,8 +323,11 @@ class InteractionManager {
     interactionData.target = item;
 
     //a sprite or display object with a hit area defined
-    if (item.hitArea && item.hitArea.contains) {
+    if (item.hitArea != null && item.hitArea.contains != null) {
+      //print("$x $y");
       if (item.hitArea.contains(x, y)) {
+
+        //print(item);
         //if(isSprite)
         interactionData.target = item;
 
@@ -329,6 +338,7 @@ class InteractionManager {
     }
     // a sprite with no hitarea defined
     else if (isSprite) {
+
       Sprite sprite = item as Sprite;
       var width = sprite.texture.frame.width,
       height = sprite.texture.frame.height,
@@ -341,6 +351,7 @@ class InteractionManager {
         if (y > y1 && y < y1 + height) {
           // set the target property if a hit is true!
           interactionData.target = sprite;
+
           return true;
         }
       }

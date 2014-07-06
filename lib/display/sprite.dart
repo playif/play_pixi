@@ -305,8 +305,8 @@ class Sprite extends DisplayObjectContainer {
     return new Sprite(texture);
   }
 
-  static Sprite fromImage(String imageId, bool crossorigin, scaleModes scaleMode) {
-    var texture = new Texture.fromImage(imageId, crossorigin, scaleMode);
+  static Sprite fromImage(String imageId, [bool crossorigin, scaleModes scaleMode]) {
+    var texture = Texture.fromImage(imageId, crossorigin, scaleMode);
     return new Sprite(texture);
   }
 
