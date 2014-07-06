@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+
+<script type="application/dart">
+    import "dart:html";
+    import "dart:math";
+    import "package:pixi_dart/pixi.dart" as PIXI;
+
+    main() {
+        // create an new instance of a pixi stage
+        var stage = new PIXI.Stage(0x660099);
+
+        // create a renderer instance
+        var renderer =  new PIXI.CanvasRenderer(400, 300);
+        //var renderer = new PIXI.WebGLRenderer(400, 300);
+        //var renderer = PIXI.autoDetectRenderer(400, 300);
+
+        // add the renderer view element to the DOM
+        document.body.append(renderer.view);
+
+
+        // create a texture from an image path
+        var texture = PIXI.Texture.fromImage("bunny.png");
+        //window.console.log(texture.baseTexture);
+        // create a new Sprite using the texture
+        var bunny = new PIXI.Sprite(texture);
+
+        Random random = new Random();
+        bunny.tint = random.nextInt(0xFFFFFF);
+
+        // center the sprites anchor point
+        bunny.anchor.x = 0.5;
+        bunny.anchor.y = 0.5;
+
+        // move the sprite t the center of the screen
+        bunny.position.x = 200;
+        bunny.position.y = 150;
+
+        stage.addChild(bunny);
+
+        Map source = {
+        };
+
+        CanvasElement canvas = document.createElement("canvas");
+        source['Canvas'] = {
+        };// $('<canvas></canvas>')[0];
+
+        canvas.width = 256;
+        canvas.height = 256;
+        source['Canvas']['context'] = canvas.getContext('2d');
+        source['Canvas']['context'].fillStyle = "#FF0000";
+        source['Canvas']['context'].fillRect(0, 0, 256, 256);
+        //Split Canvas into multiple textures
+        source['Frames'] = new List(16);
+
+
+        for (int i = 0;i < 4;i++)
+            for (int ii = 0;ii < 4;ii++) {
+                var tex = PIXI.Texture.fromCanvas(canvas);
+                tex.setFrame(new PIXI.Rectangle(ii * 32, i * 32, 32, 32));
+                source['Frames'][(ii + (i * 4))] = tex;
+            }
+
+        source['Sprite'] = new PIXI.MovieClip(source['Frames']);
+        source['Sprite'].animationSpeed = 0.1;
+        source['Sprite'].currentFrame = 0;
+        source['Sprite'].play();
+        stage.addChild(source['Sprite']);
+
+        animate(num delta) {
+            PIXI.requestAnimFrame(animate);
+
+            // just for fun, let's rotate mr rabbit a little
+            bunny.rotation += 0.1;
+
+            // render the stage
+            renderer.render(stage);
+        }
+        PIXI.requestAnimFrame(animate);
+
+    }
+</script>
+<script type="text/javascript" src="packages/browser/dart.js"></script>
+
+
+</body>
+</html>

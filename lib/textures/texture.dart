@@ -70,8 +70,10 @@ class Texture extends BaseTexture {
     this.width = frame.width;
     this.height = frame.height;
 
+    //print("$width ${frame.x} ${this.baseTexture.width } $height  ${frame.y} ${this.baseTexture.height}");
+
     if (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height) {
-      throw new Exception('Texture Error: frame does not fit inside the base Texture dimensions ${this.toString()}');
+      throw new Exception('Texture Error: frame does not fit inside the base Texture dimensions');
     }
 
     this.updateFrame = true;

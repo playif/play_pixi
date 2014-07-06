@@ -31,14 +31,16 @@ class BaseTexture extends EventTarget {
   EventFunc onLoaded;
 
 
-
   BaseTexture([ImageElement this.source, this.scaleMode=scaleModes.DEFAULT]) {
 
-    if (source == null)return;
+    if (source == null) return;
 
 
     //
-    if ((this.source.complete ) && this.source.width && this.source.height) {
+    if (( (source is ImageElement && source.complete != null ) ||
+    ( source is CanvasElement && source.getContext != null ) )
+
+    && this.source.width!=0 && this.source.height !=0) {
 
       this._hasLoaded = true;
       this.width = this.source.width;

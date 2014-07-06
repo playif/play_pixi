@@ -16,6 +16,7 @@ part "core/rectangle.dart";
 
 part "display/display_object.dart";
 part "display/display_object_container.dart";
+part "display/movie_clip.dart";
 part "display/sprite.dart";
 part "display/sprite_batch.dart";
 part "display/stage.dart";
