@@ -194,7 +194,7 @@ class WebGLSpriteBatch {
 
   }
 
-  renderTilingSprite(tilingSprite) {
+  renderTilingSprite(TilingSprite tilingSprite) {
     var texture = tilingSprite.tilingTexture;
 
     if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size) {

@@ -21,6 +21,11 @@ part "display/sprite.dart";
 part "display/sprite_batch.dart";
 part "display/stage.dart";
 
+part "extras/rope.dart";
+part "extras/spine.dart";
+part "extras/strip.dart";
+part "extras/tiling_sprite.dart";
+
 part "filters/filter.dart";
 part "filters/filter_block.dart";
 
@@ -114,7 +119,7 @@ class scaleModes {
 
 Renderer defaultRenderer;
 List blendModesWebGL = null;
-List blendModesCanvas =null;
+List blendModesCanvas = null;
 const int WEBGL_RENDERER = 0;
 const int CANVAS_RENDERER = 0;
 const String VERSION = "v1.5.3";
@@ -125,6 +130,6 @@ const bool AUTO_PREVENT_DEFAULT = true;
 const num RAD_TO_DEG = 180 / PI;
 const num DEG_TO_RAD = PI / 180;
 
-Function requestAnimFrame=window.requestAnimationFrame;
+Function requestAnimFrame = window.requestAnimationFrame;
 
 

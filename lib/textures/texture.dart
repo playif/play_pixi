@@ -22,6 +22,12 @@ class Texture extends BaseTexture {
 
   Map tintCache;
 
+  bool needsUpdate;
+
+  bool isTiling;
+
+  CanvasBuffer canvasBuffer;
+
   Texture(BaseTexture baseTexture, [this.frame]) {
 
     scope = this;
