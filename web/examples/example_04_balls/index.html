@@ -1,117 +1,127 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>Pixi Balls by Photon Storm</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
-	<link rel="stylesheet" href="storm.css">
-	<script src="jquery-1.8.3.min.js"></script>
+    <title>Pixi Balls by Photon Storm</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0"/>
+    <link rel="stylesheet" href="storm.css">
 
 </head>
 <body>
 
-	<a href="http://www.photonstorm.com"><img src="assets/photonstorm.png" width="121" height="18" id="photonstorm" title="Photon Storm" /></a>
-	<a href="http://www.html5gamedevs.com/topic/59-pixijs-has-landed/"><img src="assets/pixi.png" width="56" height="22" id="pixi" title="pixi.js" /></a>
-	<input type="button" id="rnd" value="Randomise" />
-	<div id="sx">SX: 0<br />SY: 0</div>
+<a href="http://www.photonstorm.com"><img src="assets/photonstorm.png" width="121" height="18" id="photonstorm"
+                                          title="Photon Storm"/></a>
+<a href="http://www.html5gamedevs.com/topic/59-pixijs-has-landed/"><img src="assets/pixi.png" width="56" height="22"
+                                                                        id="pixi" title="pixi.js"/></a>
+<button type="button" id="rnd" value="Randomise">Randomise</button>
 
-	<script>
-	$(window).resize(resize)
-	window.onorientationchange = resize;
+<div id="sx">SX: 0<br/>SY: 0</div>
 
-	document.addEventListener('DOMContentLoaded', start, false);
+<script type="application/dart">
+    import "dart:html";
+    import "dart:math";
+    import "package:pixi_dart/pixi.dart" as PIXI;
 
-	//	Globals, globals everywhere and not a drop to drink
-	var w = 1024;
-	var h = 768;
-	var starCount = 2500;
-	var sx = 1.0 + (Math.random() / 20);
-	var sy = 1.0 + (Math.random() / 20);
-	var slideX = w / 2;
-	var slideY = h / 2;
-	var stars = [];
-	var renderer;
-	var stage;
+    main() {
+        Random random = new Random();
 
-	function start() {
-		var ballTexture = new PIXI.Texture.fromImage("assets/bubble_32x32.png");
-		renderer = PIXI.autoDetectRenderer(w, h);
-		stage = new PIXI.Stage();
+        num w = 1024;
+        num h = 768;
+        num starCount = 2500;
+        num sx = 1.0 + (random.nextDouble() / 20);
+        num sy = 1.0 + (random.nextDouble() / 20);
+        num slideX = w / 2;
+        num slideY = h / 2;
+        List stars = [];
+        var renderer;
+        PIXI.Stage stage;
 
-		document.body.appendChild(renderer.view);
 
-		for (var i = 0; i < starCount; i++)
-		{
-			var tempBall = new PIXI.Sprite(ballTexture);
+        newWave(e) {
+            sx = 1.0 + (random.nextDouble() / 20);
+            sy = 1.0 + (random.nextDouble() / 20);
+            document.getElementById('sx').innerHtml = 'SX: ' + sx + '<br />SY: ' + sy;
+        }
 
-			tempBall.position.x = (Math.random() * w) - slideX;
-			tempBall.position.y = (Math.random() * h) - slideY;
-			tempBall.anchor.x = 0.5;
-			tempBall.anchor.y = 0.5;
+        resize([e]) {
 
-			stars.push({ sprite: tempBall, x: tempBall.position.x, y: tempBall.position.y });
+            w = window.innerWidth - 16;
+            h = window.innerHeight - 16;
 
-			stage.addChild(tempBall);
-		}
+            slideX = w / 2;
+            slideY = h / 2;
 
-		document.getElementById('rnd').onclick = newWave;
-		document.getElementById('sx').innerHTML = 'SX: ' + sx + '<br />SY: ' + sy;
+            renderer.resize(w, h);
+        }
 
-		resize();
+        update([dt]) {
+            for (var i = 0; i < starCount; i++) {
+                stars[i]['sprite'].position.x = stars[i]['x'] + slideX;
+                stars[i]['sprite'].position.y = stars[i]['y'] + slideY;
+                stars[i]['x'] = stars[i]['x'] * sx;
+                stars[i]['y'] = stars[i]['y'] * sy;
 
-		requestAnimFrame(update);
-	}
+                if (stars[i]['x'] > w) {
+                    stars[i]['x'] = stars[i]['x'] - w;
+                }
+                else if (stars[i]['x'] < -w) {
+                    stars[i]['x'] = stars[i]['x'] + w;
+                }
 
-	function newWave () {
-		sx = 1.0 + (Math.random() / 20);
-		sy = 1.0 + (Math.random() / 20);
-		document.getElementById('sx').innerHTML = 'SX: ' + sx + '<br />SY: ' + sy;
-	}
+                if (stars[i]['y'] > h) {
+                    stars[i]['y'] = stars[i]['y'] - h;
+                }
+                else if (stars[i]['y'] < -h) {
+                    stars[i]['y'] = stars[i]['y'] + h;
+                }
+            }
 
-	function resize()
-	{
-		w = $(window).width() - 16;
-		h = $(window).height() - 16;
+            renderer.render(stage);
 
-		slideX = w / 2;
-		slideY = h / 2;
+            PIXI.requestAnimFrame(update);
+        }
 
-		renderer.resize(w, h);
-	}
 
-	function update()
-	{
-		for (var i = 0; i < starCount; i++)
-		{
-			stars[i].sprite.position.x = stars[i].x + slideX;
-			stars[i].sprite.position.y = stars[i].y + slideY;
-			stars[i].x = stars[i].x * sx;
-			stars[i].y = stars[i].y * sy;
+        start() {
+            //print(w);
+            PIXI.Texture ballTexture = PIXI.Texture.fromImage("assets/bubble_32x32.png");
+            renderer = PIXI.autoDetectRenderer(w, h);
+            stage = new PIXI.Stage();
 
-			if (stars[i].x > w)
-			{
-				stars[i].x = stars[i].x - w;
-			}
-			else if (stars[i].x < -w)
-			{
-				stars[i].x = stars[i].x + w;
-			}
+            document.body.append(renderer.view);
 
-			if (stars[i].y > h)
-			{
-				stars[i].y = stars[i].y - h;
-			}
-			else if (stars[i].y < -h)
-			{
-				stars[i].y = stars[i].y + h;
-			}
-		}
+            for (var i = 0; i < starCount; i++) {
+                var tempBall = new PIXI.Sprite(ballTexture);
 
-		renderer.render(stage);
+                tempBall.position.x = random.nextInt(w) - slideX;
+                tempBall.position.y = random.nextInt(h) - slideY;
+                tempBall.anchor.x = 0.5;
+                tempBall.anchor.y = 0.5;
 
-		requestAnimFrame(update);
-	}
-	</script>
+                stars.add({
+                        'sprite': tempBall, 'x': tempBall.position.x, 'y': tempBall.position.y
+                });
 
-	</body>
+                stage.addChild(tempBall);
+            }
+
+            document.getElementById('rnd').onClick.listen(newWave);
+            document.getElementById('sx').innerHtml = 'SX:  $sx <br />SY: $sy';
+
+            resize();
+
+            PIXI.requestAnimFrame(update);
+        }
+
+
+        window.onResize.listen(resize);
+
+        start();
+    }
+
+
+</script>
+<script type="text/javascript" src="packages/browser/dart.js"></script>
+
+</body>
 </html>

@@ -13,7 +13,7 @@ class Stage extends DisplayObjectContainer {
 
   InteractionManager interactionManager;
 
-  Stage(this.backgroundColor) {
+  Stage([this.backgroundColor=0]) {
     dirty = true;
     this.stage = this;
     interactive = true;
@@ -41,7 +41,7 @@ class Stage extends DisplayObjectContainer {
     if (this.interactive)this.interactionManager.update();
   }
 
-  void setBackgroundColor([backgroundColor=0]) {
+  void setBackgroundColor(int backgroundColor) {
     this.backgroundColor = backgroundColor;
     //window.console.log(backgroundColor);
     this.backgroundColorSplit = hex2rgb(this.backgroundColor);
