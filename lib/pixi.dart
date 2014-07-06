@@ -8,8 +8,6 @@ import "dart:web_gl";
 
 import "dart:typed_data";
 
-//part "utils/myeve.dart";
-
 
 part "core/circle.dart";
 part "core/matrix.dart";
@@ -64,7 +62,7 @@ part "textures/render_texture.dart";
 part "textures/texture.dart";
 
 part "utils/detector.dart";
-
+part "utils/event_target.dart";
 part "utils/polyk.dart";
 part "utils/utils.dart";
 

@@ -1,6 +1,6 @@
 part of PIXI;
 
-abstract class Loader extends EventTargetObj {
+abstract class Loader extends EventTarget {
   String url ;
 
   bool crossorigin;

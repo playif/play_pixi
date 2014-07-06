@@ -1,6 +1,6 @@
 part of PIXI;
 
-class AssetLoader extends EventTargetObj {
+class AssetLoader extends EventTarget {
   List<String> assetURLs;
   bool crossorigin;
 

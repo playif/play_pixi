@@ -101,7 +101,7 @@ class WebGLSpriteBatch {
 
     // get the sprites current alpha
     num alpha = sprite.worldAlpha;
-    num tint = sprite.tint;
+    num tint = sprite.tint.toDouble();
 
     var verticies = this.vertices;
 
@@ -142,7 +142,7 @@ class WebGLSpriteBatch {
     num tx = worldTransform.tx;//[2];
     num ty = worldTransform.ty;///[5];
 
-    //print(index);
+    //print(tint);
     //print("${uvs.x0} ${uvs.y0} ${uvs.x1} ${uvs.y1} ${uvs.x2} ${uvs.y2} ${uvs.x3} ${uvs.y3}");
     //print("$alpha $tint");
     //print("${a * w1 + c * h1 + tx}");

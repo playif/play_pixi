@@ -7,7 +7,7 @@ List texturesToDestroy = [];
 
 int BaseTextureCacheIdGenerator = 0;
 
-class BaseTexture extends EventTargetObj {
+class BaseTexture extends EventTarget {
   int id = BaseTextureCacheIdGenerator++;
   num width = 100, height = 100;
   scaleModes scaleMode;

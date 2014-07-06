@@ -243,7 +243,7 @@ class InteractionManager {
     }
   }
 
-  void onMouseOut() {
+  void onMouseOut(MouseEvent event) {
     int length = this.interactiveItems.length;
 
     this.interactionDOMElement.style.cursor = 'inherit';
