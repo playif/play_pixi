@@ -63,10 +63,12 @@ class TilingSprite extends Sprite {
     }
 
 
-    if (!this.tilingTexture == null || this.refreshTexture != null) {
+    if (this.tilingTexture == null || this.refreshTexture) {
+
       this.generateTilingTexture(true);
-      if (this.tilingTexture && this.tilingTexture.needsUpdate) {
+      if (this.tilingTexture != null && this.tilingTexture.needsUpdate) {
         //TODO - tweaking
+
         updateWebGLTexture(this.tilingTexture.baseTexture, renderSession.gl);
         this.tilingTexture.needsUpdate = false;
         // this.tilingTexture._uvs = null;
@@ -88,47 +90,90 @@ class TilingSprite extends Sprite {
     renderSession.spriteBatch.start();
   }
 
-  _renderCanvas(RenderSession renderSession) {
-    if (this.visible == false || this.alpha == 0)return;
+  _renderCanvas(renderSession)
+  {
+    if(this.visible == false || this.alpha == 0)return;
 
-    var context = renderSession.context;
+    CanvasRenderingContext2D context = renderSession.context;
+
+    if(this._mask != null)
+    {
+      renderSession.maskManager.pushMask(this._mask, context);
+    }
 
     context.globalAlpha = this.worldAlpha;
 
 
     var transform = this.worldTransform;
 
-    // alow for trimming
+    // allow for trimming
+//(this.anchor.x) * -frame.width,
+//                               (this.anchor.y) * -frame.height,
 
-    context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+
+    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx , transform.ty);
 
 
-    if (!this.__tilePattern)
-      this.__tilePattern = context.createPattern(this.texture.baseTexture.source, 'repeat');
+    if(!this.__tilePattern ||  this.refreshTexture)
+    {
+      this.generateTilingTexture(false);
+
+      if(this.tilingTexture != null)
+      {
+        var source=this.tilingTexture.baseTexture.source;
+
+        if(source is CanvasElement){
+          this.__tilePattern = context.createPattern(this.tilingTexture.baseTexture.source, 'repeat');
+        }
+        else if(source is ImageElement){
+          this.__tilePattern = context.createPatternFromImage(this.tilingTexture.baseTexture.source, 'repeat');
+        }
+        else{
+          throw new Exception("null source");
+        }
+      }
+      else
+      {
+        return;
+      }
+    }
 
     // check blend mode
-    if (this.blendMode != renderSession.currentBlendMode) {
+    if(this.blendMode != renderSession.currentBlendMode)
+    {
       renderSession.currentBlendMode = this.blendMode;
       context.globalCompositeOperation = blendModesCanvas[renderSession.currentBlendMode];
     }
 
     context.beginPath();
 
-    var tilePosition = this.tilePosition;
-    var tileScale = this.tileScale;
+    Point tilePosition = this.tilePosition;
+    Point tileScale = this.tileScale;
+
+    tilePosition.x %= this.tilingTexture.baseTexture.width;
+    tilePosition.y %= this.tilingTexture.baseTexture.height;
 
     // offset
-    context.scale(tileScale.x, tileScale.y);
+    context.scale(tileScale.x,tileScale.y);
     context.translate(tilePosition.x, tilePosition.y);
 
     context.fillStyle = this.__tilePattern;
-    context.fillRect(-tilePosition.x, -tilePosition.y, this.width / tileScale.x, this.height / tileScale.y);
 
-    context.scale(1 / tileScale.x, 1 / tileScale.y);
+    // make sure to account for the anchor point..
+    context.fillRect(-tilePosition.x + (this.anchor.x * -this._width),-tilePosition.y + (this.anchor.y * -this._height),
+    this._width / tileScale.x, this._height / tileScale.y);
+
+    context.scale(1/tileScale.x, 1/tileScale.y);
     context.translate(-tilePosition.x, -tilePosition.y);
 
     context.closePath();
+
+    if(this._mask)
+    {
+      renderSession.maskManager.popMask(renderSession.context);
+    }
   }
+
 
   getBounds() {
 
@@ -204,9 +249,10 @@ class TilingSprite extends Sprite {
 
 
   generateTilingTexture(bool forcePowerOfTwo) {
+
     Texture texture = this.texture;
 
-    if (!texture.baseTexture.hasLoaded)return;
+    if (!texture.baseTexture.hasLoaded) return;
 
     Texture baseTexture = texture.baseTexture;
     Rectangle frame = texture.frame;
@@ -233,8 +279,11 @@ class TilingSprite extends Sprite {
       if (frame.width != targetWidth && frame.height != targetHeight)newTextureRequired = true;
     }
 
+
+
     if (newTextureRequired) {
-      var canvasBuffer;
+
+      CanvasBuffer canvasBuffer;
 
       if (this.tilingTexture && this.tilingTexture.isTiling) {
         canvasBuffer = this.tilingTexture.canvasBuffer;
@@ -252,7 +301,7 @@ class TilingSprite extends Sprite {
 
       }
 
-      canvasBuffer.context.drawImage(texture.baseTexture.source,
+      canvasBuffer.context.drawImageScaledFromSource(texture.baseTexture.source,
       frame.x,
       frame.y,
       frame.width,

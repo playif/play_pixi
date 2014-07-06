@@ -22,7 +22,7 @@ class Texture extends BaseTexture {
 
   Map tintCache;
 
-  bool needsUpdate;
+  bool needsUpdate =true;
 
   bool isTiling;
 

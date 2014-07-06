@@ -22,8 +22,8 @@
         var stage = new PIXI.Stage(0x97C56E, true);
 
         // create a renderer instance
-        var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
-
+        //var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+        var renderer =  new PIXI.CanvasRenderer(window.innerWidth, window.innerHeight);
         // add the renderer view element to the DOM
         renderer.view.style.position = "absolute";
         renderer.view.style.top = "0px";
