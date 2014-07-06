@@ -2,7 +2,7 @@ part of PIXI;
 
 class WebGLSpriteBatch {
   RenderingContext gl;
-  int glID;
+//  int glID;
   int vertSize = 6;
   int maxSize = 6000;
   int size;
@@ -28,7 +28,7 @@ class WebGLSpriteBatch {
 
   Matrix matrix = null;
 
-  WebGLSpriteBatch(RenderingContext gl, this.glID) {
+  WebGLSpriteBatch(RenderingContext gl) {
 
     size = maxSize;
     numVerts = size * 4 * vertSize;
@@ -316,9 +316,9 @@ class WebGLSpriteBatch {
     //var gl = this.gl;
 
     // bind the current texture
-    Texture texture = this.currentBaseTexture._glTextures[glID];
+    Texture texture = this.currentBaseTexture._glTextures[gl];
     if (texture == null) {
-      texture = createWebGLTexture(this.currentBaseTexture, gl, glID);
+      texture = createWebGLTexture(this.currentBaseTexture, gl);
     }
     //print(texture);
     gl.bindTexture(TEXTURE_2D, texture);

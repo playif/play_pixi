@@ -1,11 +1,9 @@
 part of PIXI;
 
-Map glContexts = {
-};
+Set glContexts = new Set();
 
 class WebGLRenderer extends Renderer {
-  static int glContextId = 0;
-  int glId = 0;
+//  static int glContextId = 0;
 
   //num width, height;
   bool transparent;
@@ -56,9 +54,9 @@ class WebGLRenderer extends Renderer {
     }
 
     var gl = this.gl;
-    this.glId = WebGLRenderer.glContextId ++;
+    //this.glId = WebGLRenderer.glContextId ++;
 
-    glContexts[this.glId] = gl;
+    glContexts.add(gl);
     //window.console.log(gl);
 
     if (blendModesWebGL == null) {
@@ -98,7 +96,7 @@ class WebGLRenderer extends Renderer {
 
     // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager = new WebGLShaderManager(gl); // deals with managing the shader programs and their attribs
-    this.spriteBatch = new WebGLSpriteBatch(gl, glId); // manages the rendering of sprites
+    this.spriteBatch = new WebGLSpriteBatch(gl); // manages the rendering of sprites
     this.maskManager = new WebGLMaskManager(gl); // manages the masks using the stencil buffer
     this.filterManager = new WebGLFilterManager(gl, this.transparent); // manages the filters
 
@@ -309,7 +307,7 @@ class WebGLRenderer extends Renderer {
     }
 
     var gl = this.gl;
-    this.glId = WebGLRenderer.glContextId ++;
+    //this.glId = WebGLRenderer.glContextId ++;
 
 
     // need to set the context...
@@ -351,7 +349,7 @@ class WebGLRenderer extends Renderer {
     this.view.removeEventListener('webglcontextlost', this.handleContextLost);
     this.view.removeEventListener('webglcontextrestored', this.handleContextRestored);
 
-    glContexts[this.glContextId] = null;
+    glContexts.remove(this.gl);
 
     this.projection = null;
     this.offset = null;
@@ -381,7 +379,7 @@ createWebGLTexture(Texture texture, RenderingContext gl) {
     texture._glTextures[gl] = gl.createTexture();
 
 
-    gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[glID]);
+    gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[gl]);
 
     gl.pixelStorei(RenderingContext.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
 
@@ -408,7 +406,7 @@ createWebGLTexture(Texture texture, RenderingContext gl) {
 
 updateWebGLTexture(Texture texture, RenderingContext gl) {
   if (texture._glTextures[gl] != null) {
-    gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[glID]);
+    gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[gl]);
     gl.pixelStorei(RenderingContext.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
     gl.texImage2D(RenderingContext.TEXTURE_2D, 0, RenderingContext.RGBA, RenderingContext.RGBA, RenderingContext.UNSIGNED_BYTE, texture.source);
