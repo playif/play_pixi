@@ -64,7 +64,7 @@ part 'renderers/render_session.dart';
 part "renderers/renderer.dart";
 
 part "text/bitmap_text.dart";
-part "text/text.dart";
+part 'text/text_text.dart';
 
 part "textures/base_texture.dart";
 part "textures/render_texture.dart";
