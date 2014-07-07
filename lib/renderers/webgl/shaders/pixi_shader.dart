@@ -331,10 +331,7 @@ class PixiShader {
           UniformLocation location = uniform['uniformLocation'];
           //print(uniform['value']);
           List list = uniform['value'];
-          Float32List flist = new Float32List(list.length);
-          for (int i = 0;i < list.length;i++) {
-            flist[i] = list[i].toDouble();
-          }
+          Float32List flist = new Float32List.fromList(list);
           bool transpose = uniform['transpose'] != null ? uniform['transpose'] : false;
           uniform['glFunc'](location, transpose, flist);
         }
@@ -343,11 +340,7 @@ class PixiShader {
           //print(uniform['value']);
           if(uniform['value'] is List){
             List list = uniform['value'];
-            Float32List flist = new Float32List(list.length);
-            for (int i = 0;i < list.length;i++) {
-              flist[i] = list[i].toDouble();
-            }
-            //print(uniform['glFunc']);
+            Float32List flist = new Float32List.fromList(list);
             uniform['glFunc'](location, flist);
           }
           else{

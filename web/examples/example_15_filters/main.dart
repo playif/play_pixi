@@ -24,10 +24,18 @@ main() {
   0, 0, 0, 1];
 
   var texture = PIXI.Texture.fromImage("panda.png");
+  var displacementTexture = PIXI.Texture.fromImage("displacementMAP.jpg");
+  var displacementFilter = new PIXI.RGBSplitFilter();
+  //displacementFilter.scale = new Point(50, 50);
 
-  var filter = new PIXI.ColorStepFilter();
-  filter.step = 1.2;
+  //displacementFilter.size=new Point(10,10);
+  //displacementFilter.angle=1;
+
+  var filter = new PIXI.CrossHatchFilter();
+  filter.blur = 10.2;
   //filter.map
+  var filter2 = new PIXI.BlurFilter();
+  filter2.blur = 100;
 
   var container = new PIXI.DisplayObjectContainer();
   container.position.x = 620 / 2;
@@ -66,7 +74,7 @@ main() {
   // add render view to DOM
   document.body.append(renderer.view);
 
-  stage.filters = [filter];
+  stage.filters = [displacementFilter];
 
   var count = 0;
   var switchy = false;

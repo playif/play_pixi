@@ -334,10 +334,10 @@ class WebGLFilterManager {
     gl.uniform2f(shader.offsetVector, 0, 0);
 
     if (filter.uniforms['dimensions'] != null) {
-      filter.uniforms['dimensions']['value'][0] = this.width;//width;
-      filter.uniforms['dimensions']['value'][1] = this.height;//height;
-      filter.uniforms['dimensions']['value'][2] = this.vertexArray[0];
-      filter.uniforms['dimensions']['value'][3] = this.vertexArray[5];
+      filter.uniforms['dimensions']['value'][0] = this.width.toDouble();//width;
+      filter.uniforms['dimensions']['value'][1] = this.height.toDouble();//height;
+      filter.uniforms['dimensions']['value'][2] = this.vertexArray[0].toDouble();
+      filter.uniforms['dimensions']['value'][3] = this.vertexArray[5].toDouble();
       //filterArea.height;
     }
 
