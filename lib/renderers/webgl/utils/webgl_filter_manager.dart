@@ -81,6 +81,7 @@ class WebGLFilterManager {
       texture.resize(this.width, this.height);
     }
 
+
     gl.bindTexture(TEXTURE_2D, texture.texture);
 
     Rectangle filterArea = filterBlock._filterArea;// filterBlock.target.getBounds();///filterBlock.target.filterArea;
@@ -97,6 +98,7 @@ class WebGLFilterManager {
     if (filterArea.y < 0)filterArea.y = 0;
     if (filterArea.height > this.height)filterArea.height = this.height;
 
+
     //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  filterArea.width, filterArea.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     gl.bindFramebuffer(FRAMEBUFFER, texture.frameBuffer);
 
@@ -109,13 +111,16 @@ class WebGLFilterManager {
     offset.x = -filterArea.x;
     offset.y = -filterArea.y;
 
+
     // update projection
-    gl.uniform2f(this.defaultShader.projectionVector, filterArea.width / 2, -filterArea.height / 2);
-    gl.uniform2f(this.defaultShader.offsetVector, -filterArea.x, -filterArea.y);
+    gl.uniform2f(this.defaultShader.projectionVector, filterArea.width / 2.0, -filterArea.height / 2.0);
+    gl.uniform2f(this.defaultShader.offsetVector, -filterArea.x.toDouble(), -filterArea.y.toDouble());
 
     gl.colorMask(true, true, true, true);
-    gl.clearColor(0, 0, 0, 0);
+    gl.clearColor(0.0, 0.0, 0.0, 0.0);
+    //print(COLOR_BUFFER_BIT);
     gl.clear(COLOR_BUFFER_BIT);
+    //print("here");
 
     filterBlock._glFilterTexture = texture;
 

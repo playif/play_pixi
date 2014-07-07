@@ -225,7 +225,7 @@ class PixiShader {
       var wrapT = (data.wrapT) ? data.wrapT : CLAMP_TO_EDGE;
       var format = (data.luminance) ? LUMINANCE : RGBA;
 
-      if (data.repeat) {
+      if (data['repeat'] != null) {
         wrapS = REPEAT;
         wrapT = REPEAT;
       }
