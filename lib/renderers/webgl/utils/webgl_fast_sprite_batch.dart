@@ -4,12 +4,12 @@ class WebGLFastSpriteBatch {
   RenderingContext gl;
   int vertSize = 10;
   int maxSize = 6000;
-  int size = maxSize;
-  int numVerts = this.size * 4 * this.vertSize;
-  int numIndices = this.maxSize * 6;
+  int size;
+  int numVerts;
+  int numIndices;
 
-  Float32List vertices = new Float32List(numVerts);
-  Uint16List indices = new Uint16List(numIndices);
+  Float32List vertices;
+  Uint16List indices;
 
   Buffer vertexBuffer = null;
   Buffer indexBuffer = null;
@@ -27,7 +27,14 @@ class WebGLFastSpriteBatch {
   Matrix matrix = null;
 
 
-  WebGLFastSpriteBatch() {
+  WebGLFastSpriteBatch(RenderingContext gl) {
+    size = maxSize;
+    numVerts = this.size * 4 * this.vertSize;
+    numIndices = this.maxSize * 6;
+    vertices = new Float32List(numVerts);
+    indices = new Uint16List(numIndices);
+
+
     for (int i = 0, j = 0; i < numIndices; i += 6, j += 4) {
       this.indices[i + 0] = j + 0;
       this.indices[i + 1] = j + 1;
@@ -39,7 +46,7 @@ class WebGLFastSpriteBatch {
     setContext(gl);
   }
 
-  setContext(gl) {
+  setContext(RenderingContext gl) {
     this.gl = gl;
 
     // create a couple of buffers
@@ -50,16 +57,16 @@ class WebGLFastSpriteBatch {
 
 
     //upload the index data
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+    gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+    gl.bufferData(ELEMENT_ARRAY_BUFFER, this.indices, STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
+    gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
+    gl.bufferData(ARRAY_BUFFER, this.vertices, DYNAMIC_DRAW);
 
     this.currentBlendMode = 99999;
   }
 
-  begin(spriteBatch, renderSession) {
+  begin(SpriteBatch spriteBatch, RenderSession renderSession) {
     this.renderSession = renderSession;
     this.shader = this.renderSession.shaderManager.fastShader;
 
@@ -72,7 +79,7 @@ class WebGLFastSpriteBatch {
     this.flush();
   }
 
-  render(spriteBatch) {
+  render(SpriteBatch spriteBatch) {
 
     var children = spriteBatch.children;
     var sprite = children[0];
@@ -95,16 +102,16 @@ class WebGLFastSpriteBatch {
     this.flush();
   }
 
-  renderSprite(sprite) {
+  renderSprite(Sprite sprite) {
     //sprite = children[i];
-    if (!sprite.visible)return;
+    if (!sprite.visible) return;
 
     // TODO trim??
     if (sprite.texture.baseTexture != this.currentBaseTexture) {
       this.flush();
       this.currentBaseTexture = sprite.texture.baseTexture;
 
-      if (!sprite.texture._uvs)return;
+      if (sprite.texture._uvs == null)return;
     }
 
     var uvs, verticies = this.vertices, width, height, w0, w1, h0, h1, index;
@@ -115,7 +122,7 @@ class WebGLFastSpriteBatch {
     width = sprite.texture.frame.width;
     height = sprite.texture.frame.height;
 
-    if (sprite.texture.trim) {
+    if (sprite.texture.trim != null) {
       // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
       var trim = sprite.texture.trim;
 
@@ -153,7 +160,7 @@ class WebGLFastSpriteBatch {
     verticies[index++] = uvs.x0;
     verticies[index++] = uvs.y1;
     // color
-    verticies[index++] = sprite.alpha;
+    verticies[index++] = sprite.alpha.toDouble();
 
 
     // xy
@@ -174,7 +181,7 @@ class WebGLFastSpriteBatch {
     verticies[index++] = uvs.x1;
     verticies[index++] = uvs.y1;
     // color
-    verticies[index++] = sprite.alpha;
+    verticies[index++] = sprite.alpha.toDouble();
 
 
     // xy
@@ -195,7 +202,7 @@ class WebGLFastSpriteBatch {
     verticies[index++] = uvs.x2;
     verticies[index++] = uvs.y2;
     // color
-    verticies[index++] = sprite.alpha;
+    verticies[index++] = sprite.alpha.toDouble();
 
 
     // xy
@@ -216,7 +223,7 @@ class WebGLFastSpriteBatch {
     verticies[index++] = uvs.x3;
     verticies[index++] = uvs.y3;
     // color
-    verticies[index++] = sprite.alpha;
+    verticies[index++] = sprite.alpha.toDouble();
 
     // increment the batchs
     this.currentBatchSize++;
@@ -230,31 +237,31 @@ class WebGLFastSpriteBatch {
   flush() {
 
     // If the batch is length 0 then return as there is nothing to draw
-    if (this.currentBatchSize == 0)return;
+    if (this.currentBatchSize == 0) return;
 
     var gl = this.gl;
 
     // bind the current texture
 
-    if (!this.currentBaseTexture._glTextures[gl.id])createWebGLTexture(this.currentBaseTexture, gl);
+    if (this.currentBaseTexture._glTextures[gl] == null)createWebGLTexture(this.currentBaseTexture, gl);
 
-    gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture._glTextures[gl.id]);// || PIXI.createWebGLTexture(this.currentBaseTexture, gl));
+    gl.bindTexture(TEXTURE_2D, this.currentBaseTexture._glTextures[gl]);// || PIXI.createWebGLTexture(this.currentBaseTexture, gl));
 
     // upload the verts to the buffer
 
 
     if (this.currentBatchSize > ( this.size * 0.5 )) {
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
+      gl.bufferSubData(ARRAY_BUFFER, 0, this.vertices);
     }
     else {
       var view = this.vertices.sublist(0, this.currentBatchSize * 4 * this.vertSize);
 
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+      gl.bufferSubData(ARRAY_BUFFER, 0, view);
     }
 
 
     // now draw those suckas!
-    gl.drawElements(gl.TRIANGLES, this.currentBatchSize * 6, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(TRIANGLES, this.currentBatchSize * 6, UNSIGNED_SHORT, 0);
 
     // then reset the batch!
     this.currentBatchSize = 0;
@@ -272,28 +279,28 @@ class WebGLFastSpriteBatch {
     var gl = this.gl;
 
     // bind the main texture
-    gl.activeTexture(gl.TEXTURE0);
+    gl.activeTexture(TEXTURE0);
 
     // bind the buffers
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+    gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
+    gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
     // set the projection
     var projection = this.renderSession.projection;
-    gl.uniform2f(this.shader['projectionVector'], projection.x, projection.y);
+    gl.uniform2f(this.shader.projectionVector, projection.x, projection.y);
 
     // set the matrix
-    gl.uniformMatrix3fv(this.shader['uMatrix'], false, this.matrix);
+    gl.uniformMatrix3fv(this.shader.uMatrix, false, this.matrix);
 
     // set the pointers
     var stride = this.vertSize * 4;
 
-    gl.vertexAttribPointer(this.shader['aVertexPosition'], 2, gl.FLOAT, false, stride, 0);
-    gl.vertexAttribPointer(this.shader['aPositionCoord'], 2, gl.FLOAT, false, stride, 2 * 4);
-    gl.vertexAttribPointer(this.shader['aScale'], 2, gl.FLOAT, false, stride, 4 * 4);
-    gl.vertexAttribPointer(this.shader['aRotation'], 1, gl.FLOAT, false, stride, 6 * 4);
-    gl.vertexAttribPointer(this.shader['aTextureCoord'], 2, gl.FLOAT, false, stride, 7 * 4);
-    gl.vertexAttribPointer(this.shader['colorAttribute'], 1, gl.FLOAT, false, stride, 9 * 4);
+    gl.vertexAttribPointer(this.shader.aVertexPosition, 2, FLOAT, false, stride, 0);
+    gl.vertexAttribPointer(this.shader.aPositionCoord, 2, FLOAT, false, stride, 2 * 4);
+    gl.vertexAttribPointer(this.shader.aScale, 2, FLOAT, false, stride, 4 * 4);
+    gl.vertexAttribPointer(this.shader.aRotation, 1, FLOAT, false, stride, 6 * 4);
+    gl.vertexAttribPointer(this.shader.aTextureCoord, 2, FLOAT, false, stride, 7 * 4);
+    gl.vertexAttribPointer(this.shader.colorAttribute, 1, FLOAT, false, stride, 9 * 4);
 
     // set the blend mode..
     if (this.currentBlendMode != blendModes.NORMAL) {
@@ -301,7 +308,7 @@ class WebGLFastSpriteBatch {
     }
   }
 
-  setBlendMode(blendMode) {
+  setBlendMode(blendModes blendMode) {
     this.flush();
 
     this.currentBlendMode = blendMode;

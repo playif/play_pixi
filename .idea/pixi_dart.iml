@@ -42,6 +42,7 @@
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_13_graphics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_14_masking/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_15_filters/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_18_batch/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_1_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_6_interactive/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_7_transparent_background/packages" />

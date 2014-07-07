@@ -2,31 +2,29 @@ part of PIXI;
 
 class SpriteBatch extends DisplayObjectContainer {
   RenderTexture textureThing;
-  bool ready=false;
+  bool ready = false;
   WebGLFastSpriteBatch fastSpriteBatch;
-  SpriteBatch(this.textureThing) {
+
+  SpriteBatch([this.textureThing]) {
   }
 
-  initWebGL(gl)
-  {
+  initWebGL(gl) {
     // TODO only one needed for the whole engine really?
     this.fastSpriteBatch = new WebGLFastSpriteBatch(gl);
 
     this.ready = true;
   }
 
-  updateTransform()
-  {
+  updateTransform() {
     // TODO dont need to!
-    DisplayObject.updateTransform.call( this );
+    super.updateTransform();
     //  PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
   }
 
-  void _renderWebGL(renderSession)
-  {
-    if(!this.visible || this.alpha <= 0 || !this.children.length)return;
+  void _renderWebGL(RenderSession renderSession) {
+    if (!this.visible || this.alpha <= 0 || this.children.length == 0)return;
 
-    if(!this.ready)this.initWebGL( renderSession.gl );
+    if (!this.ready) this.initWebGL(renderSession.gl);
 
     renderSession.spriteBatch.stop();
 
@@ -42,74 +40,68 @@ class SpriteBatch extends DisplayObjectContainer {
   }
 
 
-  void _renderCanvas (renderSession)
-  {
-    var context = renderSession.context;
+  void _renderCanvas(renderSession) {
+    CanvasRenderingContext2D context = renderSession.context;
     context.globalAlpha = this.worldAlpha;
 
-    DisplayObject.updateTransform.call(this);
+    super.updateTransform();
 
-    var transform = this.worldTransform;
+    Matrix transform = this.worldTransform;
     // alow for trimming
 
-    var isRotated = true;
+    bool isRotated = true;
 
-    for (var i = 0; i < this.children.length; i++) {
+    for (int i = 0; i < this.children.length; i++) {
 
-      var child = this.children[i];
+      Sprite child = this.children[i];
 
-      if(!child.visible)continue;
+      if (!child.visible)continue;
 
-      var texture = child.texture;
-      var frame = texture.frame;
+      Texture texture = child.texture;
+      Rectangle frame = texture.frame;
 
       context.globalAlpha = this.worldAlpha * child.alpha;
 
-      if(child.rotation % (PI * 2) == 0)
-      {
-        if(isRotated)
-        {
+      if (child.rotation % (PI * 2) == 0) {
+        if (isRotated) {
           context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
           isRotated = false;
         }
 
         // this is the fastest  way to optimise! - if rotation is 0 then we can avoid any kind of setTransform call
-        context.drawImage(texture.baseTexture.source,
+        context.drawImageScaledFromSource(texture.baseTexture.source,
         frame.x,
         frame.y,
         frame.width,
         frame.height,
-        ((child.anchor.x) * (-frame.width * child.scale.x) + child.position.x  + 0.5) | 0,
-        ((child.anchor.y) * (-frame.height * child.scale.y) + child.position.y  + 0.5) | 0,
+        ((child.anchor.x) * (-frame.width * child.scale.x) + child.position.x + 0.5) | 0,
+        ((child.anchor.y) * (-frame.height * child.scale.y) + child.position.y + 0.5) | 0,
         frame.width * child.scale.x,
         frame.height * child.scale.y);
       }
-      else
-      {
-        if(!isRotated)isRotated = true;
+      else {
+        if (!isRotated) isRotated = true;
 
-        DisplayObject.updateTransform.call(child);
+        child.updateTransform();
 
         var childTransform = child.worldTransform;
 
         // allow for trimming
 
-        if (renderSession.roundPixels)
-        {
+        if (renderSession.roundPixels) {
           context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx | 0, childTransform.ty | 0);
         }
-        else
-        {
+        else {
           context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx, childTransform.ty);
         }
 
-        context.drawImage(texture.baseTexture.source,
+        context.drawImageScaledFromSource(texture.baseTexture.source,
         frame.x,
         frame.y,
         frame.width,
         frame.height,
-        ((child.anchor.x) * (-frame.width) + 0.5) | 0,
-        ((child.anchor.y) * (-frame.height) + 0.5) | 0,
+        ((child.anchor.x) * (-frame.width) + 0.5),
+        ((child.anchor.y) * (-frame.height) + 0.5),
         frame.width,
         frame.height);
 
