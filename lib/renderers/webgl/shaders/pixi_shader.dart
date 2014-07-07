@@ -131,8 +131,9 @@ class PixiShader {
 
     // add those custom shaders!
     for (var key in this.uniforms.keys) {
+
       // get the uniform locations..
-      this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
+      this.uniforms[key]['uniformLocation'] = gl.getUniformLocation(program, key);
     }
 
     this.initUniforms();
@@ -145,68 +146,68 @@ class PixiShader {
     var gl = this.gl;
     var uniform;
 
-    for (var key in this.uniforms.keys) {
+    for (String key in this.uniforms.keys) {
       uniform = this.uniforms[key];
 
-      var type = uniform.type;
+      var type = uniform['type'];
 
       if (type == 'sampler2D') {
-        uniform._init = false;
+        uniform['_init'] = false;
 
-        if (uniform.value != null) {
+        if (uniform['value'] != null) {
           this.initSampler2D(uniform);
         }
       }
       else if (type == 'mat2' || type == 'mat3' || type == 'mat4') {
         //  These require special handling
-        uniform.glMatrix = true;
-        uniform.glValueLength = 1;
+        uniform['glMatrix'] = true;
+        uniform['glValueLength'] = 1;
 
         if (type == 'mat2') {
-          uniform.glFunc = gl.uniformMatrix2fv;
+          uniform['glFunc'] = gl.uniformMatrix2fv;
         }
         else if (type == 'mat3') {
-          uniform.glFunc = gl.uniformMatrix3fv;
+          uniform['glFunc'] = gl.uniformMatrix3fv;
         }
         else if (type == 'mat4') {
-            uniform.glFunc = gl.uniformMatrix4fv;
+            uniform['glFunc'] = gl.uniformMatrix4fv;
           }
       }
       else {
         //  GL function reference
-        uniform.glFunc = gl['uniform' + type];
+        uniform['glFunc'] = gl['uniform' + type];
 
         if (type == '2f' || type == '2i') {
-          uniform.glValueLength = 2;
+          uniform['glValueLength'] = 2;
         }
         else if (type == '3f' || type == '3i') {
-          uniform.glValueLength = 3;
+          uniform['glValueLength'] = 3;
         }
         else if (type == '4f' || type == '4i') {
-            uniform.glValueLength = 4;
+            uniform['glValueLength'] = 4;
           }
           else {
-            uniform.glValueLength = 1;
+            uniform['glValueLength'] = 1;
           }
       }
     }
 
   }
 
-  initSampler2D(uniform) {
+  initSampler2D(Map uniform) {
 
-    if (!uniform.value || !uniform.value.baseTexture || !uniform.value.baseTexture.hasLoaded) {
+    if (uniform['value'] == null || uniform['value']['baseTexture'] == null || !uniform['value']['baseTexture'].hasLoaded) {
       return;
     }
 
     var gl = this.gl;
 
     gl.activeTexture(gl['TEXTURE' + this.textureCount]);
-    gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id]);
+    gl.bindTexture(TEXTURE_2D, uniform['value'].baseTexture._glTextures[gl.id]);
 
     //  Extended texture data
-    if (uniform.textureData) {
-      var data = uniform.textureData;
+    if (uniform['textureData'] != null) {
+      var data = uniform['textureData'];
 
       // GLTexture = mag linear, min linear_mipmap_linear, wrap repeat + gl.generateMipmap(gl.TEXTURE_2D);
       // GLTextureLinear = mag/min linear, wrap clamp
@@ -218,18 +219,18 @@ class PixiShader {
       //  magFilter can be: gl.LINEAR, gl.LINEAR_MIPMAP_LINEAR or gl.NEAREST
       //  wrapS/T can be: gl.CLAMP_TO_EDGE or gl.REPEAT
 
-      var magFilter = (data.magFilter) ? data.magFilter : gl.LINEAR;
-      var minFilter = (data.minFilter) ? data.minFilter : gl.LINEAR;
-      var wrapS = (data.wrapS) ? data.wrapS : gl.CLAMP_TO_EDGE;
-      var wrapT = (data.wrapT) ? data.wrapT : gl.CLAMP_TO_EDGE;
-      var format = (data.luminance) ? gl.LUMINANCE : gl.RGBA;
+      var magFilter = (data.magFilter) ? data.magFilter : LINEAR;
+      var minFilter = (data.minFilter) ? data.minFilter : LINEAR;
+      var wrapS = (data.wrapS) ? data.wrapS : CLAMP_TO_EDGE;
+      var wrapT = (data.wrapT) ? data.wrapT : CLAMP_TO_EDGE;
+      var format = (data.luminance) ? LUMINANCE : RGBA;
 
       if (data.repeat) {
-        wrapS = gl.REPEAT;
-        wrapT = gl.REPEAT;
+        wrapS = REPEAT;
+        wrapT = REPEAT;
       }
 
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, !!data.flipY);
+      gl.pixelStorei(UNPACK_FLIP_Y_WEBGL, !!data.flipY);
 
       if (data.width) {
         var width = (data.width) ? data.width : 512;
@@ -237,22 +238,22 @@ class PixiShader {
         var border = (data.border) ? data.border : 0;
 
         // void texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels);
-        gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, border, format, gl.UNSIGNED_BYTE, null);
+        gl.texImage2D(TEXTURE_2D, 0, format, width, height, border, format, UNSIGNED_BYTE, null);
       }
       else {
         //  void texImage2D(GLenum target, GLint level, GLenum internalformat, GLenum format, GLenum type, ImageData? pixels);
-        gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, uniform.value.baseTexture.source);
+        gl.texImage2D(TEXTURE_2D, 0, format, RGBA, UNSIGNED_BYTE, uniform['value']['baseTexture'].source);
       }
 
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, magFilter);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, minFilter);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, wrapS);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, wrapT);
     }
 
-    gl.uniform1i(uniform.uniformLocation, this.textureCount);
+    gl.uniform1i(uniform['uniformLocation'], this.textureCount);
 
-    uniform._init = true;
+    uniform['_init'] = true;
 
     this.textureCount++;
 
@@ -264,30 +265,39 @@ class PixiShader {
     var gl = this.gl;
 
     //  This would probably be faster in an array and it would guarantee key order
-    for (var key in this.uniforms) {
+    for (var key in this.uniforms.keys) {
       uniform = this.uniforms[key];
 
-      if (uniform.glValueLength == 1) {
-        if (uniform.glMatrix == true) {
-          uniform.glFunc.call(gl, uniform.uniformLocation, uniform.transpose, uniform.value);
+      if (uniform['glValueLength'] == 1) {
+        if (uniform['glMatrix'] == true) {
+          //.console.log(uniform);
+          UniformLocation location = uniform['uniformLocation'];
+          //print(uniform['value']);
+          List list = uniform['value'];
+          Float32List flist = new Float32List(list.length);
+          for (int i = 0;i < list.length;i++) {
+            flist[i] = list[i].toDouble();
+          }
+          bool transpose = uniform['transpose'] != null ? uniform['transpose'] : false;
+          uniform['glFunc'](location, transpose, flist);
         }
         else {
-          uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value);
+          uniform['glFunc'](uniform['uniformLocation'], uniform['value']);
         }
       }
-      else if (uniform.glValueLength == 2) {
-        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
+      else if (uniform['glValueLength'] == 2) {
+        uniform['glFunc'](uniform['uniformLocation'], uniform['value']['x'], uniform['value']['y']);
       }
-      else if (uniform.glValueLength == 3) {
-          uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
+      else if (uniform['glValueLength'] == 3) {
+          uniform['glFunc'](uniform['uniformLocation'], uniform['value']['x'], uniform['value']['y'], uniform['value']['z']);
         }
-        else if (uniform.glValueLength == 4) {
-            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
+        else if (uniform['glValueLength'] == 4) {
+            uniform['glFunc'](uniform['uniformLocation'], uniform['value']['x'], uniform['value']['y'], uniform['value']['z'], uniform['value']['w']);
           }
-          else if (uniform.type == 'sampler2D') {
-              if (uniform._init) {
+          else if (uniform['type'] == 'sampler2D') {
+              if (uniform['_init']) {
                 gl.activeTexture(gl['TEXTURE' + this.textureCount]);
-                gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id] || createWebGLTexture(uniform.value.baseTexture, gl));
+                gl.bindTexture(TEXTURE_2D, uniform.value.baseTexture._glTextures[gl] || createWebGLTexture(uniform.value.baseTexture, gl));
                 gl.uniform1i(uniform.uniformLocation, this.textureCount);
                 this.textureCount++;
               }

@@ -2,7 +2,7 @@ part of PIXI;
 
 class AbstractFilter {
   List<AbstractFilter> passes;
-  List shaders = [];
+  Map shaders = {};
   bool dirty = true;
   num padding = 0;
 

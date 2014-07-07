@@ -41,23 +41,23 @@ class FilterTexture {
     gl.clear(COLOR_BUFFER_BIT);
   }
 
-  resize(num width, num height) {
+  resize(int width, int height) {
     if (this.width == width && this.height == height) return;
 
-    this.width = width;
-    this.height = height;
+    this.width = width.toInt();
+    this.height = height.toInt();
 
     var gl = this.gl;
 
     gl.bindTexture(TEXTURE_2D, this.texture);
 
-
-    gl.texImage2D(TEXTURE_2D, 0, RGBA, width, height, 0, RGBA, UNSIGNED_BYTE, null);
+    print(height);
+    gl.texImage2D(TEXTURE_2D, 0, RGBA, width.toInt(), height.toInt(), 0, RGBA, UNSIGNED_BYTE, null);
 
 
     // update the stencil buffer width and height
     gl.bindRenderbuffer(RENDERBUFFER, this.renderBuffer);
-    gl.renderbufferStorage(RENDERBUFFER, DEPTH_STENCIL, width, height);
+    gl.renderbufferStorage(RENDERBUFFER, DEPTH_STENCIL, width.toInt(), width.toInt());
   }
 
   destroy() {

@@ -176,7 +176,7 @@ class DisplayObject {
     this.worldAlpha = this.alpha * this.parent.worldAlpha;
   }
 
-  Matrix getBounds(Matrix matrix) {
+  Matrix getBounds([Matrix matrix]) {
     matrix = matrix;//just to get passed js hinting (and preserve inheritance)
     return EmptyRectangle;
   }

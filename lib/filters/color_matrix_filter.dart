@@ -5,10 +5,12 @@ class ColorMatrixFilter extends AbstractFilter {
     this.passes = [this];
     this.uniforms = {
         'matrix': {
-            'type': 'mat4', 'value': [1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1]
+            'type': 'mat4', 'value':[
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
         },
     };
 
