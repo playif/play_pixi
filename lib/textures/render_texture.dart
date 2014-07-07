@@ -25,7 +25,7 @@ class RenderTexture extends Texture {
     baseTexture.height = height;
     baseTexture.scaleMode = scaleMode;
     baseTexture.hasLoaded = true;
-    print(this.renderer.type);
+    //print(this.renderer.type);
     if (this.renderer.type == WEBGL_RENDERER) {
       var gl = this.renderer.gl;
 

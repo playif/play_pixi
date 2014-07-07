@@ -195,7 +195,7 @@ class WebGLSpriteBatch {
   }
 
   renderTilingSprite(TilingSprite tilingSprite) {
-    var texture = tilingSprite.tilingTexture;
+    Texture texture = tilingSprite.tilingTexture;
 
     if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size) {
       this.flush();
@@ -212,16 +212,16 @@ class WebGLSpriteBatch {
 
     if (!tilingSprite._uvs)tilingSprite._uvs = new TextureUvs();
 
-    var uvs = tilingSprite._uvs;
+    TextureUvs uvs = tilingSprite._uvs;
 
     tilingSprite.tilePosition.x %= texture.baseTexture.width * tilingSprite.tileScaleOffset.x;
     tilingSprite.tilePosition.y %= texture.baseTexture.height * tilingSprite.tileScaleOffset.y;
 
-    var offsetX = tilingSprite.tilePosition.x / (texture.baseTexture.width * tilingSprite.tileScaleOffset.x);
-    var offsetY = tilingSprite.tilePosition.y / (texture.baseTexture.height * tilingSprite.tileScaleOffset.y);
+    num offsetX = tilingSprite.tilePosition.x / (texture.baseTexture.width * tilingSprite.tileScaleOffset.x);
+    num offsetY = tilingSprite.tilePosition.y / (texture.baseTexture.height * tilingSprite.tileScaleOffset.y);
 
-    var scaleX = (tilingSprite.width / texture.baseTexture.width) / (tilingSprite.tileScale.x * tilingSprite.tileScaleOffset.x);
-    var scaleY = (tilingSprite.height / texture.baseTexture.height) / (tilingSprite.tileScale.y * tilingSprite.tileScaleOffset.y);
+    num scaleX = (tilingSprite.width / texture.baseTexture.width) / (tilingSprite.tileScale.x * tilingSprite.tileScaleOffset.x);
+    num scaleY = (tilingSprite.height / texture.baseTexture.height) / (tilingSprite.tileScale.y * tilingSprite.tileScaleOffset.y);
 
     uvs.x0 = 0 - offsetX;
     uvs.y0 = 0 - offsetY;
@@ -236,33 +236,33 @@ class WebGLSpriteBatch {
     uvs.y3 = (1 * scaleY) - offsetY;
 
     // get the tilingSprites current alpha
-    var alpha = tilingSprite.worldAlpha;
-    var tint = tilingSprite.tint.toDouble();
+    num alpha = tilingSprite.worldAlpha;
+    num tint = tilingSprite.tint.toDouble();
 
-    var verticies = this.vertices;
+    Float32List verticies = this.vertices;
 
-    var width = tilingSprite.width;
-    var height = tilingSprite.height;
+    num width = tilingSprite.width;
+    num height = tilingSprite.height;
 
     // TODO trim??
-    var aX = tilingSprite.anchor.x; // - tilingSprite.texture.trim.x
-    var aY = tilingSprite.anchor.y; //- tilingSprite.texture.trim.y
-    var w0 = width * (1 - aX);
-    var w1 = width * -aX;
+    num aX = tilingSprite.anchor.x; // - tilingSprite.texture.trim.x
+    num aY = tilingSprite.anchor.y; //- tilingSprite.texture.trim.y
+    num w0 = width * (1 - aX);
+    num w1 = width * -aX;
 
-    var h0 = height * (1 - aY);
-    var h1 = height * -aY;
+    num h0 = height * (1 - aY);
+    num h1 = height * -aY;
 
-    var index = this.currentBatchSize * 4 * this.vertSize;
+    int index = this.currentBatchSize * 4 * this.vertSize;
 
-    var worldTransform = tilingSprite.worldTransform;
+    Matrix worldTransform = tilingSprite.worldTransform;
 
-    var a = worldTransform.a;//[0];
-    var b = worldTransform.c;//[3];
-    var c = worldTransform.b;//[1];
-    var d = worldTransform.d;//[4];
-    var tx = worldTransform.tx;//[2];
-    var ty = worldTransform.ty;///[5];
+    num a = worldTransform.a;//[0];
+    num b = worldTransform.c;//[3];
+    num c = worldTransform.b;//[1];
+    num d = worldTransform.d;//[4];
+    num tx = worldTransform.tx;//[2];
+    num ty = worldTransform.ty;///[5];
 
     // xy
     verticies[index++] = a * w1 + c * h1 + tx;
@@ -311,7 +311,7 @@ class WebGLSpriteBatch {
 
   flush() {
     // If the batch is length 0 then return as there is nothing to draw
-    if (this.currentBatchSize == 0)return;
+    if (this.currentBatchSize == 0) return;
 
     //var gl = this.gl;
 

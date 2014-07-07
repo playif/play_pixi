@@ -29,7 +29,7 @@ class Texture extends BaseTexture {
   CanvasBuffer canvasBuffer;
 
   Texture._(){
-
+    scope = this;
   }
 
   Texture(BaseTexture baseTexture, [this.frame]) {
@@ -41,10 +41,11 @@ class Texture extends BaseTexture {
       frame = new Rectangle(0, 0, 1, 1);
     }
 
+
+
     if (baseTexture is Texture)
       baseTexture = (baseTexture as Texture).baseTexture;
     this.baseTexture = baseTexture;
-
 
     if (baseTexture.hasLoaded) {
 
@@ -58,6 +59,8 @@ class Texture extends BaseTexture {
         scope.onBaseTextureLoaded();
       });
     }
+
+
   }
 
   void onBaseTextureLoaded() {

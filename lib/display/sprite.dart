@@ -161,6 +161,7 @@ class Sprite extends DisplayObjectContainer {
         spriteBatch.start();
       }
 
+
       if (this._filters != null) {
         spriteBatch.flush();
         renderSession.filterManager.pushFilter(this._filterBlock);
