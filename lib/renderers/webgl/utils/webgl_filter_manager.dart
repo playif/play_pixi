@@ -110,7 +110,6 @@ class WebGLFilterManager {
     // set view port
 
 
-
     gl.viewport(0, 0, filterArea.width.toInt(), filterArea.height.toInt());
 
     projection.x = filterArea.width / 2;
@@ -128,69 +127,73 @@ class WebGLFilterManager {
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     //print(COLOR_BUFFER_BIT);
 
-    filterBlock._glFilterTexture = texture;
+
     gl.clear(COLOR_BUFFER_BIT);
     //print("here");
 
-
+    filterBlock._glFilterTexture = texture;
   }
 
 
   popFilter() {
     var gl = this.gl;
-    var filterBlock = this.filterStack.removeLast();
-    var filterArea = filterBlock._filterArea;
-    var texture = filterBlock._glFilterTexture;
-    var projection = this.renderSession.projection;
-    var offset = this.renderSession.offset;
+    FilterBlock filterBlock = this.filterStack.removeLast();
+    Rectangle filterArea = filterBlock._filterArea;
+    FilterTexture texture = filterBlock._glFilterTexture;
+    Point projection = this.renderSession.projection;
+    Point offset = this.renderSession.offset;
 
     if (filterBlock.filterPasses.length > 1) {
-      gl.viewport(0, 0, filterArea.width, filterArea.height);
+      gl.viewport(0, 0, filterArea.width.toInt(), filterArea.height.toInt());
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+      gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
 
-      this.vertexArray[0] = 0;
-      this.vertexArray[1] = filterArea.height;
+      this.vertexArray[0] = 0.0;
+      this.vertexArray[1] = filterArea.height.toDouble();
 
-      this.vertexArray[2] = filterArea.width;
-      this.vertexArray[3] = filterArea.height;
+      this.vertexArray[2] = filterArea.width.toDouble();
+      this.vertexArray[3] = filterArea.height.toDouble();
 
-      this.vertexArray[4] = 0;
-      this.vertexArray[5] = 0;
+      this.vertexArray[4] = 0.0;
+      this.vertexArray[5] = 0.0;
 
-      this.vertexArray[6] = filterArea.width;
-      this.vertexArray[7] = 0;
+      this.vertexArray[6] = filterArea.width.toDouble();
+      this.vertexArray[7] = 0.0;
 
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertexArray);
+      gl.bufferSubData(ARRAY_BUFFER, 0, this.vertexArray);
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
+      gl.bindBuffer(ARRAY_BUFFER, this.uvBuffer);
       // now set the uvs..
       this.uvArray[2] = filterArea.width / this.width;
       this.uvArray[5] = filterArea.height / this.height;
       this.uvArray[6] = filterArea.width / this.width;
       this.uvArray[7] = filterArea.height / this.height;
 
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.uvArray);
+      gl.bufferSubData(ARRAY_BUFFER, 0, this.uvArray);
 
       var inputTexture = texture;
-      var outputTexture = this.texturePool.removeLast();
-      if (!outputTexture)outputTexture = new FilterTexture(this.gl, this.width, this.height);
+      var outputTexture;
+      if (this.texturePool.length > 0) {
+        outputTexture = this.texturePool.removeLast();
+      }
+
+      if (outputTexture == null) outputTexture = new FilterTexture(this.gl, this.width, this.height);
       outputTexture.resize(this.width, this.height);
 
       // need to clear this FBO as it may have some left over elements from a previous filter.
-      gl.bindFramebuffer(gl.FRAMEBUFFER, outputTexture.frameBuffer);
-      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.bindFramebuffer(FRAMEBUFFER, outputTexture.frameBuffer);
+      gl.clear(COLOR_BUFFER_BIT);
 
-      gl.disable(gl.BLEND);
+      gl.disable(BLEND);
 
       for (var i = 0; i < filterBlock.filterPasses.length - 1; i++) {
         var filterPass = filterBlock.filterPasses[i];
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, outputTexture.frameBuffer);
+        gl.bindFramebuffer(FRAMEBUFFER, outputTexture.frameBuffer);
 
         // set texture
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, inputTexture.texture);
+        gl.activeTexture(TEXTURE0);
+        gl.bindTexture(TEXTURE_2D, inputTexture.texture);
 
         // draw texture..
         //filterPass.applyFilterPass(filterArea.width, filterArea.height);
@@ -202,7 +205,7 @@ class WebGLFilterManager {
         outputTexture = temp;
       }
 
-      gl.enable(gl.BLEND);
+      gl.enable(BLEND);
 
       texture = inputTexture;
       this.texturePool.add(outputTexture);
@@ -331,10 +334,10 @@ class WebGLFilterManager {
     gl.uniform2f(shader.offsetVector, 0, 0);
 
     if (filter.uniforms['dimensions'] != null) {
-      filter.uniforms['dimensions'].value[0] = this.width;//width;
-      filter.uniforms['dimensions'].value[1] = this.height;//height;
-      filter.uniforms['dimensions'].value[2] = this.vertexArray[0];
-      filter.uniforms['dimensions'].value[3] = this.vertexArray[5];
+      filter.uniforms['dimensions']['value'][0] = this.width;//width;
+      filter.uniforms['dimensions']['value'][1] = this.height;//height;
+      filter.uniforms['dimensions']['value'][2] = this.vertexArray[0];
+      filter.uniforms['dimensions']['value'][3] = this.vertexArray[5];
       //filterArea.height;
     }
 

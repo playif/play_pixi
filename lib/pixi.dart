@@ -27,7 +27,24 @@ part 'extras/ext_strip.dart';
 part "extras/tiling_sprite.dart";
 
 part "filters/abstract_filter.dart";
+part "filters/alpha_mask_filter.dart";
+part "filters/blur_filter.dart";
+part "filters/blur_x_filter.dart";
+part "filters/blur_y_filter.dart";
 part "filters/color_matrix_filter.dart";
+part "filters/color_step_filter.dart";
+part "filters/cross_hatch_filter.dart";
+part "filters/displacement_filter.dart";
+part "filters/dot_screen_filter.dart";
+part "filters/gray_filter.dart";
+part "filters/invert_filter.dart";
+part "filters/normal_map_filter.dart";
+part "filters/pixelate_filter.dart";
+part "filters/rgb_split_filter.dart";
+part "filters/sepia_filter.dart";
+part "filters/smart_blur_filter.dart";
+part "filters/twist_filter.dart";
+
 part "filters/filter_block.dart";
 
 part 'loaders/loader.dart';

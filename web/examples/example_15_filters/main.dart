@@ -23,7 +23,11 @@ main() {
   0, 0, 1, 0,
   0, 0, 0, 1];
 
-  var filter = new PIXI.ColorMatrixFilter();
+  var texture = PIXI.Texture.fromImage("panda.png");
+
+  var filter = new PIXI.ColorStepFilter();
+  filter.step = 1.2;
+  //filter.map
 
   var container = new PIXI.DisplayObjectContainer();
   container.position.x = 620 / 2;
@@ -118,7 +122,7 @@ main() {
     colorMatrix[4] = sin(count / 3) * 2;
     colorMatrix[5] = sin(count / 2);
     colorMatrix[6] = sin(count / 4);
-    filter.matrix = colorMatrix;
+    //filter.matrix = colorMatrix;
 
     renderer.render(stage);
     PIXI.requestAnimFrame(animate);
