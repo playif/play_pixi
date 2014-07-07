@@ -310,7 +310,11 @@ class Graphics extends DisplayObjectContainer {
   }
 
 
-  getBounds([Matrix matrix = this.worldTransform]) {
+  getBounds([Matrix matrix]) {
+    if(matrix == null){
+      matrix= this.worldTransform;
+    }
+
     if (!this.bounds)this.updateBounds();
 
     var w0 = this.bounds.x;

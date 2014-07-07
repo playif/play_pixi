@@ -1047,29 +1047,21 @@ var $$ = {};
     static: {"^": "PixiShader_defaultVertexSrc"}
   },
   PrimitiveShader: {
-    "^": "Object;gl,program,fragmentSrc,vertexSrc,defaultVertexSrc,textureCount,uSampler,projectionVector,offsetVector,dimensions,uMatrix,aVertexPosition,aPositionCoord,aScale,aRotation,aTextureCoord,colorAttribute,attributes,uniforms",
+    "^": "Object;gl,program,fragmentSrc,vertexSrc,projectionVector,offsetVector,tintColor,translationMatrix,aVertexPosition,colorAttribute,attributes,alpha,uniforms",
     init$0: function() {
       var gl, program, t1;
       gl = this.gl;
       program = M.compileProgram(gl, this.vertexSrc, this.fragmentSrc);
       J.useProgram$1$x(gl, program);
-      this.uSampler = gl.getUniformLocation(program, "uSampler");
       this.projectionVector = gl.getUniformLocation(program, "projectionVector");
       this.offsetVector = gl.getUniformLocation(program, "offsetVector");
-      this.dimensions = gl.getUniformLocation(program, "dimensions");
-      this.uMatrix = gl.getUniformLocation(program, "uMatrix");
+      this.tintColor = gl.getUniformLocation(program, "tint");
       this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
-      this.aPositionCoord = gl.getAttribLocation(program, "aPositionCoord");
-      this.aScale = gl.getAttribLocation(program, "aScale");
-      this.aRotation = gl.getAttribLocation(program, "aRotation");
-      this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
       t1 = gl.getAttribLocation(program, "aColor");
       this.colorAttribute = t1;
-      if (t1 === -1) {
-        this.colorAttribute = 2;
-        t1 = 2;
-      }
-      this.attributes = [this.aVertexPosition, this.aPositionCoord, this.aScale, this.aRotation, this.aTextureCoord, t1];
+      this.attributes = [this.aVertexPosition, t1];
+      this.translationMatrix = gl.getUniformLocation(program, "translationMatrix");
+      this.alpha = gl.getUniformLocation(program, "alpha");
       this.program = program;
     }
   },
@@ -1155,7 +1147,7 @@ var $$ = {};
     setContext$1: function(gl) {
       var t1;
       this.gl = gl;
-      t1 = new M.PrimitiveShader(gl, null, ["precision mediump float;", "varying vec4 vColor;", "void main(void) {", "   gl_FragColor = vColor;", "}"], ["attribute vec2 aVertexPosition;", "attribute vec4 aColor;", "uniform mat3 translationMatrix;", "uniform vec2 projectionVector;", "uniform vec2 offsetVector;", "uniform float alpha;", "uniform vec3 tint;", "varying vec4 vColor;", "void main(void) {", "   vec3 v = translationMatrix * vec3(aVertexPosition , 1.0);", "   v -= offsetVector.xyx;", "   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);", "   vColor = aColor * vec4(tint * alpha, alpha);", "}"], ["attribute vec2 aVertexPosition;", "attribute vec2 aTextureCoord;", "attribute vec2 aColor;", "uniform vec2 projectionVector;", "uniform vec2 offsetVector;", "varying vec2 vTextureCoord;", "varying vec4 vColor;", "const vec2 center = vec2(-1.0, 1.0);", "void main(void) {", "   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);", "   vTextureCoord = aTextureCoord;", "   vec3 color = mod(vec3(aColor.y/65536.0, aColor.y/256.0, aColor.y), 256.0) / 256.0;", "   vColor = vec4(color * aColor.x, aColor.x);", "}"], 0, null, null, null, null, null, null, null, null, null, null, null, null, null);
+      t1 = new M.PrimitiveShader(gl, null, ["precision mediump float;", "varying vec4 vColor;", "void main(void) {", "   gl_FragColor = vColor;", "}"], ["attribute vec2 aVertexPosition;", "attribute vec4 aColor;", "uniform mat3 translationMatrix;", "uniform vec2 projectionVector;", "uniform vec2 offsetVector;", "uniform float alpha;", "uniform vec3 tint;", "varying vec4 vColor;", "void main(void) {", "   vec3 v = translationMatrix * vec3(aVertexPosition , 1.0);", "   v -= offsetVector.xyx;", "   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);", "   vColor = aColor * vec4(tint * alpha, alpha);", "}"], null, null, null, null, null, null, null, null, null);
       t1.init$0();
       this.primitiveShader = t1;
       t1 = new M.PixiShader(gl, null, ["precision lowp float;", "varying vec2 vTextureCoord;", "varying vec4 vColor;", "uniform sampler2D uSampler;", "void main(void) {", "   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;", "}"], null, 0, null, null, null, null, null, null, null, null, null, null, null, null, P.LinkedHashMap_LinkedHashMap$_empty(null, null));
@@ -2056,7 +2048,7 @@ var $$ = {};
     toString$0: function(receiver) {
       return H.Primitives_objectToString(receiver);
     },
-    "%": "ArrayBuffer|CanvasGradient|CanvasPattern|DOMError|FileError|ImageData|MediaError|MediaKeyError|Navigator|NavigatorUserMediaError|PositionError|SQLError|SVGAnimatedEnumeration|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString|SVGRect|WebGLBuffer|WebGLFramebuffer|WebGLProgram|WebGLRenderbuffer|WebGLShader|WebGLTexture"
+    "%": "ArrayBuffer|CanvasGradient|CanvasPattern|DOMError|FileError|ImageData|MediaError|MediaKeyError|Navigator|NavigatorUserMediaError|PositionError|SQLError|SVGAnimatedEnumeration|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString|SVGPointList|SVGRect|WebGLBuffer|WebGLFramebuffer|WebGLProgram|WebGLRenderbuffer|WebGLShader|WebGLTexture"
   },
   JSBool: {
     "^": "Interceptor;",
@@ -4774,6 +4766,9 @@ var $$ = {};
     }
     return -1;
   },
+  Symbol_getName: function(symbol) {
+    return symbol.get$_name();
+  },
   ListIterator: {
     "^": "Object;_iterable,_length,_index,_current",
     get$current: function() {
@@ -6708,6 +6703,9 @@ var $$ = {};
 }],
 ["dart.core", "dart:core", , P, {
   "^": "",
+  _symbolToString: function(symbol) {
+    return H.Symbol_getName(symbol);
+  },
   Error_safeToString: function(object) {
     var buffer, t1, i, t2, codeUnit;
     if (typeof object === "number" || typeof object === "boolean" || null == object)
@@ -6779,10 +6777,7 @@ var $$ = {};
       var t1 = this.box_0;
       if (t1.i_1 > 0)
         t1.sb_0.write$1(", ");
-      t1.sb_0.write$1(key.get$_name());
-      t1.sb_0.write$1(": ");
-      t1.sb_0.write$1(P.Error_safeToString(value));
-      ++t1.i_1;
+      t1.sb_0.write$1(P._symbolToString(key));
     }
   },
   bool: {
@@ -8998,6 +8993,10 @@ $.libraries_to_load = {};
 $.defaultRenderer = null;
 $.blendModesWebGL = null;
 $.blendModesCanvas = null;
+$.Graphics_POLY = 0;
+$.Graphics_RECT = 1;
+$.Graphics_CIRC = 2;
+$.Graphics_ELIP = 3;
 $.CanvasTinter_cacheStepsPerColorChannel = 8;
 $.CanvasTinter_convertTintToImage = false;
 $.CanvasTinter_canvas = null;
