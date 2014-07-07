@@ -71,7 +71,7 @@ class PolyK {
     return tgs;
   }
 
-  bool _PointInTriangle(px, py, ax, ay, bx, by, cx, cy) {
+  static bool _PointInTriangle(px, py, ax, ay, bx, by, cx, cy) {
     var v0x = cx - ax;
     var v0y = cy - ay;
     var v1x = bx - ax;
@@ -93,7 +93,7 @@ class PolyK {
     return (u >= 0) && (v >= 0) && (u + v < 1);
   }
 
-  bool _convex(ax, ay, bx, by, cx, cy, sign) {
+  static bool _convex(num ax, num ay, num bx, num by, num cx, num cy,num  sign) {
     return ((ay - by) * (cx - bx) + (bx - ax) * (cy - by) >= 0) == sign;
   }
 

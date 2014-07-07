@@ -13,6 +13,7 @@ class RenderTexture extends Texture {
   var textureBuffer;
   Point projection;
 
+  Render render;
 
   static Matrix tempMatrix = new Matrix();
 
@@ -58,8 +59,8 @@ class RenderTexture extends Texture {
       this.projection.y = -this.height / 2;
 
       var gl = this.renderer.gl;
-      gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTextures[gl.id]);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      gl.bindTexture(TEXTURE_2D, this.baseTexture._glTextures[gl]);
+      gl.texImage2D(TEXTURE_2D, 0, RGBA, this.width, this.height, 0, RGBA, UNSIGNED_BYTE, null);
     }
     else {
       this.textureBuffer.resize(this.width, this.height);
@@ -78,7 +79,7 @@ class RenderTexture extends Texture {
 
     gl.bindFramebuffer(FRAMEBUFFER, this.textureBuffer.frameBuffer);
 
-    if (clear)this.textureBuffer.clear();
+    if (clear) this.textureBuffer.clear();
 
     // THIS WILL MESS WITH HIT TESTING!
     var children = displayObject.children;
@@ -90,12 +91,12 @@ class RenderTexture extends Texture {
     displayObject.worldTransform.d = -1;
     displayObject.worldTransform.ty = this.projection.y * -2;
 
-    if (position) {
+    if (position != null) {
       displayObject.worldTransform.tx = position.x;
       displayObject.worldTransform.ty -= position.y;
     }
 
-    for (var i = 0, j = children.length; i < j; i++) {
+    for (int i = 0, j = children.length; i < j; i++) {
       children[i].updateTransform();
     }
 

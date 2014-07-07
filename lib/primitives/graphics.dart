@@ -1,5 +1,16 @@
 part of PIXI;
 
+class GraphicsData {
+  List<num> points = [];
+  num fillAlpha = 1;
+  num fillColor = 0x0;
+
+  bool fill;
+  num lineWidth = 1;
+  num lineAlpha = 1;
+  num lineColor = 0x0;
+  int type = Graphics.POLY;
+}
 
 class Graphics extends DisplayObjectContainer {
   static int POLY = 0;
@@ -8,21 +19,19 @@ class Graphics extends DisplayObjectContainer {
   static int ELIP = 3;
 
   num fillAlpha = 1;
-  String fillColor = "";
-  String filling;
+  num fillColor = 0x0;
+  bool filling = false;
   num lineWidth = 1;
   num lineAlpha = 1;
-  String lineColor = "black";
-  List graphicsData = [];
+  num lineColor = 0x0;
+  List<GraphicsData> graphicsData = [];
 
   int tint = 0xFFFFFF;
   blendModes blendMode;
 
-  Map currentPath = {
-      'points':[]
-  };
+  GraphicsData currentPath = new GraphicsData();
 
-  List _webGL = [];
+  Map _webGL = {};
 
   bool isMask = false;
 
@@ -36,8 +45,6 @@ class Graphics extends DisplayObjectContainer {
   Graphics() {
     renderable = true;
     blendMode = blendModes.NORMAL;
-
-
   }
 
 
@@ -54,23 +61,26 @@ class Graphics extends DisplayObjectContainer {
     this._cacheAsBitmap = value;
   }
 
-  lineStyle(int lineWidth, color, [num alpha=1]) {
-    if (!this.currentPath['points'].length) this.graphicsData.removeLast();
+  lineStyle([int lineWidth=0, num color=0, num alpha=1]) {
+    if (this.currentPath.points.length == 0) {
+      if (this.graphicsData.length > 0) {
+        this.graphicsData.removeLast();
+      }
+    }
 
-    this.lineWidth = lineWidth || 0;
-    this.lineColor = color || 0;
+    this.lineWidth = lineWidth;
+    this.lineColor = color;
     this.lineAlpha = alpha;
 
-    this.currentPath = {
-        'lineWidth':this.lineWidth,
-        'lineColor':this.lineColor,
-        'lineAlpha':this.lineAlpha,
-        'fillColor':this.fillColor,
-        'fillAlpha':this.fillAlpha,
-        'fill':this.filling,
-        'points':[],
-        'type':POLY
-    };
+    this.currentPath = new GraphicsData()
+      ..lineWidth = this.lineWidth
+      ..lineColor = this.lineColor
+      ..lineAlpha = this.lineAlpha
+      ..fillColor = this.fillColor
+      ..fillAlpha = this.fillAlpha
+      ..fill = this.filling
+      ..points = []
+      ..type = POLY;
 
     this.graphicsData.add(this.currentPath);
 
@@ -78,20 +88,23 @@ class Graphics extends DisplayObjectContainer {
   }
 
   moveTo(num x, num y) {
-    if (!this.currentPath['points'].length) this.graphicsData.removeLast();
+    if (this.currentPath.points.length == 0) {
+      if (this.graphicsData.length > 0) {
+        this.graphicsData.removeLast();
+      }
+    }
 
-    this.currentPath = this.currentPath = {
-        'lineWidth':this.lineWidth,
-        'lineColor':this.lineColor,
-        'lineAlpha':this.lineAlpha,
-        'fillColor':this.fillColor,
-        'fillAlpha':this.fillAlpha,
-        'fill':this.filling,
-        'points':[],
-        'type':POLY
-    };
+    this.currentPath = new GraphicsData()
+      ..lineWidth = this.lineWidth
+      ..lineColor = this.lineColor
+      ..lineAlpha = this.lineAlpha
+      ..fillColor = this.fillColor
+      ..fillAlpha = this.fillAlpha
+      ..fill = this.filling
+      ..points = []
+      ..type = POLY;
 
-    this.currentPath['points'].addAll([x, y]);
+    this.currentPath.points.addAll([x, y]);
 
     this.graphicsData.add(this.currentPath);
 
@@ -99,13 +112,13 @@ class Graphics extends DisplayObjectContainer {
   }
 
   lineTo(x, y) {
-    this.currentPath['points'].addAll([x, y]);
+    this.currentPath.points.addAll([x, y]);
     this.dirty = true;
 
     return this;
   }
 
-  beginFill([color, alpha=1]) {
+  beginFill([num color, num alpha=1]) {
 
     this.filling = true;
     this.fillColor = color;
@@ -123,18 +136,22 @@ class Graphics extends DisplayObjectContainer {
   }
 
   drawRect(x, y, width, height) {
-    if (!this.currentPath['points'].length) this.graphicsData.removeLast();
+    if (this.currentPath.points.length == 0) {
+      if (this.graphicsData.length > 0) {
+        this.graphicsData.removeLast();
+      }
+    }
 
-    this.currentPath = {
-        'lineWidth':this.lineWidth,
-        'lineColor':this.lineColor,
-        'lineAlpha':this.lineAlpha,
-        'fillColor':this.fillColor,
-        'fillAlpha':this.fillAlpha,
-        'fill':this.filling,
-        'points':[x, y, width, height],
-        'type':RECT
-    };
+    this.currentPath = new GraphicsData()
+      ..lineWidth = this.lineWidth
+      ..lineColor = this.lineColor
+      ..lineAlpha = this.lineAlpha
+      ..fillColor = this.fillColor
+      ..fillAlpha = this.fillAlpha
+      ..fill = this.filling
+      ..points = [x, y, width, height]
+      ..type = RECT;
+
 
     this.graphicsData.add(this.currentPath);
     this.dirty = true;
@@ -143,19 +160,21 @@ class Graphics extends DisplayObjectContainer {
   }
 
   drawCircle(x, y, radius) {
+    if (this.currentPath.points.length == 0) {
+      if (this.graphicsData.length > 0) {
+        this.graphicsData.removeLast();
+      }
+    }
 
-    if (!this.currentPath['points'].length) this.graphicsData.removeLast();
-
-    this.currentPath = {
-        'lineWidth':this.lineWidth,
-        'lineColor':this.lineColor,
-        'lineAlpha':this.lineAlpha,
-        'fillColor':this.fillColor,
-        'fillAlpha':this.fillAlpha,
-        'fill':this.filling,
-        'points':[x, y, radius, radius],
-        'type':CIRC
-    };
+    this.currentPath = new GraphicsData()
+      ..lineWidth = this.lineWidth
+      ..lineColor = this.lineColor
+      ..lineAlpha = this.lineAlpha
+      ..fillColor = this.fillColor
+      ..fillAlpha = this.fillAlpha
+      ..fill = this.filling
+      ..points = [x, y, radius, radius]
+      ..type = CIRC;
 
     this.graphicsData.add(this.currentPath);
     this.dirty = true;
@@ -164,19 +183,22 @@ class Graphics extends DisplayObjectContainer {
   }
 
   drawEllipse(x, y, width, height) {
+    if (this.currentPath.points.length == 0) {
+      if (this.graphicsData.length > 0) {
+        this.graphicsData.removeLast();
+      }
+    }
 
-    if (!this.currentPath['points'].length) this.graphicsData.removeLast();
+    this.currentPath = new GraphicsData()
+      ..lineWidth = this.lineWidth
+      ..lineColor = this.lineColor
+      ..lineAlpha = this.lineAlpha
+      ..fillColor = this.fillColor
+      ..fillAlpha = this.fillAlpha
+      ..fill = this.filling
+      ..points = [x, y, width, height]
+      ..type = ELIP;
 
-    this.currentPath = {
-        'lineWidth':this.lineWidth,
-        'lineColor':this.lineColor,
-        'lineAlpha':this.lineAlpha,
-        'fillColor':this.fillColor,
-        'fillAlpha':this.fillAlpha,
-        'fill':this.filling,
-        'points':[x, y, width, height],
-        'type':ELIP
-    };
 
     this.graphicsData.add(this.currentPath);
     this.dirty = true;
@@ -198,10 +220,10 @@ class Graphics extends DisplayObjectContainer {
   }
 
   Texture generateTexture() {
-    var bounds = this.getBounds();
+    Rectangle bounds = this.getBounds();
 
-    var canvasBuffer = new CanvasBuffer(bounds.width, bounds.height);
-    var texture = Texture.fromCanvas(canvasBuffer.canvas);
+    CanvasBuffer canvasBuffer = new CanvasBuffer(bounds.width, bounds.height);
+    Texture texture = Texture.fromCanvas(canvasBuffer.canvas);
 
     canvasBuffer.context.translate(-bounds.x, -bounds.y);
 
@@ -210,7 +232,7 @@ class Graphics extends DisplayObjectContainer {
     return texture;
   }
 
-  void _renderWebGL(renderSession) {
+  void _renderWebGL(RenderSession renderSession) {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if (this.visible == false || this.alpha == 0 || this.isMask == true)return;
 
@@ -225,7 +247,7 @@ class Graphics extends DisplayObjectContainer {
       }
 
       this._cachedSprite.alpha = this.alpha;
-      Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
+      _cachedSprite._renderWebGL(renderSession);
 
       return;
     }
@@ -265,7 +287,8 @@ class Graphics extends DisplayObjectContainer {
     }
   }
 
-  void _renderCanvas(renderSession) {
+  void _renderCanvas(RenderSession renderSession) {
+    //print("here");
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if (this.visible == false || this.alpha == 0 || this.isMask == true)return;
 

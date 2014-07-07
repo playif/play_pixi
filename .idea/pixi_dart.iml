@@ -41,6 +41,7 @@
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_04_balls/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_10_text/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_11_render_texture/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_13_graphics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_5_morph/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_6_interactive/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_7_transparent_background/packages" />

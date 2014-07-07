@@ -17,7 +17,7 @@ class PrimitiveShader {
       '}'
   ];
 
-  List<String> vertexSrc  = [
+  List<String> vertexSrc = [
       'attribute vec2 aVertexPosition;',
       'attribute vec4 aColor;',
       'uniform mat3 translationMatrix;',
@@ -35,97 +35,59 @@ class PrimitiveShader {
       '}'
   ];
 
-  List<String> defaultVertexSrc = [
-      'attribute vec2 aVertexPosition;',
-      'attribute vec2 aTextureCoord;',
-      'attribute vec2 aColor;',
 
-      'uniform vec2 projectionVector;',
-      'uniform vec2 offsetVector;',
+  //int textureCount = 0;
 
-      'varying vec2 vTextureCoord;',
-      'varying vec4 vColor;',
-
-      'const vec2 center = vec2(-1.0, 1.0);',
-
-      'void main(void) {',
-      '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
-      '   vTextureCoord = aTextureCoord;',
-      '   vec3 color = mod(vec3(aColor.y/65536.0, aColor.y/256.0, aColor.y), 256.0) / 256.0;',
-      '   vColor = vec4(color * aColor.x, aColor.x);',
-      '}'
-  ];
-
-  int textureCount = 0;
-
-  UniformLocation uSampler;
   UniformLocation projectionVector;
   UniformLocation offsetVector;
-  UniformLocation dimensions;
-  UniformLocation uMatrix;
+  UniformLocation tintColor;
+  UniformLocation translationMatrix;
 
   int aVertexPosition;
-  int aPositionCoord;
-  int aScale;
-  int aRotation;
-  int aTextureCoord;
   int colorAttribute;
+
+//  int aPositionCoord;
+//  int aScale;
+//  int aRotation;
+//  int aTextureCoord;
+
 
   List attributes;
 
+
+  num alpha;
+
+
   var uniforms;
 
-  init ()
-  {
+  init() {
 
     var gl = this.gl;
 
     Program program = compileProgram(gl, this.vertexSrc, this.fragmentSrc);
-
     gl.useProgram(program);
 
     // get and store the uniforms for the shader
-    this.uSampler = gl.getUniformLocation(program, 'uSampler');
-
     this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
     this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
-    this.dimensions = gl.getUniformLocation(program, 'dimensions');
-    this.uMatrix = gl.getUniformLocation(program, 'uMatrix');
+    this.tintColor = gl.getUniformLocation(program, 'tint');
+
 
     // get and store the attributes
     this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
-    this.aPositionCoord = gl.getAttribLocation(program, 'aPositionCoord');
-
-    this.aScale = gl.getAttribLocation(program, 'aScale');
-    this.aRotation = gl.getAttribLocation(program, 'aRotation');
-
-    this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
     this.colorAttribute = gl.getAttribLocation(program, 'aColor');
 
 
-
-    // Begin worst hack eva //
-
-    // WHY??? ONLY on my chrome pixel the line above returns -1 when using filters?
-    // maybe its somthing to do with the current state of the gl context.
-    // Im convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on my chrome pixel
-    // If theres any webGL people that know why could happen please help :)
-    if(this.colorAttribute == -1)
-    {
-      this.colorAttribute = 2;
-    }
-
-    this.attributes = [this.aVertexPosition, this.aPositionCoord,  this.aScale, this.aRotation, this.aTextureCoord, this.colorAttribute];
-
+    this.attributes = [this.aVertexPosition, this.colorAttribute];
     // End worst hack eva //
-
+    this.translationMatrix = gl.getUniformLocation(program, 'translationMatrix');
+    this.alpha = gl.getUniformLocation(program, 'alpha');
 
     this.program = program;
   }
 
-  destroy ()
-  {
-    this.gl.deleteProgram( this.program );
+  destroy() {
+    this.gl.deleteProgram(this.program);
     this.uniforms = null;
     this.gl = null;
 

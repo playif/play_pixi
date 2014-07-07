@@ -317,6 +317,7 @@ class WebGLSpriteBatch {
 
     // bind the current texture
     Texture texture = this.currentBaseTexture._glTextures[gl];
+
     if (texture == null) {
       texture = createWebGLTexture(this.currentBaseTexture, gl);
     }
@@ -338,6 +339,7 @@ class WebGLSpriteBatch {
     //gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
 
     // now draw those suckas!
+    //print("here");
     gl.drawElements(TRIANGLES, this.currentBatchSize * 6, UNSIGNED_SHORT, 0);
 
     // then reset the batch!

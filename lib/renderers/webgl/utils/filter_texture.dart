@@ -4,12 +4,12 @@ class FilterTexture {
   RenderingContext gl;
   Framebuffer frameBuffer;
   Renderbuffer renderBuffer;
-  Texture texture;
+  var texture;
   int width, height;
 
-  FilterTexture(this.gl, this.width, this.height, [scaleMode =scaleModes.DEFAULT]) {
-    frameBuffer = gl.createFramebuffer();
-    texture = gl.createTexture();
+  FilterTexture(this.gl, num width, num height, [scaleMode =scaleModes.DEFAULT]) {
+    this.frameBuffer = gl.createFramebuffer();
+    this.texture = gl.createTexture();
 
     gl.bindTexture(TEXTURE_2D, this.texture);
     gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
@@ -18,8 +18,14 @@ class FilterTexture {
     gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
     gl.bindFramebuffer(FRAMEBUFFER, this.frameBuffer);
 
-    gl.bindFramebuffer(FRAMEBUFFER, this.frameBuffer);
+
+    //gl.bindFramebuffer(FRAMEBUFFER, this.frameBuffer);
+
+
+
     gl.framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D, this.texture, 0);
+
+
 
     // required for masking a mask??
     this.renderBuffer = gl.createRenderbuffer();
@@ -33,10 +39,11 @@ class FilterTexture {
     var gl = this.gl;
 
     gl.clearColor(0, 0, 0, 0);
+
     gl.clear(COLOR_BUFFER_BIT);
   }
 
-  resize(width, height) {
+  resize(num width, num height) {
     if (this.width == width && this.height == height) return;
 
     this.width = width;
@@ -46,6 +53,7 @@ class FilterTexture {
 
     gl.bindTexture(TEXTURE_2D, this.texture);
     gl.texImage2D(TEXTURE_2D, 0, RGBA, width, height, 0, RGBA, UNSIGNED_BYTE, null);
+
 
     // update the stencil buffer width and height
     gl.bindRenderbuffer(RENDERBUFFER, this.renderBuffer);

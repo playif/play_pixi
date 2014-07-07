@@ -1,5 +1,16 @@
 part of PIXI;
 
+class WebGLData {
+  List<num> points = [];
+  List<num> indices = [];
+  int lastIndex = 0;
+  Buffer buffer;
+  Buffer indexBuffer;
+
+  Float32List glPoints;
+  Uint16List glIndicies;
+}
+
 class WebGLGraphics {
   WebGLGraphics() {
   }
@@ -10,15 +21,14 @@ class WebGLGraphics {
     offset = renderSession.offset,
     shader = renderSession.shaderManager.primitiveShader;
 
-    if (graphics._webGL[gl.id] == null)graphics._webGL[gl.id] = {
-        'points':[],
-        'indices':[],
-        'lastIndex':0,
-        'buffer':gl.createBuffer(),
-        'indexBuffer':gl.createBuffer()
-    };
+    if (graphics._webGL[gl] == null)graphics._webGL[gl] = new WebGLData()
+      ..points = []
+      ..indices = []
+      ..lastIndex = 0
+      ..buffer = gl.createBuffer()
+      ..indexBuffer = gl.createBuffer();
 
-    var webGL = graphics._webGL[gl.id];
+    WebGLData webGL = graphics._webGL[gl];
 
     if (graphics.dirty) {
       graphics.dirty = false;
@@ -33,32 +43,40 @@ class WebGLGraphics {
       }
 
       WebGLGraphics.updateGraphics(graphics, gl);
+      //window.console.log(webGL);
     }
 
     renderSession.shaderManager.activatePrimitiveShader();
 
     // This  could be speeded up for sure!
 
+
     // set the matrix transform
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.blendFunc(ONE, ONE_MINUS_SRC_ALPHA);
 
     gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
 
     gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
     gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
 
-    gl.uniform3fv(shader.tintColor, PIXI.hex2rgb(graphics.tint));
+    //print(shader.translationMatrix);
+    List colorList = hex2rgb(graphics.tint);
+    Float32List tintColor = new Float32List(3);
+    tintColor[0] = colorList[0];
+    tintColor[1] = colorList[1];
+    tintColor[2] = colorList[2];
+    gl.uniform3fv(shader.tintColor, tintColor);
 
     gl.uniform1f(shader.alpha, graphics.worldAlpha);
-    gl.bindBuffer(gl.ARRAY_BUFFER, webGL.buffer);
+    gl.bindBuffer(ARRAY_BUFFER, webGL.buffer);
 
-    gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
-    gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false, 4 * 6, 2 * 4);
+    gl.vertexAttribPointer(shader.aVertexPosition, 2, FLOAT, false, 4 * 6, 0);
+    gl.vertexAttribPointer(shader.colorAttribute, 4, FLOAT, false, 4 * 6, 2 * 4);
 
     // set the index buffer!
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGL.indexBuffer);
+    gl.bindBuffer(ELEMENT_ARRAY_BUFFER, webGL.indexBuffer);
 
-    gl.drawElements(gl.TRIANGLE_STRIP, webGL.indices.length, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(TRIANGLE_STRIP, webGL.indices.length, UNSIGNED_SHORT, 0);
 
     renderSession.shaderManager.deactivatePrimitiveShader();
 
@@ -66,19 +84,22 @@ class WebGLGraphics {
 //  PIXI.activateShader(PIXI.defaultShader);
   }
 
-  updateGraphics(Graphics graphics, RenderingContext gl) {
-    var webGL = graphics._webGL[gl.id];
+  static updateGraphics(Graphics graphics, RenderingContext gl) {
+    WebGLData webGL = graphics._webGL[gl];
 
-    for (var i = webGL.lastIndex; i < graphics.graphicsData.length; i++) {
+    for (int i = webGL.lastIndex; i < graphics.graphicsData.length; i++) {
       var data = graphics.graphicsData[i];
 
       if (data.type == Graphics.POLY) {
+
         if (data.fill) {
           if (data.points.length > 3)
+
             WebGLGraphics.buildPoly(data, webGL);
         }
 
         if (data.lineWidth > 0) {
+
           WebGLGraphics.buildLine(data, webGL);
         }
       }
@@ -92,19 +113,25 @@ class WebGLGraphics {
 
     webGL.lastIndex = graphics.graphicsData.length;
 
+    webGL.glPoints = new Float32List(webGL.points.length);
+    for (int i = 0;i < webGL.points.length;i++) {
+      webGL.glPoints[i] = webGL.points[i].toDouble();
+    }
 
-    webGL.glPoints = new Float32List(webGL.points);
+    gl.bindBuffer(ARRAY_BUFFER, webGL.buffer);
+    gl.bufferData(ARRAY_BUFFER, webGL.glPoints, STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, webGL.buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, webGL.glPoints, gl.STATIC_DRAW);
+    webGL.glIndicies = new Uint16List(webGL.indices.length);
+    for (int i = 0;i < webGL.indices.length;i++) {
+      webGL.glIndicies[i] = webGL.indices[i].toInt();
+    }
 
-    webGL.glIndicies = new Uint16List(webGL.indices);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGL.indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, webGL.glIndicies, gl.STATIC_DRAW);
+    gl.bindBuffer(ELEMENT_ARRAY_BUFFER, webGL.indexBuffer);
+    gl.bufferData(ELEMENT_ARRAY_BUFFER, webGL.glIndicies, STATIC_DRAW);
   }
 
-  buildRectangle(graphicsData, webGLData) {
+  static buildRectangle(GraphicsData graphicsData, WebGLData webGLData) {
+
     // --- //
     // need to convert points to a nice regular data
     //
@@ -123,29 +150,29 @@ class WebGLGraphics {
       var g = color[1] * alpha;
       var b = color[2] * alpha;
 
-      var verts = webGLData.points;
-      var indices = webGLData.indices;
+      List verts = webGLData.points;
+      List indices = webGLData.indices;
 
       var vertPos = verts.length / 6;
 
       // start
-      verts.push(x, y);
-      verts.push(r, g, b, alpha);
+      verts.addAll([x, y]);
+      verts.addAll([r, g, b, alpha]);
 
-      verts.push(x + width, y);
-      verts.push(r, g, b, alpha);
+      verts.addAll([x + width, y]);
+      verts.addAll([r, g, b, alpha]);
 
-      verts.push(x, y + height);
-      verts.push(r, g, b, alpha);
+      verts.addAll([x, y + height]);
+      verts.addAll([r, g, b, alpha]);
 
-      verts.push(x + width, y + height);
-      verts.push(r, g, b, alpha);
+      verts.addAll([x + width, y + height]);
+      verts.addAll([r, g, b, alpha]);
 
       // insert 2 dead triangles..
-      indices.push(vertPos, vertPos, vertPos + 1, vertPos + 2, vertPos + 3, vertPos + 3);
+      indices.addAll([vertPos, vertPos, vertPos + 1, vertPos + 2, vertPos + 3, vertPos + 3]);
     }
 
-    if (graphicsData.lineWidth) {
+    if (graphicsData.lineWidth != 0) {
       var tempPoints = graphicsData.points;
 
       graphicsData.points = [x, y,
@@ -161,7 +188,7 @@ class WebGLGraphics {
     }
   }
 
-  buildCircle(graphicsData, webGLData) {
+  static buildCircle(GraphicsData graphicsData, WebGLData webGLData) {
 
     // need to convert points to a nice regular data
     var rectData = graphicsData.points;
@@ -171,46 +198,48 @@ class WebGLGraphics {
     var height = rectData[3];
 
     var totalSegs = 40;
-    var seg = (Math.PI * 2) / totalSegs ;
+    var seg = (PI * 2) / totalSegs ;
 
     var i = 0;
 
     if (graphicsData.fill) {
-      var color = PIXI.hex2rgb(graphicsData.fillColor);
+      var color = hex2rgb(graphicsData.fillColor);
       var alpha = graphicsData.fillAlpha;
 
       var r = color[0] * alpha;
       var g = color[1] * alpha;
       var b = color[2] * alpha;
 
-      var verts = webGLData.points;
-      var indices = webGLData.indices;
+      List verts = webGLData.points;
+      List indices = webGLData.indices;
 
       var vecPos = verts.length / 6;
 
-      indices.push(vecPos);
+      indices.add(vecPos);
 
       for (i = 0; i < totalSegs + 1 ; i++) {
-        verts.push(x, y, r, g, b, alpha);
+        verts.addAll([x, y, r, g, b, alpha]);
 
-        verts.push(x + Math.sin(seg * i) * width,
-        y + Math.cos(seg * i) * height,
-        r, g, b, alpha);
+        verts.addAll([x + sin(seg * i) * width,
+        y + cos(seg * i) * height,
+        r, g, b, alpha]);
 
-        indices.push(vecPos++, vecPos++);
+        indices.addAll([vecPos++, vecPos++]);
       }
 
-      indices.push(vecPos - 1);
+      indices.add(vecPos - 1);
     }
 
-    if (graphicsData.lineWidth) {
+    if (graphicsData.lineWidth != 0) {
       var tempPoints = graphicsData.points;
 
       graphicsData.points = [];
 
       for (i = 0; i < totalSegs + 1; i++) {
-        graphicsData.points.push(x + sin(seg * i) * width,
-        y + cos(seg * i) * height);
+        graphicsData.points.addAll([
+            x + sin(seg * i) * width,
+            y + cos(seg * i) * height
+        ]);
       }
 
       WebGLGraphics.buildLine(graphicsData, webGLData);
@@ -219,43 +248,45 @@ class WebGLGraphics {
     }
   }
 
-  buildLine(graphicsData, webGLData) {
+  static buildLine(GraphicsData graphicsData, WebGLData webGLData) {
     // TODO OPTIMISE!
-    var i = 0;
+    int i = 0;
 
-    var points = graphicsData.points;
-    if (points.length == 0)return;
+    List points = graphicsData.points;
+    if (points.length == 0) return;
+
 
     // if the line width is an odd number add 0.5 to align to a whole pixel
-    if (graphicsData.lineWidth % 2) {
+    if (graphicsData.lineWidth % 2 != 0) {
       for (i = 0; i < points.length; i++) {
         points[i] += 0.5;
       }
     }
 
+
     // get first and last point.. figure out the middle!
-    var firstPoint = new Point(points[0], points[1]);
-    var lastPoint = new Point(points[points.length - 2], points[points.length - 1]);
+    Point firstPoint = new Point(points[0], points[1]);
+    Point lastPoint = new Point(points[points.length - 2], points[points.length - 1]);
 
     // if the first point is the last point - gonna have issues :)
     if (firstPoint.x == lastPoint.x && firstPoint.y == lastPoint.y) {
-      points.pop();
-      points.pop();
+      points.removeLast();
+      points.removeLast();
 
       lastPoint = new Point(points[points.length - 2], points[points.length - 1]);
 
       var midPointX = lastPoint.x + (firstPoint.x - lastPoint.x) * 0.5;
       var midPointY = lastPoint.y + (firstPoint.y - lastPoint.y) * 0.5;
 
-      points.unshift(midPointX, midPointY);
-      points.push(midPointX, midPointY);
+      points.insertAll(0, [midPointX, midPointY]);
+      points.addAll([midPointX, midPointY]);
     }
 
-    var verts = webGLData.points;
-    var indices = webGLData.indices;
-    var length = points.length / 2;
-    var indexCount = points.length;
-    var indexStart = verts.length / 6;
+    List verts = webGLData.points;
+    List indices = webGLData.indices;
+    int length = points.length ~/ 2;
+    int indexCount = points.length;
+    int indexStart = verts.length ~/ 6;
 
     // DRAW the Line
     var width = graphicsData.lineWidth / 2;
@@ -289,11 +320,12 @@ class WebGLGraphics {
     perpy *= width;
 
     // start
-    verts.push(p1x - perpx, p1y - perpy,
-    r, g, b, alpha);
+    verts.addAll([p1x - perpx, p1y - perpy,
+    r, g, b, alpha]);
 
-    verts.push(p1x + perpx, p1y + perpy,
-    r, g, b, alpha);
+
+    verts.addAll([p1x + perpx, p1y + perpy,
+    r, g, b, alpha]);
 
     for (i = 1; i < length - 1; i++) {
       p1x = points[(i - 1) * 2];
@@ -332,14 +364,14 @@ class WebGLGraphics {
 
       denom = a1 * b2 - a2 * b1;
 
-      if (abs(denom) < 0.1) {
+      if ((denom < 0 ? -denom : denom) < 0.1) {
 
         denom += 10.1;
-        verts.push(p2x - perpx, p2y - perpy,
-        r, g, b, alpha);
+        verts.addAll([p2x - perpx, p2y - perpy,
+        r, g, b, alpha]);
 
-        verts.push(p2x + perpx, p2y + perpy,
-        r, g, b, alpha);
+        verts.addAll([p2x + perpx, p2y + perpy,
+        r, g, b, alpha]);
 
         continue;
       }
@@ -361,27 +393,28 @@ class WebGLGraphics {
         perp3x *= width;
         perp3y *= width;
 
-        verts.push(p2x - perp3x, p2y - perp3y);
-        verts.push(r, g, b, alpha);
+        verts.addAll([p2x - perp3x, p2y - perp3y]);
+        verts.addAll([r, g, b, alpha]);
 
-        verts.push(p2x + perp3x, p2y + perp3y);
-        verts.push(r, g, b, alpha);
+        verts.addAll([p2x + perp3x, p2y + perp3y]);
+        verts.addAll([r, g, b, alpha]);
 
-        verts.push(p2x - perp3x, p2y - perp3y);
-        verts.push(r, g, b, alpha);
+        verts.addAll([p2x - perp3x, p2y - perp3y]);
+        verts.addAll([r, g, b, alpha]);
 
         indexCount++;
       }
       else {
 
-        verts.push(px, py);
-        verts.push(r, g, b, alpha);
+        verts.addAll([px, py]);
+        verts.addAll([r, g, b, alpha]);
 
-        verts.push(p2x - (px - p2x), p2y - (py - p2y));
-        verts.push(r, g, b, alpha);
+        verts.addAll([p2x - (px - p2x), p2y - (py - p2y)]);
+        verts.addAll([r, g, b, alpha]);
       }
     }
 
+    //print((length - 2) * 2);
     p1x = points[(length - 2) * 2];
     p1y = points[(length - 2) * 2 + 1];
 
@@ -397,28 +430,29 @@ class WebGLGraphics {
     perpx *= width;
     perpy *= width;
 
-    verts.push(p2x - perpx, p2y - perpy);
-    verts.push(r, g, b, alpha);
+    verts.addAll([p2x - perpx, p2y - perpy]);
+    verts.addAll([r, g, b, alpha]);
 
-    verts.push(p2x + perpx, p2y + perpy);
-    verts.push(r, g, b, alpha);
-
-    indices.push(indexStart);
+    verts.addAll([p2x + perpx, p2y + perpy]);
+    verts.addAll([r, g, b, alpha]);
+//    print(verts);
+    indices.add(indexStart);
 
     for (i = 0; i < indexCount; i++) {
-      indices.push(indexStart++);
+      indices.add(indexStart++);
     }
 
-    indices.push(indexStart - 1);
+    indices.add(indexStart - 1);
   }
 
-  buildPoly(graphicsData, webGLData) {
+  static buildPoly(GraphicsData graphicsData, WebGLData webGLData) {
     var points = graphicsData.points;
-    if (points.length < 6)return;
+
+    if (points.length < 6) return;
 
     // get first and last point.. figure out the middle!
-    var verts = webGLData.points;
-    var indices = webGLData.indices;
+    List verts = webGLData.points;
+    List indices = webGLData.indices;
 
     var length = points.length / 2;
 
@@ -436,16 +470,19 @@ class WebGLGraphics {
     var i = 0;
 
     for (i = 0; i < triangles.length; i += 3) {
-      indices.push(triangles[i] + vertPos);
-      indices.push(triangles[i] + vertPos);
-      indices.push(triangles[i + 1] + vertPos);
-      indices.push(triangles[i + 2] + vertPos);
-      indices.push(triangles[i + 2] + vertPos);
+      indices.add(triangles[i] + vertPos);
+      indices.add(triangles[i] + vertPos);
+      indices.add(triangles[i + 1] + vertPos);
+      indices.add(triangles[i + 2] + vertPos);
+      indices.add(triangles[i + 2] + vertPos);
     }
 
     for (i = 0; i < length; i++) {
-      verts.push(points[i * 2], points[i * 2 + 1],
-      r, g, b, alpha);
+      verts.addAll([
+          points[i * 2],
+          points[i * 2 + 1],
+          r, g, b, alpha
+      ]);
     }
   }
 }

@@ -379,26 +379,26 @@ createWebGLTexture(Texture texture, RenderingContext gl) {
     texture._glTextures[gl] = gl.createTexture();
 
 
-    gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[gl]);
+    gl.bindTexture(TEXTURE_2D, texture._glTextures[gl]);
 
-    gl.pixelStorei(RenderingContext.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+    gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
 
-    gl.texImage2D(RenderingContext.TEXTURE_2D, 0, RenderingContext.RGBA, RenderingContext.RGBA, RenderingContext.UNSIGNED_BYTE, texture.source);
-    gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? RenderingContext.LINEAR : RenderingContext.NEAREST);
-    gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_MIN_FILTER, texture.scaleMode == scaleModes.LINEAR ? RenderingContext.LINEAR : RenderingContext.NEAREST);
+    gl.texImage2D(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, texture.source);
+    gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
+    gl.texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, texture.scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
 
     // reguler...
 
     if (!texture._powerOf2) {
-      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_S, RenderingContext.CLAMP_TO_EDGE);
-      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_T, RenderingContext.CLAMP_TO_EDGE);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
     }
     else {
-      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_S, RenderingContext.REPEAT);
-      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_T, RenderingContext.REPEAT);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, REPEAT);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT);
     }
 
-    gl.bindTexture(RenderingContext.TEXTURE_2D, null);
+    gl.bindTexture(TEXTURE_2D, null);
   }
 
   return texture._glTextures[gl];
@@ -406,25 +406,25 @@ createWebGLTexture(Texture texture, RenderingContext gl) {
 
 updateWebGLTexture(Texture texture, RenderingContext gl) {
   if (texture._glTextures[gl] != null) {
-    gl.bindTexture(RenderingContext.TEXTURE_2D, texture._glTextures[gl]);
-    gl.pixelStorei(RenderingContext.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.bindTexture(TEXTURE_2D, texture._glTextures[gl]);
+    gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
-    gl.texImage2D(RenderingContext.TEXTURE_2D, 0, RenderingContext.RGBA, RenderingContext.RGBA, RenderingContext.UNSIGNED_BYTE, texture.source);
-    gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? RenderingContext.LINEAR : RenderingContext.NEAREST);
-    gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_MIN_FILTER, texture.scaleMode == scaleModes.LINEAR ? RenderingContext.LINEAR : RenderingContext.NEAREST);
+    gl.texImage2D(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, texture.source);
+    gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
+    gl.texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, texture.scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
 
     // reguler...
 
     if (!texture._powerOf2) {
-      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_S, RenderingContext.CLAMP_TO_EDGE);
-      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_T, RenderingContext.CLAMP_TO_EDGE);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
     }
     else {
-      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_S, RenderingContext.REPEAT);
-      gl.texParameteri(RenderingContext.TEXTURE_2D, RenderingContext.TEXTURE_WRAP_T, RenderingContext.REPEAT);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, REPEAT);
+      gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT);
     }
 
-    gl.bindTexture(RenderingContext.TEXTURE_2D, null);
+    gl.bindTexture(TEXTURE_2D, null);
   }
 
 }

@@ -1,17 +1,18 @@
 import "dart:html";
+import "dart:math";
 import "package:pixi_dart/pixi.dart" as PIXI;
 
-main(){
+main() {
   // create an new instance of a pixi stage
   var stage = new PIXI.Stage(0x660099);
 
   // create a renderer instance
-  //PIXI.Renderer renderer =  new PIXI.CanvasRenderer(400, 300);
+  //var renderer =  new PIXI.CanvasRenderer(400, 300);
+  //var renderer = new PIXI.WebGLRenderer(400, 300);
+  var renderer = PIXI.autoDetectRenderer(400, 300);
 
-  var renderer =  new PIXI.WebGLRenderer(400, 400);
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
-
 
 
   // create a texture from an image path
@@ -19,6 +20,9 @@ main(){
   //window.console.log(texture.baseTexture);
   // create a new Sprite using the texture
   var bunny = new PIXI.Sprite(texture);
+
+  Random random = new Random();
+  bunny.tint = random.nextInt(0xFFFFFF);
 
   // center the sprites anchor point
   bunny.anchor.x = 0.5;
@@ -31,7 +35,7 @@ main(){
   stage.addChild(bunny);
 
   animate(num delta) {
-    window.requestAnimationFrame(animate);
+    PIXI.requestAnimFrame(animate);
 
     // just for fun, let's rotate mr rabbit a little
     bunny.rotation += 0.1;
@@ -39,6 +43,6 @@ main(){
     // render the stage
     renderer.render(stage);
   }
-  window.requestAnimationFrame(animate);
+  PIXI.requestAnimFrame(animate);
 
 }

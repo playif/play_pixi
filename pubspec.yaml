@@ -3,7 +3,7 @@ dependencies:
   browser: any
 transformers:
 - $dart2js:
-    checked: true
+    checked: false
     minify: false
-    suppressWarnings: false
+    suppressWarnings: true
     suppressHints: false
