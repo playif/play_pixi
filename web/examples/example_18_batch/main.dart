@@ -62,7 +62,7 @@ main() {
     dude.y = random.nextDouble() * viewHeight;
 
 // create some extra properties that will control movement
-    dude.tint = random.nextInt(0x808080);
+    dude.tint = random.nextInt(0x008080);
 
 // create a random direction in radians. This is a number between 0 and PI*2 which is the equivalent of 0 - 360 degrees
     dude.direction = random.nextDouble() * PI * 2;

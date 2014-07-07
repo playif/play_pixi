@@ -368,7 +368,7 @@ var $$ = {};
           return true;
       }
       return false;
-    }, "call$2", "get$contains", 4, 0, 11]
+    }, "call$2", "get$contains", 4, 0, 19]
   },
   DisplayObject: {
     "^": "Object;rotation<,hitArea<,interactiveChildren?,__hit?,__isOver<,mousemove<,mousedown<,_interactive<",
@@ -517,7 +517,7 @@ var $$ = {};
         this.scale.y = t1 / t2;
       }
       this.updateFrame = true;
-    }, "call$1", "get$onTextureUpdate", 2, 0, 12],
+    }, "call$1", "get$onTextureUpdate", 2, 0, 20],
     _renderWebGL$1: function(renderSession) {
       var t1, j, i;
       if (!this.visible || this.alpha <= 0)
@@ -566,7 +566,7 @@ var $$ = {};
     }
   },
   FilterBlock: {
-    "^": "Object;visible,renderable,target,_filterArea,filterArea,filterPasses"
+    "^": "Object;visible,renderable,target,_filterArea,filterArea,filterPasses,_glFilterTexture"
   },
   InteractionData: {
     "^": "Object;global,target,originalEvent"
@@ -704,7 +704,7 @@ var $$ = {};
           return H.ioore(t4, i);
         t4[i].get$mousemove();
       }
-    }, "call$1", "get$onMouseMove", 2, 0, 13],
+    }, "call$1", "get$onMouseMove", 2, 0, 21],
     onMouseDown$1: [function(_, $event) {
       var t1, $length, i;
       this.mouse.originalEvent = $event;
@@ -716,7 +716,7 @@ var $$ = {};
           return H.ioore(t1, i);
         t1[i].get$mousedown();
       }
-    }, "call$1", "get$onMouseDown", 2, 0, 14],
+    }, "call$1", "get$onMouseDown", 2, 0, 22],
     onMouseOut$1: [function(_, $event) {
       var t1, $length, t2, i, item;
       t1 = this.interactiveItems;
@@ -735,7 +735,7 @@ var $$ = {};
       t1 = t2.global;
       t1.x = -10000;
       t1.y = -10000;
-    }, "call$1", "get$onMouseOut", 2, 0, 14],
+    }, "call$1", "get$onMouseOut", 2, 0, 22],
     onMouseUp$1: [function(_, $event) {
       var t1, t2, $length, up, i, item;
       t1 = this.mouse;
@@ -756,7 +756,7 @@ var $$ = {};
           ;
         item.__isDown = false;
       }
-    }, "call$1", "get$onMouseUp", 2, 0, 13],
+    }, "call$1", "get$onMouseUp", 2, 0, 21],
     hitTest$2: function(item, interactionData) {
       var global, worldTransform, a00, a01, a02, a10, a11, a12, t1, id, t2, t3, x, y, width, height, x1, y1, $length, i;
       global = interactionData.global;
@@ -844,7 +844,7 @@ var $$ = {};
         for (j = 0; j < t1.length; ++j)
           t1[j].get$touchmove();
       }
-    }, "call$1", "get$onTouchMove", 2, 0, 15],
+    }, "call$1", "get$onTouchMove", 2, 0, 23],
     onTouchStart$1: [function(_, $event) {
       var rect, changedTouches, t1, t2, t3, t4, i, touchEvent, touchData, t5, t6, t7, t8, $length, j, item;
       rect = this.interactionDOMElement.getBoundingClientRect();
@@ -884,7 +884,7 @@ var $$ = {};
           item.get$tap();
         }
       }
-    }, "call$1", "get$onTouchStart", 2, 0, 15],
+    }, "call$1", "get$onTouchStart", 2, 0, 23],
     onTouchEnd$1: [function(_, $event) {
       var rect, changedTouches, t1, t2, t3, t4, i, touchEvent, touchData, t5, t6, t7, t8, $length, up, j;
       rect = this.interactionDOMElement.getBoundingClientRect();
@@ -918,7 +918,7 @@ var $$ = {};
         t1.push(touchData);
         t2.$indexSet(0, touchEvent.get$identifier(touchEvent), null);
       }
-    }, "call$1", "get$onTouchEnd", 2, 0, 15]
+    }, "call$1", "get$onTouchEnd", 2, 0, 23]
   },
   blendModes: {
     "^": "Object;value",
@@ -945,7 +945,7 @@ var $$ = {};
     "^": "Object;gl@,projection@,offset',drawCount@,shaderManager@,maskManager?,filterManager?,spriteBatch@,renderer?,currentBlendMode?,scaleMode,context,roundPixels"
   },
   Renderer: {
-    "^": "Object;type>"
+    "^": "Object;"
   },
   PixiFastShader: {
     "^": "Object;gl,program,fragmentSrc,vertexSrc,textureCount,uSampler,projectionVector,offsetVector,dimensions,uMatrix,aVertexPosition,aPositionCoord,aScale,aRotation,aTextureCoord,colorAttribute,attributes,uniforms",
@@ -997,52 +997,67 @@ var $$ = {};
       this.attributes = [this.aVertexPosition, this.aTextureCoord, t1];
       for (t1 = this.uniforms.get$keys()._map, t2 = new P.LinkedHashMapKeyIterator(t1, t1._modifications, null, null), t2._cell = t1._first; t2.moveNext$0();) {
         key = t2._collection$_current;
-        this.uniforms.$index(0, key).set$uniformLocation(gl.getUniformLocation(program, key));
+        C.JSNull_methods.$indexSet(this.uniforms.$index(0, key), "uniformLocation", gl.getUniformLocation(program, key));
       }
       this.initUniforms$0();
       this.program = program;
     },
     initUniforms$0: function() {
-      var gl, t1, t2, key, uniform, t3, type;
+      var gl, t1, t2, key, uniform, type;
       this.textureCount = 1;
       gl = this.gl;
-      for (t1 = this.uniforms.get$keys()._map, t2 = new P.LinkedHashMapKeyIterator(t1, t1._modifications, null, null), t2._cell = t1._first, t1 = J.getInterceptor$asx(gl); t2.moveNext$0();) {
+      for (t1 = this.uniforms.get$keys()._map, t2 = new P.LinkedHashMapKeyIterator(t1, t1._modifications, null, null), t2._cell = t1._first, t1 = J.getInterceptor$x(gl); t2.moveNext$0();) {
         key = t2._collection$_current;
         uniform = this.uniforms.$index(0, key);
-        t3 = J.getInterceptor$x(uniform);
-        type = t3.get$type(uniform);
-        if (type === "sampler2D") {
-          uniform.set$_init(false);
-          t3.get$value(uniform);
-          this.initSampler2D$1(uniform);
-        } else {
-          t3 = type === "mat2";
-          if (t3 || type === "mat3" || type === "mat4") {
-            uniform.set$glMatrix(true);
-            uniform.set$glValueLength(1);
-            if (t3)
-              uniform.set$glFunc(t1.get$uniformMatrix2fv(gl));
-            else if (type === "mat3")
-              uniform.set$glFunc(t1.get$uniformMatrix3fv(gl));
-            else if (type === "mat4")
-              uniform.set$glFunc(t1.get$uniformMatrix4fv(gl));
-          } else {
-            uniform.set$glFunc(t1.$index(gl, C.JSString_methods.$add("uniform", type)));
-            if (type === "2f" || type === "2i")
-              uniform.set$glValueLength(2);
-            else if (type === "3f" || type === "3i")
-              uniform.set$glValueLength(3);
-            else if (type === "4f" || type === "4i")
-              uniform.set$glValueLength(4);
-            else
-              uniform.set$glValueLength(1);
-          }
+        type = C.JSNull_methods.$index(uniform, "type");
+        switch (type) {
+          case "1f":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform1f(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 1);
+            break;
+          case "1i":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform1i(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 1);
+            break;
+          case "2f":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform2f(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 2);
+            break;
+          case "2i":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform2i(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 2);
+            break;
+          case "2fv":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform2fv(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 1);
+            break;
+          case "3f":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform3f(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 3);
+            break;
+          case "3i":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform3i(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 3);
+            break;
+          case "3fv":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform3fv(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 1);
+            break;
+          case "4f":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform4f(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 4);
+            break;
+          case "4i":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform4i(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 4);
+            break;
+          case "4fv":
+            C.JSNull_methods.$indexSet(uniform, "glFunc", t1.get$uniform4fv(gl));
+            C.JSNull_methods.$indexSet(uniform, "glValueLength", 1);
+            break;
         }
+        C.JSNull_methods.$index(uniform, "glFunc");
       }
-    },
-    initSampler2D$1: function(uniform) {
-      uniform.get$value(uniform);
-      return;
     },
     static: {"^": "PixiShader_defaultVertexSrc"}
   },
@@ -1528,8 +1543,8 @@ var $$ = {};
       t1.renderSession = t2;
       t1.defaultShader = t2.get$shaderManager().defaultShader;
       projection = t1.renderSession.get$projection();
-      t1.width = J.get$x$x(projection) * 2;
-      t1.height = -projection.y * 2;
+      t1.width = C.JSNumber_methods.toInt$0(J.get$x$x(projection) * 2);
+      t1.height = C.JSNumber_methods.toInt$0(-projection.y * 2);
       t1.buffer = buffer;
       displayObject._renderWebGL$1(this.renderSession);
       this.spriteBatch.flush$0(0);
@@ -1540,7 +1555,7 @@ var $$ = {};
     handleContextLost$1: [function($event) {
       J.preventDefault$0$x($event);
       this.contextLost = true;
-    }, "call$1", "get$handleContextLost", 2, 0, 16],
+    }, "call$1", "get$handleContextLost", 2, 0, 24],
     handleContextRestored$0: [function() {
       var exception, gl, t1, key;
       try {
@@ -1763,7 +1778,7 @@ var $$ = {};
       }}
   },
   BaseTexture_closure: {
-    "^": "Closure:16;scope_0",
+    "^": "Closure:24;scope_0",
     call$1: function(e) {
       var t1 = this.scope_0;
       t1._hasLoaded = true;
@@ -1803,7 +1818,7 @@ var $$ = {};
       M.WebGLRenderer_updateTextures();
       this.renderer.renderDisplayObject$3(displayObject, this.projection, this.textureBuffer.get$frameBuffer());
       displayObject.worldTransform = originalWorldTransform;
-    }, "call$3", "get$renderWebGL", 6, 0, 17],
+    }, "call$3", "get$renderWebGL", 6, 0, 25],
     renderCanvas$3: [function(displayObject, position, clear) {
       var children, originalWorldTransform, j, i, context;
       children = displayObject.children;
@@ -1820,7 +1835,7 @@ var $$ = {};
       this.renderer.renderDisplayObject$2(displayObject, context);
       J.setTransform$6$x(context, 1, 0, 0, 1, 0, 0);
       displayObject.worldTransform = originalWorldTransform;
-    }, "call$3", "get$renderCanvas", 6, 0, 18],
+    }, "call$3", "get$renderCanvas", 6, 0, 26],
     RenderTexture$4: function(width, height, renderer, scaleMode) {
       var t1, t2, t3, t4, t5, gl;
       t1 = this.renderer;
@@ -1942,7 +1957,7 @@ var $$ = {};
       }}
   },
   Texture_closure: {
-    "^": "Closure:16;scope_0",
+    "^": "Closure:24;scope_0",
     call$1: function(e) {
       this.scope_0.onBaseTextureLoaded$0();
     }
@@ -1966,7 +1981,7 @@ var $$ = {};
     }
   },
   PixiEvent: {
-    "^": "Object;type>,content,loader"
+    "^": "Object;type,content,loader"
   },
   EventTarget0: {
     "^": "Object;",
@@ -2048,7 +2063,7 @@ var $$ = {};
     toString$0: function(receiver) {
       return H.Primitives_objectToString(receiver);
     },
-    "%": "ArrayBuffer|CanvasGradient|CanvasPattern|DOMError|FileError|ImageData|MediaError|MediaKeyError|Navigator|NavigatorUserMediaError|PositionError|SQLError|SVGAnimatedEnumeration|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString|SVGPointList|SVGRect|WebGLBuffer|WebGLFramebuffer|WebGLProgram|WebGLRenderbuffer|WebGLShader|WebGLTexture"
+    "%": "ArrayBuffer|Blob|CanvasGradient|CanvasPattern|DOMError|File|FileError|ImageData|MediaError|MediaKeyError|Navigator|NavigatorUserMediaError|PositionError|SQLError|SVGAnimatedEnumeration|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString|SVGPointList|SVGRect|WebGLBuffer|WebGLFramebuffer|WebGLProgram|WebGLRenderbuffer|WebGLShader|WebGLTexture"
   },
   JSBool: {
     "^": "Interceptor;",
@@ -2325,7 +2340,7 @@ var $$ = {};
       if (startIndex === 0 && endIndex0 === endIndex)
         return result;
       return result.substring(startIndex, endIndex0);
-    }, "call$0", "get$trim", 0, 0, 19],
+    }, "call$0", "get$trim", 0, 0, 27],
     $mul: function(receiver, times) {
       var s, result;
       if (0 >= times)
@@ -3302,7 +3317,7 @@ var $$ = {};
     }
   },
   _Copier_visitMap_closure: {
-    "^": "Closure:20;box_0,this_1",
+    "^": "Closure:28;box_0,this_1",
     call$2: function(key, val) {
       var t1 = this.this_1;
       J.$indexSet$ax(this.box_0.copy_0, t1._dispatch$1(key), t1._dispatch$1(val));
@@ -4449,7 +4464,7 @@ var $$ = {};
     }
   },
   unwrapException_saveStackTrace: {
-    "^": "Closure:16;ex_0",
+    "^": "Closure:24;ex_0",
     call$1: function(error) {
       if (!!J.getInterceptor(error).$isError)
         if (error.$thrownJsError == null)
@@ -4693,19 +4708,19 @@ var $$ = {};
     $isTypeImpl: true
   },
   initHooks_closure: {
-    "^": "Closure:16;getTag_0",
+    "^": "Closure:24;getTag_0",
     call$1: function(o) {
       return this.getTag_0(o);
     }
   },
   initHooks_closure0: {
-    "^": "Closure:21;getUnknownTag_1",
+    "^": "Closure:29;getUnknownTag_1",
     call$2: function(o, tag) {
       return this.getUnknownTag_1(o, tag);
     }
   },
   initHooks_closure1: {
-    "^": "Closure:22;prototypeForTag_2",
+    "^": "Closure:30;prototypeForTag_2",
     call$1: function(tag) {
       return this.prototypeForTag_2(tag);
     }
@@ -4865,7 +4880,7 @@ var $$ = {};
     self.scheduleImmediate(H.convertDartClosureToJS(new P._AsyncRun__scheduleImmediateJsOverride_internalCallback(callback), 0));
   }, "call$1", "_AsyncRun__scheduleImmediateJsOverride$closure", 2, 0, 0],
   _AsyncRun__scheduleImmediateWithTimer: [function(callback) {
-    P.Timer__createTimer(C.Duration_0, callback);
+    P._createTimer(C.Duration_0, callback);
   }, "call$1", "_AsyncRun__scheduleImmediateWithTimer$closure", 2, 0, 0],
   _registerErrorHandler: function(errorHandler, zone) {
     var t1 = H.getDynamicRuntimeType();
@@ -4899,6 +4914,20 @@ var $$ = {};
     }
 
   }, "call$0", "_asyncRunCallback$closure", 0, 0, 1],
+  _scheduleAsyncCallback: function(callback) {
+    var t1, t2;
+    t1 = $._lastCallback;
+    if (t1 == null) {
+      t1 = new P._AsyncCallbackEntry(callback, null);
+      $._lastCallback = t1;
+      $._nextCallback = t1;
+      $.get$_AsyncRun_scheduleImmediateClosure().call$1(P._asyncRunCallback$closure());
+    } else {
+      t2 = new P._AsyncCallbackEntry(callback, null);
+      t1.next = t2;
+      $._lastCallback = t2;
+    }
+  },
   _runUserCode: function(userCode, onSuccess, onError) {
     var e, s, exception, t1;
     try {
@@ -4925,11 +4954,11 @@ var $$ = {};
     var t1 = $.Zone__current;
     if (t1 === C.C__RootZone) {
       t1.toString;
-      return P.Timer__createTimer(duration, callback);
+      return P._rootCreateTimer(t1, null, t1, duration, callback);
     }
-    return P.Timer__createTimer(duration, t1.bindCallback$2$runGuarded(callback, true));
+    return P._rootCreateTimer(t1, null, t1, duration, t1.bindCallback$2$runGuarded(callback, true));
   },
-  Timer__createTimer: function(duration, callback) {
+  _createTimer: function(duration, callback) {
     var milliseconds = C.JSNumber_methods._tdivFast$1(duration._duration, 1000);
     return H.TimerImpl$(milliseconds < 0 ? 0 : milliseconds, callback);
   },
@@ -4939,7 +4968,7 @@ var $$ = {};
     return previous;
   },
   _rootHandleUncaughtError: function($self, $parent, zone, error, stackTrace) {
-    P._rootScheduleMicrotask(null, null, C.C__RootZone, new P._rootHandleUncaughtError_closure(error, stackTrace));
+    P._rootRun($self, null, $self, new P._rootHandleUncaughtError_closure(error, stackTrace));
   },
   _rootRun: function($self, $parent, zone, f) {
     var old, t1;
@@ -4978,20 +5007,10 @@ var $$ = {};
     }
   },
   _rootScheduleMicrotask: function($self, $parent, zone, f) {
-    var t1, t2;
-    if (C.C__RootZone !== zone)
-      f = zone.bindCallback$1(f);
-    t1 = $._lastCallback;
-    if (t1 == null) {
-      t1 = new P._AsyncCallbackEntry(f, null);
-      $._lastCallback = t1;
-      $._nextCallback = t1;
-      $.get$_AsyncRun_scheduleImmediateClosure().call$1(P._asyncRunCallback$closure());
-    } else {
-      t2 = new P._AsyncCallbackEntry(f, null);
-      t1.next = t2;
-      $._lastCallback = t2;
-    }
+    P._scheduleAsyncCallback(C.C__RootZone !== zone ? zone.bindCallback$1(f) : f);
+  },
+  _rootCreateTimer: function($self, $parent, zone, duration, callback) {
+    return P._createTimer(duration, C.C__RootZone !== zone ? zone.bindCallback$1(callback) : callback);
   },
   _AsyncRun__scheduleImmediateJsOverride_internalCallback: {
     "^": "Closure:6;callback_0",
@@ -5061,7 +5080,7 @@ var $$ = {};
       if (this._state >= 4) {
         t1 = this._zone;
         t1.toString;
-        P._rootScheduleMicrotask(null, null, t1, new P._Future__addListener_closure(this, listener));
+        P._rootScheduleMicrotask(t1, null, t1, new P._Future__addListener_closure(this, listener));
       } else {
         listener._nextListener = this._resultOrListeners;
         this._resultOrListeners = listener;
@@ -5102,7 +5121,7 @@ var $$ = {};
       P._Future__propagateToListeners(this, listeners);
     }, function(error) {
       return this._completeError$2(error, null);
-    }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 23, 8],
+    }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 31, 8],
     $is_Future: true,
     $isFuture: true,
     static: {"^": "_Future__INCOMPLETE,_Future__PENDING_COMPLETE,_Future__CHAINED,_Future__VALUE,_Future__ERROR", _Future$: function($T) {
@@ -5143,7 +5162,7 @@ var $$ = {};
             t3 = J.get$error$x(asyncError);
             t4 = asyncError.get$stackTrace();
             t2.toString;
-            P._rootHandleUncaughtError(null, null, t2, t3, t4);
+            P._rootHandleUncaughtError(t2, null, t2, t3, t4);
             return;
           }
           if (listeners == null)
@@ -5169,9 +5188,10 @@ var $$ = {};
           if (t4) {
             zone = listeners._zone;
             if (hasError) {
-              t4 = t1.source_4.get$_zone().get$errorZone();
+              t4 = t1.source_4.get$_zone();
+              t4.toString;
               zone.toString;
-              t4 = t4 !== zone;
+              t4 = zone == null ? t4 != null : zone !== t4;
             } else
               t4 = false;
             if (t4) {
@@ -5180,7 +5200,7 @@ var $$ = {};
               t3 = J.get$error$x(asyncError);
               t4 = asyncError.get$stackTrace();
               t2.toString;
-              P._rootHandleUncaughtError(null, null, t2, t3, t4);
+              P._rootHandleUncaughtError(t2, null, t2, t3, t4);
               return;
             }
             oldZone = $.Zone__current;
@@ -5249,13 +5269,13 @@ var $$ = {};
     }
   },
   _Future__chainForeignFuture_closure: {
-    "^": "Closure:16;target_0",
+    "^": "Closure:24;target_0",
     call$1: function(value) {
       this.target_0._completeWithValue$1(value);
     }
   },
   _Future__chainForeignFuture_closure0: {
-    "^": "Closure:24;target_1",
+    "^": "Closure:32;target_1",
     call$2: function(error, stackTrace) {
       this.target_1._completeError$2(error, stackTrace);
     },
@@ -5264,13 +5284,15 @@ var $$ = {};
     }
   },
   _Future__propagateToListeners_handleValueCallback: {
-    "^": "Closure:25;box_1,listener_3,sourceValue_4,zone_5",
+    "^": "Closure:33;box_1,listener_3,sourceValue_4,zone_5",
     call$0: function() {
-      var e, s, t1, exception;
+      var e, s, t1, t2, exception;
       try {
-        t1 = this.listener_3;
-        t1 = t1._state === 2 ? null : t1._onValueCallback;
-        this.box_1.listenerValueOrError_2 = this.zone_5.runUnary$2(t1, this.sourceValue_4);
+        t1 = this.zone_5;
+        t2 = this.listener_3;
+        t2 = t2._state === 2 ? null : t2._onValueCallback;
+        t1.toString;
+        this.box_1.listenerValueOrError_2 = P._rootRunUnary(t1, null, t1, t2, this.sourceValue_4);
         return true;
       } catch (exception) {
         t1 = H.unwrapException(exception);
@@ -5285,14 +5307,17 @@ var $$ = {};
   _Future__propagateToListeners_handleError: {
     "^": "Closure:1;box_2,box_1,listener_6,zone_7",
     call$0: function() {
-      var asyncError, test, matchesTest, e, s, errorCallback, e0, s0, t1, exception, t2, listenerValueOrError, t3, t4;
+      var asyncError, test, matchesTest, e, s, errorCallback, e0, s0, t1, t2, t3, exception, listenerValueOrError, t4;
       asyncError = this.box_2.source_4.get$_error();
       t1 = this.listener_6;
       test = t1._state === 2 ? null : t1._errorTestCallback;
       matchesTest = true;
       if (test != null)
         try {
-          matchesTest = this.zone_7.runUnary$2(test, J.get$error$x(asyncError));
+          t2 = this.zone_7;
+          t3 = J.get$error$x(asyncError);
+          t2.toString;
+          matchesTest = P._rootRunUnary(t2, null, t2, test, t3);
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e = t1;
@@ -5314,10 +5339,16 @@ var $$ = {};
           t2 = H.buildFunctionType(t2, [t2, t2])._isTest$1(t1);
           t3 = this.zone_7;
           t4 = this.box_1;
-          if (t2)
-            t4.listenerValueOrError_2 = t3.runBinary$3(errorCallback, J.get$error$x(asyncError), asyncError.get$stackTrace());
-          else
-            t4.listenerValueOrError_2 = t3.runUnary$2(errorCallback, J.get$error$x(asyncError));
+          if (t2) {
+            t1 = J.get$error$x(asyncError);
+            t2 = asyncError.get$stackTrace();
+            t3.toString;
+            t4.listenerValueOrError_2 = P._rootRunBinary(t3, null, t3, errorCallback, t1, t2);
+          } else {
+            t1 = J.get$error$x(asyncError);
+            t3.toString;
+            t4.listenerValueOrError_2 = P._rootRunUnary(t3, null, t3, errorCallback, t1);
+          }
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e0 = t1;
@@ -5342,13 +5373,15 @@ var $$ = {};
   _Future__propagateToListeners_handleWhenCompleteCallback: {
     "^": "Closure:1;box_2,box_1,hasError_8,listener_9,zone_10",
     call$0: function() {
-      var t1, e, s, t2, exception, t3;
+      var t1, e, s, t2, t3, exception;
       t1 = {};
       t1.completeResult_0 = null;
       try {
-        t2 = this.listener_9;
-        t2 = t2._state === 2 ? null : t2._whenCompleteActionCallback;
-        t1.completeResult_0 = this.zone_10.run$1(t2);
+        t2 = this.zone_10;
+        t3 = this.listener_9;
+        t3 = t3._state === 2 ? null : t3._whenCompleteActionCallback;
+        t2.toString;
+        t1.completeResult_0 = P._rootRun(t2, null, t2, t3);
       } catch (exception) {
         t2 = H.unwrapException(exception);
         e = t2;
@@ -5377,13 +5410,13 @@ var $$ = {};
     }
   },
   _Future__propagateToListeners_handleWhenCompleteCallback_closure: {
-    "^": "Closure:16;box_2,listener_11",
+    "^": "Closure:24;box_2,listener_11",
     call$1: function(ignored) {
       P._Future__propagateToListeners(this.box_2.source_4, this.listener_11);
     }
   },
   _Future__propagateToListeners_handleWhenCompleteCallback_closure0: {
-    "^": "Closure:24;box_0,listener_12",
+    "^": "Closure:32;box_0,listener_12",
     call$2: function(error, stackTrace) {
       var t1, completeResult;
       t1 = this.box_0;
@@ -5441,7 +5474,7 @@ var $$ = {};
     }
   },
   Stream_forEach__closure0: {
-    "^": "Closure:16;",
+    "^": "Closure:24;",
     call$1: function(_) {
     }
   },
@@ -5452,7 +5485,7 @@ var $$ = {};
     }
   },
   Stream_length_closure: {
-    "^": "Closure:16;box_0",
+    "^": "Closure:24;box_0",
     call$1: function(_) {
       ++this.box_0.count_0;
     }
@@ -5479,21 +5512,94 @@ var $$ = {};
     }
   },
   _cancelAndErrorClosure_closure: {
-    "^": "Closure:26;subscription_0,future_1",
+    "^": "Closure:34;subscription_0,future_1",
     call$2: function(error, stackTrace) {
       return P._cancelAndError(this.subscription_0, this.future_1, error, stackTrace);
     }
   },
-  _Zone: {
-    "^": "Object;"
+  _BaseZone: {
+    "^": "Object;",
+    runGuarded$1: function(f) {
+      var e, s, t1, exception;
+      try {
+        t1 = this.run$1(f);
+        return t1;
+      } catch (exception) {
+        t1 = H.unwrapException(exception);
+        e = t1;
+        s = new H._StackTrace(exception, null);
+        return this.handleUncaughtError$2(e, s);
+      }
+
+    },
+    runUnaryGuarded$2: function(f, arg) {
+      var e, s, t1, exception;
+      try {
+        t1 = this.runUnary$2(f, arg);
+        return t1;
+      } catch (exception) {
+        t1 = H.unwrapException(exception);
+        e = t1;
+        s = new H._StackTrace(exception, null);
+        return this.handleUncaughtError$2(e, s);
+      }
+
+    },
+    bindCallback$2$runGuarded: function(f, runGuarded) {
+      var registered = this.registerCallback$1(f);
+      if (runGuarded)
+        return new P._BaseZone_bindCallback_closure(this, registered);
+      else
+        return new P._BaseZone_bindCallback_closure0(this, registered);
+    },
+    bindCallback$1: function(f) {
+      return this.bindCallback$2$runGuarded(f, true);
+    },
+    bindUnaryCallback$2$runGuarded: function(f, runGuarded) {
+      var registered = this.registerUnaryCallback$1(f);
+      if (runGuarded)
+        return new P._BaseZone_bindUnaryCallback_closure(this, registered);
+      else
+        return new P._BaseZone_bindUnaryCallback_closure0(this, registered);
+    }
+  },
+  _BaseZone_bindCallback_closure: {
+    "^": "Closure:6;this_0,registered_1",
+    call$0: function() {
+      return this.this_0.runGuarded$1(this.registered_1);
+    }
+  },
+  _BaseZone_bindCallback_closure0: {
+    "^": "Closure:6;this_2,registered_3",
+    call$0: function() {
+      return this.this_2.run$1(this.registered_3);
+    }
+  },
+  _BaseZone_bindUnaryCallback_closure: {
+    "^": "Closure:24;this_0,registered_1",
+    call$1: function(arg) {
+      return this.this_0.runUnaryGuarded$2(this.registered_1, arg);
+    }
+  },
+  _BaseZone_bindUnaryCallback_closure0: {
+    "^": "Closure:24;this_2,registered_3",
+    call$1: function(arg) {
+      return this.this_2.runUnary$2(this.registered_3, arg);
+    }
   },
   _rootHandleUncaughtError_closure: {
     "^": "Closure:6;error_0,stackTrace_1",
     call$0: function() {
+      P._scheduleAsyncCallback(new P._rootHandleUncaughtError__closure(this.error_0, this.stackTrace_1));
+    }
+  },
+  _rootHandleUncaughtError__closure: {
+    "^": "Closure:6;error_2,stackTrace_3",
+    call$0: function() {
       var t1, trace;
-      t1 = this.error_0;
+      t1 = this.error_2;
       P.print("Uncaught Error: " + H.S(t1));
-      trace = this.stackTrace_1;
+      trace = this.stackTrace_3;
       if (trace == null && !!J.getInterceptor(t1).$isError)
         trace = t1.get$stackTrace();
       if (trace != null)
@@ -5502,101 +5608,24 @@ var $$ = {};
     }
   },
   _RootZone: {
-    "^": "_Zone;",
-    get$errorZone: function() {
-      return this;
-    },
-    runGuarded$1: function(f) {
-      var e, s, t1, exception;
-      try {
-        if (C.C__RootZone === $.Zone__current) {
-          t1 = f.call$0();
-          return t1;
-        }
-        t1 = P._rootRun(null, null, this, f);
-        return t1;
-      } catch (exception) {
-        t1 = H.unwrapException(exception);
-        e = t1;
-        s = new H._StackTrace(exception, null);
-        return P._rootHandleUncaughtError(null, null, this, e, s);
-      }
-
-    },
-    runUnaryGuarded$2: function(f, arg) {
-      var e, s, t1, exception;
-      try {
-        if (C.C__RootZone === $.Zone__current) {
-          t1 = f.call$1(arg);
-          return t1;
-        }
-        t1 = P._rootRunUnary(null, null, this, f, arg);
-        return t1;
-      } catch (exception) {
-        t1 = H.unwrapException(exception);
-        e = t1;
-        s = new H._StackTrace(exception, null);
-        return P._rootHandleUncaughtError(null, null, this, e, s);
-      }
-
-    },
-    bindCallback$2$runGuarded: function(f, runGuarded) {
-      if (runGuarded)
-        return new P._RootZone_bindCallback_closure(this, f);
-      else
-        return new P._RootZone_bindCallback_closure0(this, f);
-    },
-    bindCallback$1: function(f) {
-      return this.bindCallback$2$runGuarded(f, true);
-    },
-    bindUnaryCallback$2$runGuarded: function(f, runGuarded) {
-      if (runGuarded)
-        return new P._RootZone_bindUnaryCallback_closure(this, f);
-      else
-        return new P._RootZone_bindUnaryCallback_closure0(this, f);
-    },
+    "^": "_BaseZone;",
     $index: function(_, key) {
       return;
     },
+    handleUncaughtError$2: function(error, stackTrace) {
+      return P._rootHandleUncaughtError(this, null, this, error, stackTrace);
+    },
     run$1: function(f) {
-      if ($.Zone__current === C.C__RootZone)
-        return f.call$0();
-      return P._rootRun(null, null, this, f);
+      return P._rootRun(this, null, this, f);
     },
     runUnary$2: function(f, arg) {
-      if ($.Zone__current === C.C__RootZone)
-        return f.call$1(arg);
-      return P._rootRunUnary(null, null, this, f, arg);
+      return P._rootRunUnary(this, null, this, f, arg);
     },
-    runBinary$3: function(f, arg1, arg2) {
-      if ($.Zone__current === C.C__RootZone)
-        return f.call$2(arg1, arg2);
-      return P._rootRunBinary(null, null, this, f, arg1, arg2);
+    registerCallback$1: function(f) {
+      return f;
     },
-    static: {"^": "_RootZone__rootMap,_RootZone__rootDelegate"}
-  },
-  _RootZone_bindCallback_closure: {
-    "^": "Closure:6;this_0,f_1",
-    call$0: function() {
-      return this.this_0.runGuarded$1(this.f_1);
-    }
-  },
-  _RootZone_bindCallback_closure0: {
-    "^": "Closure:6;this_2,f_3",
-    call$0: function() {
-      return this.this_2.run$1(this.f_3);
-    }
-  },
-  _RootZone_bindUnaryCallback_closure: {
-    "^": "Closure:16;this_0,f_1",
-    call$1: function(arg) {
-      return this.this_0.runUnaryGuarded$2(this.f_1, arg);
-    }
-  },
-  _RootZone_bindUnaryCallback_closure0: {
-    "^": "Closure:16;this_2,f_3",
-    call$1: function(arg) {
-      return this.this_2.runUnary$2(this.f_3, arg);
+    registerUnaryCallback$1: function(f) {
+      return f;
     }
   }
 }],
@@ -5945,7 +5974,7 @@ var $$ = {};
       }}
   },
   _HashMap_values_closure: {
-    "^": "Closure:16;this_0",
+    "^": "Closure:24;this_0",
     call$1: function(each) {
       return this.this_0.$index(0, each);
     }
@@ -6203,7 +6232,7 @@ var $$ = {};
       }}
   },
   _LinkedHashMap_values_closure: {
-    "^": "Closure:16;this_0",
+    "^": "Closure:24;this_0",
     call$1: function(each) {
       return this.this_0.$index(0, each);
     }
@@ -6555,7 +6584,7 @@ var $$ = {};
     $isEfficientLength: true
   },
   Maps_mapToString_closure: {
-    "^": "Closure:20;box_0,result_1",
+    "^": "Closure:28;box_0,result_1",
     call$2: function(k, v) {
       var t1 = this.box_0;
       if (!t1.first_0)
@@ -6772,7 +6801,7 @@ var $$ = {};
     H.printString(line);
   },
   NoSuchMethodError_toString_closure: {
-    "^": "Closure:27;box_0",
+    "^": "Closure:35;box_0",
     call$2: function(key, value) {
       var t1 = this.box_0;
       if (t1.i_1 > 0)
@@ -6881,7 +6910,7 @@ var $$ = {};
       }}
   },
   Duration_toString_sixDigits: {
-    "^": "Closure:28;",
+    "^": "Closure:36;",
     call$1: function(n) {
       if (n >= 100000)
         return H.S(n);
@@ -6897,7 +6926,7 @@ var $$ = {};
     }
   },
   Duration_toString_twoDigits: {
-    "^": "Closure:28;",
+    "^": "Closure:36;",
     call$1: function(n) {
       if (n >= 10)
         return H.S(n);
@@ -7164,10 +7193,10 @@ var $$ = {};
   },
   HtmlElement: {
     "^": "Element;",
-    "%": "HTMLAppletElement|HTMLBRElement|HTMLBaseElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDirectoryElement|HTMLDivElement|HTMLFontElement|HTMLFrameElement|HTMLFrameSetElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLMapElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMetaElement|HTMLMeterElement|HTMLModElement|HTMLOptGroupElement|HTMLOptionElement|HTMLParagraphElement|HTMLParamElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement|HTMLShadowElement|HTMLSpanElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableElement|HTMLTableHeaderCellElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTemplateElement|HTMLTitleElement|HTMLUListElement|HTMLUnknownElement;HTMLElement"
+    "%": "HTMLAppletElement|HTMLBRElement|HTMLBaseElement|HTMLButtonElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDirectoryElement|HTMLDivElement|HTMLFieldSetElement|HTMLFontElement|HTMLFrameElement|HTMLFrameSetElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLKeygenElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLMapElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMetaElement|HTMLMeterElement|HTMLModElement|HTMLOListElement|HTMLOptGroupElement|HTMLOptionElement|HTMLOutputElement|HTMLParagraphElement|HTMLParamElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement|HTMLShadowElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableElement|HTMLTableHeaderCellElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTemplateElement|HTMLTextAreaElement|HTMLTitleElement|HTMLUListElement|HTMLUnknownElement;HTMLElement"
   },
   AnchorElement: {
-    "^": "HtmlElement;type=",
+    "^": "HtmlElement;",
     toString$0: function(receiver) {
       return receiver.toString();
     },
@@ -7180,20 +7209,12 @@ var $$ = {};
     },
     "%": "HTMLAreaElement"
   },
-  Blob: {
-    "^": "Interceptor;type=",
-    "%": "Blob|File"
-  },
   BodyElement: {
     "^": "HtmlElement;",
     get$onLoad: function(receiver) {
       return H.setRuntimeTypeInfo(new W._ElementEventStreamImpl(receiver, C.EventStreamProvider_load._eventType, false), [null]);
     },
     "%": "HTMLBodyElement"
-  },
-  ButtonElement: {
-    "^": "HtmlElement;type=",
-    "%": "HTMLButtonElement"
   },
   CanvasElement: {
     "^": "HtmlElement;height%,width%",
@@ -7265,7 +7286,7 @@ var $$ = {};
     "%": ";Element"
   },
   EmbedElement: {
-    "^": "HtmlElement;height%,src},type=,width%",
+    "^": "HtmlElement;height%,src},width%",
     "%": "HTMLEmbedElement"
   },
   ErrorEvent: {
@@ -7273,11 +7294,11 @@ var $$ = {};
     "%": "ErrorEvent"
   },
   Event: {
-    "^": "Interceptor;type=",
+    "^": "Interceptor;",
     preventDefault$0: function(receiver) {
       return receiver.preventDefault();
     },
-    "%": "AudioProcessingEvent|AutocompleteErrorEvent|BeforeLoadEvent|BeforeUnloadEvent|CSSFontFaceLoadEvent|CloseEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|HashChangeEvent|IDBVersionChangeEvent|InstallEvent|InstallPhaseEvent|MIDIConnectionEvent|MIDIMessageEvent|MediaKeyEvent|MediaKeyMessageEvent|MediaKeyNeededEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MutationEvent|OfflineAudioCompletionEvent|OverflowEvent|PageTransitionEvent|PopStateEvent|ProgressEvent|RTCDTMFToneChangeEvent|RTCDataChannelEvent|RTCIceCandidateEvent|ResourceProgressEvent|SecurityPolicyViolationEvent|SpeechInputEvent|SpeechRecognitionEvent|SpeechSynthesisEvent|StorageEvent|TrackEvent|TransitionEvent|WebGLContextEvent|WebKitAnimationEvent|WebKitTransitionEvent|XMLHttpRequestProgressEvent;Event|InputEvent"
+    "%": "AudioProcessingEvent|AutocompleteErrorEvent|BeforeLoadEvent|BeforeUnloadEvent|CSSFontFaceLoadEvent|CloseEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|HashChangeEvent|IDBVersionChangeEvent|InstallEvent|InstallPhaseEvent|MIDIConnectionEvent|MIDIMessageEvent|MediaKeyEvent|MediaKeyMessageEvent|MediaKeyNeededEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MutationEvent|OfflineAudioCompletionEvent|OverflowEvent|PageTransitionEvent|PopStateEvent|ProgressEvent|RTCDTMFToneChangeEvent|RTCDataChannelEvent|RTCIceCandidateEvent|ResourceProgressEvent|SecurityPolicyViolationEvent|SpeechInputEvent|SpeechRecognitionEvent|SpeechSynthesisEvent|StorageEvent|TrackEvent|TransitionEvent|WebGLContextEvent|WebKitAnimationEvent|WebKitTransitionEvent|XMLHttpRequestProgressEvent;Event"
   },
   EventTarget: {
     "^": "Interceptor;",
@@ -7292,10 +7313,6 @@ var $$ = {};
       return receiver.removeEventListener(type, H.convertDartClosureToJS(listener, 1), useCapture);
     },
     "%": "MediaStream;EventTarget"
-  },
-  FieldSetElement: {
-    "^": "HtmlElement;type=",
-    "%": "HTMLFieldSetElement"
   },
   FormElement: {
     "^": "HtmlElement;length=",
@@ -7338,15 +7355,11 @@ var $$ = {};
     "%": "HTMLImageElement"
   },
   InputElement: {
-    "^": "HtmlElement;height%,src},type=,width%",
+    "^": "HtmlElement;height%,src},width%",
     "%": "HTMLInputElement"
   },
-  KeygenElement: {
-    "^": "HtmlElement;type=",
-    "%": "HTMLKeygenElement"
-  },
   LinkElement: {
-    "^": "HtmlElement;crossOrigin},type=",
+    "^": "HtmlElement;crossOrigin}",
     "%": "HTMLLinkElement"
   },
   MediaElement: {
@@ -7395,41 +7408,25 @@ var $$ = {};
     $isJavaScriptIndexingBehavior: true,
     "%": "NodeList|RadioNodeList"
   },
-  OListElement: {
-    "^": "HtmlElement;type=",
-    "%": "HTMLOListElement"
-  },
   ObjectElement: {
-    "^": "HtmlElement;height%,type=,width%",
+    "^": "HtmlElement;height%,width%",
     "%": "HTMLObjectElement"
   },
-  OutputElement: {
-    "^": "HtmlElement;type=",
-    "%": "HTMLOutputElement"
-  },
   ScriptElement: {
-    "^": "HtmlElement;crossOrigin},src},type=",
+    "^": "HtmlElement;crossOrigin},src}",
     "%": "HTMLScriptElement"
   },
   SelectElement: {
-    "^": "HtmlElement;length=,type=",
+    "^": "HtmlElement;length=",
     "%": "HTMLSelectElement"
   },
   SourceElement: {
-    "^": "HtmlElement;src},type=",
+    "^": "HtmlElement;src}",
     "%": "HTMLSourceElement"
   },
   SpeechRecognitionError: {
     "^": "Event;error=",
     "%": "SpeechRecognitionError"
-  },
-  StyleElement: {
-    "^": "HtmlElement;type=",
-    "%": "HTMLStyleElement"
-  },
-  TextAreaElement: {
-    "^": "HtmlElement;type=",
-    "%": "HTMLTextAreaElement"
   },
   Touch: {
     "^": "Interceptor;",
@@ -7738,7 +7735,7 @@ var $$ = {};
     "%": "SVGFEBlendElement"
   },
   FEColorMatrixElement: {
-    "^": "SvgElement;type=,height=,width=",
+    "^": "SvgElement;height=,width=",
     "%": "SVGFEColorMatrixElement"
   },
   FEComponentTransferElement: {
@@ -7794,7 +7791,7 @@ var $$ = {};
     "%": "SVGFETileElement"
   },
   FETurbulenceElement: {
-    "^": "SvgElement;type=,height=,width=",
+    "^": "SvgElement;height=,width=",
     "%": "SVGFETurbulenceElement"
   },
   FilterElement: {
@@ -7829,20 +7826,12 @@ var $$ = {};
     "^": "GeometryElement;height=,width=",
     "%": "SVGRectElement"
   },
-  ScriptElement0: {
-    "^": "SvgElement;type=",
-    "%": "SVGScriptElement"
-  },
-  StyleElement0: {
-    "^": "SvgElement;type=",
-    "%": "SVGStyleElement"
-  },
   SvgElement: {
     "^": "Element;",
     get$onLoad: function(receiver) {
       return H.setRuntimeTypeInfo(new W._ElementEventStreamImpl(receiver, C.EventStreamProvider_load._eventType, false), [null]);
     },
-    "%": "SVGAltGlyphDefElement|SVGAltGlyphItemElement|SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGAnimationElement|SVGComponentTransferFunctionElement|SVGCursorElement|SVGDescElement|SVGDiscardElement|SVGFEDistantLightElement|SVGFEDropShadowElement|SVGFEFuncAElement|SVGFEFuncBElement|SVGFEFuncGElement|SVGFEFuncRElement|SVGFEMergeNodeElement|SVGFEPointLightElement|SVGFESpotLightElement|SVGFontElement|SVGFontFaceElement|SVGFontFaceFormatElement|SVGFontFaceNameElement|SVGFontFaceSrcElement|SVGFontFaceUriElement|SVGGlyphElement|SVGGlyphRefElement|SVGGradientElement|SVGHKernElement|SVGLinearGradientElement|SVGMPathElement|SVGMarkerElement|SVGMetadataElement|SVGMissingGlyphElement|SVGRadialGradientElement|SVGSetElement|SVGStopElement|SVGSymbolElement|SVGTitleElement|SVGVKernElement|SVGViewElement;SVGElement"
+    "%": "SVGAltGlyphDefElement|SVGAltGlyphItemElement|SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGAnimationElement|SVGComponentTransferFunctionElement|SVGCursorElement|SVGDescElement|SVGDiscardElement|SVGFEDistantLightElement|SVGFEDropShadowElement|SVGFEFuncAElement|SVGFEFuncBElement|SVGFEFuncGElement|SVGFEFuncRElement|SVGFEMergeNodeElement|SVGFEPointLightElement|SVGFESpotLightElement|SVGFontElement|SVGFontFaceElement|SVGFontFaceFormatElement|SVGFontFaceNameElement|SVGFontFaceSrcElement|SVGFontFaceUriElement|SVGGlyphElement|SVGGlyphRefElement|SVGGradientElement|SVGHKernElement|SVGLinearGradientElement|SVGMPathElement|SVGMarkerElement|SVGMetadataElement|SVGMissingGlyphElement|SVGRadialGradientElement|SVGScriptElement|SVGSetElement|SVGStopElement|SVGStyleElement|SVGSymbolElement|SVGTitleElement|SVGVKernElement|SVGViewElement;SVGElement"
   },
   SvgSvgElement: {
     "^": "GraphicsElement;height=,width=",
@@ -7941,15 +7930,39 @@ var $$ = {};
     texParameteri$3: function(receiver, target, pname, param) {
       return receiver.texParameteri(target, pname, param);
     },
-    uniformMatrix2fv$3: [function(receiver, $location, transpose, array) {
-      return receiver.uniformMatrix2fv($location, transpose, array);
-    }, "call$3", "get$uniformMatrix2fv", 6, 0, 10],
-    uniformMatrix3fv$3: [function(receiver, $location, transpose, array) {
-      return receiver.uniformMatrix3fv($location, transpose, array);
-    }, "call$3", "get$uniformMatrix3fv", 6, 0, 10],
-    uniformMatrix4fv$3: [function(receiver, $location, transpose, array) {
-      return receiver.uniformMatrix4fv($location, transpose, array);
-    }, "call$3", "get$uniformMatrix4fv", 6, 0, 10],
+    uniform1f$2: [function(receiver, $location, x) {
+      return receiver.uniform1f($location, x);
+    }, "call$2", "get$uniform1f", 4, 0, 10],
+    uniform1i$2: [function(receiver, $location, x) {
+      return receiver.uniform1i($location, x);
+    }, "call$2", "get$uniform1i", 4, 0, 11],
+    uniform2f$3: [function(receiver, $location, x, y) {
+      return receiver.uniform2f($location, x, y);
+    }, "call$3", "get$uniform2f", 6, 0, 12],
+    uniform2fv$2: [function(receiver, $location, v) {
+      return receiver.uniform2fv($location, v);
+    }, "call$2", "get$uniform2fv", 4, 0, 13],
+    uniform2i$3: [function(receiver, $location, x, y) {
+      return receiver.uniform2i($location, x, y);
+    }, "call$3", "get$uniform2i", 6, 0, 14],
+    uniform3f$4: [function(receiver, $location, x, y, z) {
+      return receiver.uniform3f($location, x, y, z);
+    }, "call$4", "get$uniform3f", 8, 0, 15],
+    uniform3fv$2: [function(receiver, $location, v) {
+      return receiver.uniform3fv($location, v);
+    }, "call$2", "get$uniform3fv", 4, 0, 13],
+    uniform3i$4: [function(receiver, $location, x, y, z) {
+      return receiver.uniform3i($location, x, y, z);
+    }, "call$4", "get$uniform3i", 8, 0, 16],
+    uniform4f$5: [function(receiver, $location, x, y, z, w) {
+      return receiver.uniform4f($location, x, y, z, w);
+    }, "call$5", "get$uniform4f", 10, 0, 17],
+    uniform4fv$2: [function(receiver, $location, v) {
+      return receiver.uniform4fv($location, v);
+    }, "call$2", "get$uniform4fv", 4, 0, 13],
+    uniform4i$5: [function(receiver, $location, x, y, z, w) {
+      return receiver.uniform4i($location, x, y, z, w);
+    }, "call$5", "get$uniform4i", 10, 0, 18],
     useProgram$1: function(receiver, program) {
       return receiver.useProgram(program);
     },
@@ -8348,7 +8361,7 @@ var $$ = {};
     return imageData;
   },
   convertDartToNative_Dictionary_closure: {
-    "^": "Closure:29;object_0",
+    "^": "Closure:37;object_0",
     call$2: function(key, value) {
       this.object_0[key] = value;
     }
@@ -8360,7 +8373,7 @@ var $$ = {};
     var t1, t2, stage, renderer, t3, t4, outputSprite, stuffContainer, fruits, items, i, texture, baseTexture, crossorigin, image, item;
     t1 = {};
     t2 = [];
-    stage = new M.Stage(null, false, new M.Rectangle(0, 0, 100000, 100000, false), 0, [], null, new M.Matrix(1, 0, 0, 1, 0, 0), null, t2, new M.Point(0, 0), new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, false, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, null), null, 0, null);
+    stage = new M.Stage(null, false, new M.Rectangle(0, 0, 100000, 100000, false), 0, [], null, new M.Matrix(1, 0, 0, 1, 0, 0), null, t2, new M.Point(0, 0), new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, false, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, [], null), null, 0, null);
     stage.Stage$2(0, true);
     renderer = M.autoDetectRenderer(window.innerWidth, window.innerHeight, null, null, null);
     document.body.appendChild(renderer.view);
@@ -8368,7 +8381,7 @@ var $$ = {};
     t1.renderTexture2_1 = M.RenderTexture$(800, 600, null, C.scaleModes_0);
     t3 = new M.Point(0, 0);
     t4 = new M.Point(0, 0);
-    outputSprite = new M.Sprite(t3, t1.renderTexture_0, false, false, 0, 0, null, null, 16777215, null, C.blendModes_0, [], t4, new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, false, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, null), null, 0, null);
+    outputSprite = new M.Sprite(t3, t1.renderTexture_0, false, false, 0, 0, null, null, 16777215, null, C.blendModes_0, [], t4, new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, false, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, [], null), null, 0, null);
     outputSprite._setupTexture$0();
     t4.x = 400;
     t4.y = 300;
@@ -8377,7 +8390,7 @@ var $$ = {};
     stage.addChildAt$2(outputSprite, t2.length);
     t3 = [];
     t4 = new M.Point(0, 0);
-    stuffContainer = new M.DisplayObjectContainer(t3, t4, new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, false, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, null), null, 0, null);
+    stuffContainer = new M.DisplayObjectContainer(t3, t4, new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, false, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, [], null), null, 0, null);
     t4.x = 400;
     t4.y = 300;
     stage.addChildAt$2(stuffContainer, t2.length);
@@ -8403,7 +8416,7 @@ var $$ = {};
       }
       t2 = new M.Point(0, 0);
       t4 = new M.Point(0, 0);
-      item = new M.Sprite(t2, texture, false, false, 0, 0, null, null, 16777215, null, C.blendModes_0, [], t4, new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, false, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, null), null, 0, null);
+      item = new M.Sprite(t2, texture, false, false, 0, 0, null, null, 16777215, null, C.blendModes_0, [], t4, new M.Point(1, 1), new M.Point(0, 0), 0, 1, true, null, false, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, false, 1, false, "pointer", new M.Matrix(1, 0, 0, 1, 0, 0), [], true, 0, 1, null, new M.Rectangle(0, 0, 1, 1, false), null, null, false, false, new M.FilterBlock(true, true, null, null, null, [], null), null, 0, null);
       if (texture.get$baseTexture()._hasLoaded)
         item.onTextureUpdate$1(null);
       else
@@ -8419,7 +8432,7 @@ var $$ = {};
     $.get$requestAnimFrame().call$1(new F.main_animate(t1, stage, renderer, outputSprite, stuffContainer, items));
   }, "call$0", "main$closure", 0, 0, 6],
   main_animate: {
-    "^": "Closure:16;box_0,stage_1,renderer_2,outputSprite_3,stuffContainer_4,items_5",
+    "^": "Closure:24;box_0,stage_1,renderer_2,outputSprite_3,stuffContainer_4,items_5",
     call$1: function(dt) {
       var t1, i, temp, renderTexture, t2, t3, t4;
       for (t1 = this.items_5, i = 0; i < t1.length; ++i)
@@ -8821,6 +8834,7 @@ J.viewport$4$x = function(receiver, a0, a1, a2, a3) {
 };
 C.JSArray_methods = J.JSArray.prototype;
 C.JSInt_methods = J.JSInt.prototype;
+C.JSNull_methods = J.JSNull.prototype;
 C.JSNumber_methods = J.JSNumber.prototype;
 C.JSString_methods = J.JSString.prototype;
 C.NativeFloat32List_methods = H.NativeFloat32List.prototype;
@@ -9142,7 +9156,15 @@ init.metadata = [{func: "void__void_", void: true, args: [{func: "void_", void: 
 {func: "CanvasRenderingContext__String__Map", ret: W.CanvasRenderingContext, args: [P.String], opt: [P.Map]},
 ,
 {func: "int__RequestAnimationFrameCallback", ret: P.$int, args: [{func: "void__num", void: true, args: [P.num]}]},
-{func: "void__UniformLocation_bool_Float32List", void: true, args: [P.UniformLocation, P.bool, P.Float32List]},
+{func: "void__UniformLocation_num", void: true, args: [P.UniformLocation, P.num]},
+{func: "void__UniformLocation_int", void: true, args: [P.UniformLocation, P.$int]},
+{func: "void__UniformLocation_num_num", void: true, args: [P.UniformLocation, P.num, P.num]},
+{func: "void__UniformLocation_Float32List", void: true, args: [P.UniformLocation, P.Float32List]},
+{func: "void__UniformLocation_int_int", void: true, args: [P.UniformLocation, P.$int, P.$int]},
+{func: "void__UniformLocation_num_num_num", void: true, args: [P.UniformLocation, P.num, P.num, P.num]},
+{func: "void__UniformLocation_int_int_int", void: true, args: [P.UniformLocation, P.$int, P.$int, P.$int]},
+{func: "void__UniformLocation_num_num_num_num", void: true, args: [P.UniformLocation, P.num, P.num, P.num, P.num]},
+{func: "void__UniformLocation_int_int_int_int", void: true, args: [P.UniformLocation, P.$int, P.$int, P.$int, P.$int]},
 {func: "bool__num_num", ret: P.bool, args: [P.num, P.num]},
 {func: "dynamic__PixiEvent", args: [M.PixiEvent]},
 {func: "dynamic__MouseEvent", args: [W.MouseEvent]},
@@ -9544,9 +9566,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   AnchorElement.prototype = $desc;
-  AnchorElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function AnimationEvent() {
   }
   AnimationEvent.builtin$cls = "AnimationEvent";
@@ -9628,9 +9647,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   Blob.prototype = $desc;
-  Blob.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function BodyElement() {
   }
   BodyElement.builtin$cls = "BodyElement";
@@ -9649,9 +9665,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   ButtonElement.prototype = $desc;
-  ButtonElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function CDataSection() {
   }
   CDataSection.builtin$cls = "CDataSection";
@@ -9922,9 +9935,6 @@ function dart_precompiled($collectedClasses) {
   EmbedElement.prototype.set$src = function(receiver, v) {
     return receiver.src = v;
   };
-  EmbedElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   EmbedElement.prototype.get$width = function(receiver) {
     return receiver.width;
   };
@@ -9952,9 +9962,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   Event.prototype = $desc;
-  Event.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function EventTarget() {
   }
   EventTarget.builtin$cls = "EventTarget";
@@ -9973,9 +9980,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   FieldSetElement.prototype = $desc;
-  FieldSetElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function File() {
   }
   File.builtin$cls = "File";
@@ -10177,9 +10181,6 @@ function dart_precompiled($collectedClasses) {
   InputElement.prototype.set$src = function(receiver, v) {
     return receiver.src = v;
   };
-  InputElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   InputElement.prototype.get$width = function(receiver) {
     return receiver.width;
   };
@@ -10222,9 +10223,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   KeygenElement.prototype = $desc;
-  KeygenElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function LIElement() {
   }
   LIElement.builtin$cls = "LIElement";
@@ -10263,9 +10261,6 @@ function dart_precompiled($collectedClasses) {
   LinkElement.prototype = $desc;
   LinkElement.prototype.set$crossOrigin = function(receiver, v) {
     return receiver.crossOrigin = v;
-  };
-  LinkElement.prototype.get$type = function(receiver) {
-    return receiver.type;
   };
   function MapElement() {
   }
@@ -10483,9 +10478,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   OListElement.prototype = $desc;
-  OListElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function ObjectElement() {
   }
   ObjectElement.builtin$cls = "ObjectElement";
@@ -10500,9 +10492,6 @@ function dart_precompiled($collectedClasses) {
   };
   ObjectElement.prototype.set$height = function(receiver, v) {
     return receiver.height = v;
-  };
-  ObjectElement.prototype.get$type = function(receiver) {
-    return receiver.type;
   };
   ObjectElement.prototype.get$width = function(receiver) {
     return receiver.width;
@@ -10537,9 +10526,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   OutputElement.prototype = $desc;
-  OutputElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function OverflowEvent() {
   }
   OverflowEvent.builtin$cls = "OverflowEvent";
@@ -10690,9 +10676,6 @@ function dart_precompiled($collectedClasses) {
   ScriptElement.prototype.set$src = function(receiver, v) {
     return receiver.src = v;
   };
-  ScriptElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function SecurityPolicyViolationEvent() {
   }
   SecurityPolicyViolationEvent.builtin$cls = "SecurityPolicyViolationEvent";
@@ -10713,9 +10696,6 @@ function dart_precompiled($collectedClasses) {
   SelectElement.prototype = $desc;
   SelectElement.prototype.get$length = function(receiver) {
     return receiver.length;
-  };
-  SelectElement.prototype.get$type = function(receiver) {
-    return receiver.type;
   };
   function ShadowElement() {
   }
@@ -10746,9 +10726,6 @@ function dart_precompiled($collectedClasses) {
   SourceElement.prototype = $desc;
   SourceElement.prototype.set$src = function(receiver, v) {
     return receiver.src = v;
-  };
-  SourceElement.prototype.get$type = function(receiver) {
-    return receiver.type;
   };
   function SpanElement() {
   }
@@ -10816,9 +10793,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   StyleElement.prototype = $desc;
-  StyleElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function TableCaptionElement() {
   }
   TableCaptionElement.builtin$cls = "TableCaptionElement";
@@ -10900,9 +10874,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   TextAreaElement.prototype = $desc;
-  TextAreaElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function TextEvent() {
   }
   TextEvent.builtin$cls = "TextEvent";
@@ -11386,9 +11357,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   FEColorMatrixElement.prototype = $desc;
-  FEColorMatrixElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   FEColorMatrixElement.prototype.get$height = function(receiver) {
     return receiver.height;
   };
@@ -11671,9 +11639,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   FETurbulenceElement.prototype = $desc;
-  FETurbulenceElement.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   FETurbulenceElement.prototype.get$height = function(receiver) {
     return receiver.height;
   };
@@ -11896,9 +11861,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   ScriptElement0.prototype = $desc;
-  ScriptElement0.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function SetElement() {
   }
   SetElement.builtin$cls = "SetElement";
@@ -11926,9 +11888,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   StyleElement0.prototype = $desc;
-  StyleElement0.prototype.get$type = function(receiver) {
-    return receiver.type;
-  };
   function SvgElement() {
   }
   SvgElement.builtin$cls = "SvgElement";
@@ -12707,13 +12666,14 @@ function dart_precompiled($collectedClasses) {
   Stage.prototype.get$worldTransform = function() {
     return this.worldTransform;
   };
-  function FilterBlock(visible, renderable, target, _filterArea, filterArea, filterPasses) {
+  function FilterBlock(visible, renderable, target, _filterArea, filterArea, filterPasses, _glFilterTexture) {
     this.visible = visible;
     this.renderable = renderable;
     this.target = target;
     this._filterArea = _filterArea;
     this.filterArea = filterArea;
     this.filterPasses = filterPasses;
+    this._glFilterTexture = _glFilterTexture;
   }
   FilterBlock.builtin$cls = "FilterBlock";
   if (!"name" in FilterBlock)
@@ -12859,8 +12819,7 @@ function dart_precompiled($collectedClasses) {
   RenderSession.prototype.set$currentBlendMode = function(v) {
     return this.currentBlendMode = v;
   };
-  function Renderer(type) {
-    this.type = type;
+  function Renderer() {
   }
   Renderer.builtin$cls = "Renderer";
   if (!"name" in Renderer)
@@ -12869,9 +12828,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   Renderer.prototype = $desc;
-  Renderer.prototype.get$type = function(receiver) {
-    return this.type;
-  };
   function PixiFastShader(gl, program, fragmentSrc, vertexSrc, textureCount, uSampler, projectionVector, offsetVector, dimensions, uMatrix, aVertexPosition, aPositionCoord, aScale, aRotation, aTextureCoord, colorAttribute, attributes, uniforms) {
     this.gl = gl;
     this.program = program;
@@ -13274,9 +13230,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   PixiEvent.prototype = $desc;
-  PixiEvent.prototype.get$type = function(receiver) {
-    return this.type;
-  };
   function EventTarget0() {
   }
   EventTarget0.builtin$cls = "EventTarget0";
@@ -14358,15 +14311,59 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   _cancelAndErrorClosure_closure.prototype = $desc;
-  function _Zone() {
+  function _BaseZone() {
   }
-  _Zone.builtin$cls = "_Zone";
-  if (!"name" in _Zone)
-    _Zone.name = "_Zone";
-  $desc = $collectedClasses._Zone;
+  _BaseZone.builtin$cls = "_BaseZone";
+  if (!"name" in _BaseZone)
+    _BaseZone.name = "_BaseZone";
+  $desc = $collectedClasses._BaseZone;
   if ($desc instanceof Array)
     $desc = $desc[1];
-  _Zone.prototype = $desc;
+  _BaseZone.prototype = $desc;
+  function _BaseZone_bindCallback_closure(this_0, registered_1) {
+    this.this_0 = this_0;
+    this.registered_1 = registered_1;
+  }
+  _BaseZone_bindCallback_closure.builtin$cls = "_BaseZone_bindCallback_closure";
+  if (!"name" in _BaseZone_bindCallback_closure)
+    _BaseZone_bindCallback_closure.name = "_BaseZone_bindCallback_closure";
+  $desc = $collectedClasses._BaseZone_bindCallback_closure;
+  if ($desc instanceof Array)
+    $desc = $desc[1];
+  _BaseZone_bindCallback_closure.prototype = $desc;
+  function _BaseZone_bindCallback_closure0(this_2, registered_3) {
+    this.this_2 = this_2;
+    this.registered_3 = registered_3;
+  }
+  _BaseZone_bindCallback_closure0.builtin$cls = "_BaseZone_bindCallback_closure0";
+  if (!"name" in _BaseZone_bindCallback_closure0)
+    _BaseZone_bindCallback_closure0.name = "_BaseZone_bindCallback_closure0";
+  $desc = $collectedClasses._BaseZone_bindCallback_closure0;
+  if ($desc instanceof Array)
+    $desc = $desc[1];
+  _BaseZone_bindCallback_closure0.prototype = $desc;
+  function _BaseZone_bindUnaryCallback_closure(this_0, registered_1) {
+    this.this_0 = this_0;
+    this.registered_1 = registered_1;
+  }
+  _BaseZone_bindUnaryCallback_closure.builtin$cls = "_BaseZone_bindUnaryCallback_closure";
+  if (!"name" in _BaseZone_bindUnaryCallback_closure)
+    _BaseZone_bindUnaryCallback_closure.name = "_BaseZone_bindUnaryCallback_closure";
+  $desc = $collectedClasses._BaseZone_bindUnaryCallback_closure;
+  if ($desc instanceof Array)
+    $desc = $desc[1];
+  _BaseZone_bindUnaryCallback_closure.prototype = $desc;
+  function _BaseZone_bindUnaryCallback_closure0(this_2, registered_3) {
+    this.this_2 = this_2;
+    this.registered_3 = registered_3;
+  }
+  _BaseZone_bindUnaryCallback_closure0.builtin$cls = "_BaseZone_bindUnaryCallback_closure0";
+  if (!"name" in _BaseZone_bindUnaryCallback_closure0)
+    _BaseZone_bindUnaryCallback_closure0.name = "_BaseZone_bindUnaryCallback_closure0";
+  $desc = $collectedClasses._BaseZone_bindUnaryCallback_closure0;
+  if ($desc instanceof Array)
+    $desc = $desc[1];
+  _BaseZone_bindUnaryCallback_closure0.prototype = $desc;
   function _rootHandleUncaughtError_closure(error_0, stackTrace_1) {
     this.error_0 = error_0;
     this.stackTrace_1 = stackTrace_1;
@@ -14378,6 +14375,17 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   _rootHandleUncaughtError_closure.prototype = $desc;
+  function _rootHandleUncaughtError__closure(error_2, stackTrace_3) {
+    this.error_2 = error_2;
+    this.stackTrace_3 = stackTrace_3;
+  }
+  _rootHandleUncaughtError__closure.builtin$cls = "_rootHandleUncaughtError__closure";
+  if (!"name" in _rootHandleUncaughtError__closure)
+    _rootHandleUncaughtError__closure.name = "_rootHandleUncaughtError__closure";
+  $desc = $collectedClasses._rootHandleUncaughtError__closure;
+  if ($desc instanceof Array)
+    $desc = $desc[1];
+  _rootHandleUncaughtError__closure.prototype = $desc;
   function _RootZone() {
   }
   _RootZone.builtin$cls = "_RootZone";
@@ -14387,50 +14395,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   _RootZone.prototype = $desc;
-  function _RootZone_bindCallback_closure(this_0, f_1) {
-    this.this_0 = this_0;
-    this.f_1 = f_1;
-  }
-  _RootZone_bindCallback_closure.builtin$cls = "_RootZone_bindCallback_closure";
-  if (!"name" in _RootZone_bindCallback_closure)
-    _RootZone_bindCallback_closure.name = "_RootZone_bindCallback_closure";
-  $desc = $collectedClasses._RootZone_bindCallback_closure;
-  if ($desc instanceof Array)
-    $desc = $desc[1];
-  _RootZone_bindCallback_closure.prototype = $desc;
-  function _RootZone_bindCallback_closure0(this_2, f_3) {
-    this.this_2 = this_2;
-    this.f_3 = f_3;
-  }
-  _RootZone_bindCallback_closure0.builtin$cls = "_RootZone_bindCallback_closure0";
-  if (!"name" in _RootZone_bindCallback_closure0)
-    _RootZone_bindCallback_closure0.name = "_RootZone_bindCallback_closure0";
-  $desc = $collectedClasses._RootZone_bindCallback_closure0;
-  if ($desc instanceof Array)
-    $desc = $desc[1];
-  _RootZone_bindCallback_closure0.prototype = $desc;
-  function _RootZone_bindUnaryCallback_closure(this_0, f_1) {
-    this.this_0 = this_0;
-    this.f_1 = f_1;
-  }
-  _RootZone_bindUnaryCallback_closure.builtin$cls = "_RootZone_bindUnaryCallback_closure";
-  if (!"name" in _RootZone_bindUnaryCallback_closure)
-    _RootZone_bindUnaryCallback_closure.name = "_RootZone_bindUnaryCallback_closure";
-  $desc = $collectedClasses._RootZone_bindUnaryCallback_closure;
-  if ($desc instanceof Array)
-    $desc = $desc[1];
-  _RootZone_bindUnaryCallback_closure.prototype = $desc;
-  function _RootZone_bindUnaryCallback_closure0(this_2, f_3) {
-    this.this_2 = this_2;
-    this.f_3 = f_3;
-  }
-  _RootZone_bindUnaryCallback_closure0.builtin$cls = "_RootZone_bindUnaryCallback_closure0";
-  if (!"name" in _RootZone_bindUnaryCallback_closure0)
-    _RootZone_bindUnaryCallback_closure0.name = "_RootZone_bindUnaryCallback_closure0";
-  $desc = $collectedClasses._RootZone_bindUnaryCallback_closure0;
-  if ($desc instanceof Array)
-    $desc = $desc[1];
-  _RootZone_bindUnaryCallback_closure0.prototype = $desc;
   function _HashMap(_collection$_length, _strings, _nums, _rest, _keys) {
     this._collection$_length = _collection$_length;
     this._strings = _strings;
@@ -15328,5 +15292,5 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   main_animate.prototype = $desc;
-  return [HtmlElement, AnchorElement, AnimationEvent, AreaElement, AudioElement, AutocompleteErrorEvent, BRElement, BaseElement, BeforeLoadEvent, BeforeUnloadEvent, Blob, BodyElement, ButtonElement, CDataSection, CanvasElement, CanvasGradient, CanvasPattern, CanvasRenderingContext, CanvasRenderingContext2D, CharacterData, CloseEvent, Comment, CompositionEvent, ContentElement, CssFontFaceLoadEvent, CssStyleDeclaration, CustomEvent, DListElement, DataListElement, DetailsElement, DeviceMotionEvent, DeviceOrientationEvent, DialogElement, DivElement, Document, DocumentFragment, DomError, DomException, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File, FileError, FocusEvent, FormElement, HRElement, HashChangeEvent, HeadElement, HeadingElement, HtmlCollection, HtmlDocument, HtmlFormControlsCollection, HtmlHtmlElement, HtmlOptionsCollection, IFrameElement, ImageData, ImageElement, InputElement, InstallEvent, InstallPhaseEvent, KeyboardEvent, KeygenElement, LIElement, LabelElement, LegendElement, LinkElement, MapElement, MediaElement, MediaError, MediaKeyError, MediaKeyEvent, MediaKeyMessageEvent, MediaKeyNeededEvent, MediaStream, MediaStreamEvent, MediaStreamTrackEvent, MenuElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, ModElement, MouseEvent, Navigator, NavigatorUserMediaError, Node, NodeList, OListElement, ObjectElement, OptGroupElement, OptionElement, OutputElement, OverflowEvent, PageTransitionEvent, ParagraphElement, ParamElement, PopStateEvent, PositionError, PreElement, ProcessingInstruction, ProgressElement, ProgressEvent, QuoteElement, ResourceProgressEvent, RtcDataChannelEvent, RtcDtmfToneChangeEvent, RtcIceCandidateEvent, ScriptElement, SecurityPolicyViolationEvent, SelectElement, ShadowElement, ShadowRoot, SourceElement, SpanElement, SpeechInputEvent, SpeechRecognitionError, SpeechRecognitionEvent, SpeechSynthesisEvent, StorageEvent, StyleElement, TableCaptionElement, TableCellElement, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, Text, TextAreaElement, TextEvent, TitleElement, Touch, TouchEvent, TouchList, TrackElement, TrackEvent, TransitionEvent, UIEvent, UListElement, UnknownElement, VideoElement, WheelEvent, Window, XmlDocument, _Attr, _ClientRect, _DocumentType, _HTMLAppletElement, _HTMLDirectoryElement, _HTMLFontElement, _HTMLFrameElement, _HTMLFrameSetElement, _HTMLMarqueeElement, _MutationEvent, _NamedNodeMap, _Notation, _XMLHttpRequestProgressEvent, VersionChangeEvent, AElement, AltGlyphElement, AnimateElement, AnimateMotionElement, AnimateTransformElement, AnimatedEnumeration, AnimatedLength, AnimatedLengthList, AnimatedNumber, AnimatedNumberList, AnimatedString, AnimationElement, CircleElement, ClipPathElement, DefsElement, DescElement, DiscardElement, EllipseElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEDistantLightElement, FEFloodElement, FEFuncAElement, FEFuncBElement, FEFuncGElement, FEFuncRElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMergeNodeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GElement, GeometryElement, GraphicsElement, ImageElement0, LineElement, LinearGradientElement, MarkerElement, MaskElement, MetadataElement, PathElement, PatternElement, PointList, PolygonElement, PolylineElement, RadialGradientElement, Rect, RectElement, ScriptElement0, SetElement, StopElement, StyleElement0, SvgElement, SvgSvgElement, SwitchElement, SymbolElement, TSpanElement, TextContentElement, TextElement, TextPathElement, TextPositioningElement, TitleElement0, UseElement, ViewElement, ZoomEvent, _GradientElement, _SVGAltGlyphDefElement, _SVGAltGlyphItemElement, _SVGComponentTransferFunctionElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGFontElement, _SVGFontFaceElement, _SVGFontFaceFormatElement, _SVGFontFaceNameElement, _SVGFontFaceSrcElement, _SVGFontFaceUriElement, _SVGGlyphElement, _SVGGlyphRefElement, _SVGHKernElement, _SVGMPathElement, _SVGMissingGlyphElement, _SVGVKernElement, AudioProcessingEvent, OfflineAudioCompletionEvent, Buffer, ContextEvent, Framebuffer, Program, Renderbuffer, RenderingContext, Shader, Texture0, UniformLocation, SqlError, NativeByteBuffer, NativeTypedData, NativeByteData, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, Matrix, Point, Rectangle, DisplayObject, DisplayObjectContainer, Sprite, Stage, FilterBlock, InteractionData, InteractionManager, blendModes, scaleModes, CanvasBuffer, RenderSession, Renderer, PixiFastShader, PixiShader, PrimitiveShader, FilterTexture, WebGLFilterManager, WebGLMaskManager, WebGLShaderManager, WebGLSpriteBatch, WebGLRenderer, BaseTexture, BaseTexture_closure, RenderTexture, Texture, Texture_closure, TextureUvs, autoDetectRenderer_closure, PixiEvent, EventTarget0, JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, _JsSerializer, _JsCopier, _JsDeserializer, _JsVisitedMap, _MessageTraverserVisitedMap, _MessageTraverser, _Copier, _Copier_visitMap_closure, _Serializer, _Deserializer, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, CapabilityImpl, ReflectionInfo, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, initHooks_closure, initHooks_closure0, initHooks_closure1, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, FixedLengthListMixin, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncError, Future, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, StreamSubscription, _EventSink, _DelayedEvent, _cancelAndError_closure, _cancelAndErrorClosure_closure, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _RootZone_bindUnaryCallback_closure0, _HashMap, _HashMap_values_closure, HashMapKeyIterable, HashMapKeyIterator, _LinkedHashMap, _LinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListMixin, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, NoSuchMethodError_toString_closure, bool, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, Expando, $int, Iterator, List, Map, Null, num, Object, Pattern, StackTrace, String, StringBuffer, Symbol, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, EventStreamProvider, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, Capability, _JSRandom, Point0, _RectangleBase, Rectangle0, Float32List, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, convertDartToNative_Dictionary_closure, main_animate];
+  return [HtmlElement, AnchorElement, AnimationEvent, AreaElement, AudioElement, AutocompleteErrorEvent, BRElement, BaseElement, BeforeLoadEvent, BeforeUnloadEvent, Blob, BodyElement, ButtonElement, CDataSection, CanvasElement, CanvasGradient, CanvasPattern, CanvasRenderingContext, CanvasRenderingContext2D, CharacterData, CloseEvent, Comment, CompositionEvent, ContentElement, CssFontFaceLoadEvent, CssStyleDeclaration, CustomEvent, DListElement, DataListElement, DetailsElement, DeviceMotionEvent, DeviceOrientationEvent, DialogElement, DivElement, Document, DocumentFragment, DomError, DomException, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File, FileError, FocusEvent, FormElement, HRElement, HashChangeEvent, HeadElement, HeadingElement, HtmlCollection, HtmlDocument, HtmlFormControlsCollection, HtmlHtmlElement, HtmlOptionsCollection, IFrameElement, ImageData, ImageElement, InputElement, InstallEvent, InstallPhaseEvent, KeyboardEvent, KeygenElement, LIElement, LabelElement, LegendElement, LinkElement, MapElement, MediaElement, MediaError, MediaKeyError, MediaKeyEvent, MediaKeyMessageEvent, MediaKeyNeededEvent, MediaStream, MediaStreamEvent, MediaStreamTrackEvent, MenuElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, ModElement, MouseEvent, Navigator, NavigatorUserMediaError, Node, NodeList, OListElement, ObjectElement, OptGroupElement, OptionElement, OutputElement, OverflowEvent, PageTransitionEvent, ParagraphElement, ParamElement, PopStateEvent, PositionError, PreElement, ProcessingInstruction, ProgressElement, ProgressEvent, QuoteElement, ResourceProgressEvent, RtcDataChannelEvent, RtcDtmfToneChangeEvent, RtcIceCandidateEvent, ScriptElement, SecurityPolicyViolationEvent, SelectElement, ShadowElement, ShadowRoot, SourceElement, SpanElement, SpeechInputEvent, SpeechRecognitionError, SpeechRecognitionEvent, SpeechSynthesisEvent, StorageEvent, StyleElement, TableCaptionElement, TableCellElement, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, Text, TextAreaElement, TextEvent, TitleElement, Touch, TouchEvent, TouchList, TrackElement, TrackEvent, TransitionEvent, UIEvent, UListElement, UnknownElement, VideoElement, WheelEvent, Window, XmlDocument, _Attr, _ClientRect, _DocumentType, _HTMLAppletElement, _HTMLDirectoryElement, _HTMLFontElement, _HTMLFrameElement, _HTMLFrameSetElement, _HTMLMarqueeElement, _MutationEvent, _NamedNodeMap, _Notation, _XMLHttpRequestProgressEvent, VersionChangeEvent, AElement, AltGlyphElement, AnimateElement, AnimateMotionElement, AnimateTransformElement, AnimatedEnumeration, AnimatedLength, AnimatedLengthList, AnimatedNumber, AnimatedNumberList, AnimatedString, AnimationElement, CircleElement, ClipPathElement, DefsElement, DescElement, DiscardElement, EllipseElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEDistantLightElement, FEFloodElement, FEFuncAElement, FEFuncBElement, FEFuncGElement, FEFuncRElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMergeNodeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GElement, GeometryElement, GraphicsElement, ImageElement0, LineElement, LinearGradientElement, MarkerElement, MaskElement, MetadataElement, PathElement, PatternElement, PointList, PolygonElement, PolylineElement, RadialGradientElement, Rect, RectElement, ScriptElement0, SetElement, StopElement, StyleElement0, SvgElement, SvgSvgElement, SwitchElement, SymbolElement, TSpanElement, TextContentElement, TextElement, TextPathElement, TextPositioningElement, TitleElement0, UseElement, ViewElement, ZoomEvent, _GradientElement, _SVGAltGlyphDefElement, _SVGAltGlyphItemElement, _SVGComponentTransferFunctionElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGFontElement, _SVGFontFaceElement, _SVGFontFaceFormatElement, _SVGFontFaceNameElement, _SVGFontFaceSrcElement, _SVGFontFaceUriElement, _SVGGlyphElement, _SVGGlyphRefElement, _SVGHKernElement, _SVGMPathElement, _SVGMissingGlyphElement, _SVGVKernElement, AudioProcessingEvent, OfflineAudioCompletionEvent, Buffer, ContextEvent, Framebuffer, Program, Renderbuffer, RenderingContext, Shader, Texture0, UniformLocation, SqlError, NativeByteBuffer, NativeTypedData, NativeByteData, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, Matrix, Point, Rectangle, DisplayObject, DisplayObjectContainer, Sprite, Stage, FilterBlock, InteractionData, InteractionManager, blendModes, scaleModes, CanvasBuffer, RenderSession, Renderer, PixiFastShader, PixiShader, PrimitiveShader, FilterTexture, WebGLFilterManager, WebGLMaskManager, WebGLShaderManager, WebGLSpriteBatch, WebGLRenderer, BaseTexture, BaseTexture_closure, RenderTexture, Texture, Texture_closure, TextureUvs, autoDetectRenderer_closure, PixiEvent, EventTarget0, JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, _JsSerializer, _JsCopier, _JsDeserializer, _JsVisitedMap, _MessageTraverserVisitedMap, _MessageTraverser, _Copier, _Copier_visitMap_closure, _Serializer, _Deserializer, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, CapabilityImpl, ReflectionInfo, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, initHooks_closure, initHooks_closure0, initHooks_closure1, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, FixedLengthListMixin, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncError, Future, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, StreamSubscription, _EventSink, _DelayedEvent, _cancelAndError_closure, _cancelAndErrorClosure_closure, _BaseZone, _BaseZone_bindCallback_closure, _BaseZone_bindCallback_closure0, _BaseZone_bindUnaryCallback_closure, _BaseZone_bindUnaryCallback_closure0, _rootHandleUncaughtError_closure, _rootHandleUncaughtError__closure, _RootZone, _HashMap, _HashMap_values_closure, HashMapKeyIterable, HashMapKeyIterator, _LinkedHashMap, _LinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListMixin, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, NoSuchMethodError_toString_closure, bool, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, Expando, $int, Iterator, List, Map, Null, num, Object, Pattern, StackTrace, String, StringBuffer, Symbol, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, EventStreamProvider, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, Capability, _JSRandom, Point0, _RectangleBase, Rectangle0, Float32List, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, convertDartToNative_Dictionary_closure, main_animate];
 }
