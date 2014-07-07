@@ -151,10 +151,11 @@ class WebGLRenderer extends Renderer {
 
     // -- Does this need to be set every frame? -- //
     //gl.colorMask(true, true, true, this.transparent);
+
     gl.viewport(0, 0, this.width, this.height);
 
     // make sure we are bound to the main frame buffer
-    gl.bindFramebuffer(RenderingContext.FRAMEBUFFER, null);
+    gl.bindFramebuffer(FRAMEBUFFER, null);
 
     if (this.transparent) {
       gl.clearColor(0, 0, 0, 0);
@@ -164,7 +165,7 @@ class WebGLRenderer extends Renderer {
     }
 
 
-    gl.clear(RenderingContext.COLOR_BUFFER_BIT);
+    gl.clear(COLOR_BUFFER_BIT);
 
     this.renderDisplayObject(stage, this.projection);
 

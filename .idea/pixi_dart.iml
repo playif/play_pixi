@@ -3,7 +3,6 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/packages/pixi_dart" />
-      <excludeFolder url="file://$MODULE_DIR$/web/bin/example 1 - Basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/bin/example 10 - Text/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/bin/example 11 - RenderTexture/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/bin/example 12 - Spine/data/packages" />
@@ -33,7 +32,6 @@
       <excludeFolder url="file://$MODULE_DIR$/web/bin/test/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_01_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_02_SpriteSheet/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_02_SpriteSheet/tp/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_03_movie_clip/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_03_movie_clip/tp/explosion/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_03_movie_clip/tp/packages" />
@@ -44,7 +42,7 @@
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_13_graphics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_14_masking/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_15_filters/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_5_morph/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/web/examples/example_1_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_6_interactive/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_7_transparent_background/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_8_dragging/packages" />

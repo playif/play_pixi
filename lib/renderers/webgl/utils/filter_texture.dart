@@ -7,7 +7,7 @@ class FilterTexture {
   var texture;
   int width, height;
 
-  FilterTexture(this.gl, num width, num height, [scaleMode =scaleModes.DEFAULT]) {
+  FilterTexture(this.gl, int width, int height, [scaleMode =scaleModes.DEFAULT]) {
     this.frameBuffer = gl.createFramebuffer();
     this.texture = gl.createTexture();
 
@@ -18,9 +18,9 @@ class FilterTexture {
     gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
     gl.bindFramebuffer(FRAMEBUFFER, this.frameBuffer);
 
+    //this.frameBuffer.width=width;
 
     //gl.bindFramebuffer(FRAMEBUFFER, this.frameBuffer);
-
 
     gl.framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D, this.texture, 0);
 
@@ -44,20 +44,22 @@ class FilterTexture {
   resize(int width, int height) {
     if (this.width == width && this.height == height) return;
 
-    this.width = width.toInt();
-    this.height = height.toInt();
+    this.width = width;
+    this.height = height;
 
     var gl = this.gl;
 
     gl.bindTexture(TEXTURE_2D, this.texture);
 
 
-    gl.texImage2D(TEXTURE_2D, 0, RGBA, width.toInt(), height.toInt(), 0, RGBA, UNSIGNED_BYTE, null);
+    gl.texImage2D(TEXTURE_2D, 0, RGBA, width, height, 0, RGBA, UNSIGNED_BYTE, null);
 
     // update the stencil buffer width and height
     gl.bindRenderbuffer(RENDERBUFFER, this.renderBuffer);
-    gl.renderbufferStorage(RENDERBUFFER, DEPTH_STENCIL, width.toInt(), width.toInt());
 
+    gl.renderbufferStorage(RENDERBUFFER, DEPTH_STENCIL, width, height);
+
+    //print(gl.checkFramebufferStatus(FRAMEBUFFER));
   }
 
   destroy() {

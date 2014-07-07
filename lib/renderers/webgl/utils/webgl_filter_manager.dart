@@ -11,9 +11,9 @@ class WebGLFilterManager {
   List<Texture> texturePool;
 
   RenderSession renderSession;
-  num width, height;
+  int width, height;
 
-  var defaultShader;
+  PixiShader defaultShader;
 
   List vertexBuffer;
   Float32List vertexArray;
@@ -39,14 +39,14 @@ class WebGLFilterManager {
     this.initShaderBuffers();
   }
 
-  begin(RenderSession renderSession, buffer) {
+  begin(RenderSession renderSession, Buffer buffer) {
     this.renderSession = renderSession;
     this.defaultShader = renderSession.shaderManager.defaultShader;
 
     var projection = this.renderSession.projection;
     // console.log(this.width)
-    this.width = projection.x * 2;
-    this.height = -projection.y * 2;
+    this.width = (projection.x * 2).toInt();
+    this.height = (-projection.y * 2).toInt();
     this.buffer = buffer;
   }
 
@@ -68,7 +68,7 @@ class WebGLFilterManager {
     this.offsetX += filterBlock._filterArea.x;
     this.offsetY += filterBlock._filterArea.y;
 
-    var texture = null;
+    FilterTexture texture = null;
 
     if (this.texturePool.length > 0) {
       texture = this.texturePool.removeLast();
@@ -78,6 +78,10 @@ class WebGLFilterManager {
       texture = new FilterTexture(this.gl, this.width, this.height);
     }
     else {
+//      print(this.width);
+//      print(texture.width);
+//      print(this.height);
+//      print(texture.height);
       texture.resize(this.width, this.height);
     }
 
@@ -92,6 +96,7 @@ class WebGLFilterManager {
     filterArea.width += padding * 2;
     filterArea.height += padding * 2;
 
+
     // cap filter to screen size..
     if (filterArea.x < 0)filterArea.x = 0;
     if (filterArea.width > this.width)filterArea.width = this.width;
@@ -99,10 +104,13 @@ class WebGLFilterManager {
     if (filterArea.height > this.height)filterArea.height = this.height;
 
 
-    //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  filterArea.width, filterArea.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    //gl.texImage2D(TEXTURE_2D, 0, RGBA,  filterArea.width.toInt(), filterArea.height.toInt(), 0, RGBA, UNSIGNED_BYTE, null);
     gl.bindFramebuffer(FRAMEBUFFER, texture.frameBuffer);
-
+    //print(filterArea.width.toInt());
     // set view port
+
+
+
     gl.viewport(0, 0, filterArea.width.toInt(), filterArea.height.toInt());
 
     projection.x = filterArea.width / 2;
@@ -111,7 +119,7 @@ class WebGLFilterManager {
     offset.x = -filterArea.x;
     offset.y = -filterArea.y;
 
-
+    //print(filterArea.width / 2.0);
     // update projection
     gl.uniform2f(this.defaultShader.projectionVector, filterArea.width / 2.0, -filterArea.height / 2.0);
     gl.uniform2f(this.defaultShader.offsetVector, -filterArea.x.toDouble(), -filterArea.y.toDouble());
@@ -119,10 +127,11 @@ class WebGLFilterManager {
     gl.colorMask(true, true, true, true);
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     //print(COLOR_BUFFER_BIT);
+
+    filterBlock._glFilterTexture = texture;
     gl.clear(COLOR_BUFFER_BIT);
     //print("here");
 
-    filterBlock._glFilterTexture = texture;
 
   }
 
@@ -241,7 +250,7 @@ class WebGLFilterManager {
 
     filterArea = filterBlock._filterArea;
 
-    num x = filterArea.x - offsetX +0.0;
+    num x = filterArea.x - offsetX + 0.0;
     num y = filterArea.y - offsetY + 0.0;
 
     // update the buffers..

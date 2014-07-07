@@ -121,8 +121,8 @@ class DisplayObjectContainer extends DisplayObject {
     num minX = double.INFINITY;
     num minY = double.INFINITY;
 
-    num maxX = -double.INFINITY;
-    num maxY = -double.INFINITY;
+    num maxX = double.NEGATIVE_INFINITY;
+    num maxY = double.NEGATIVE_INFINITY;
 
     Rectangle childBounds;
     num childMaxX;
@@ -221,7 +221,6 @@ class DisplayObjectContainer extends DisplayObject {
       }
 
       if (this._filters != null) {
-        window.console.log(this._filters);
         renderSession.spriteBatch.flush();
         renderSession.filterManager.pushFilter(this._filterBlock);
       }

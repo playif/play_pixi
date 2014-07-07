@@ -4,7 +4,7 @@ class AbstractFilter {
   List<AbstractFilter> passes;
   Map shaders = {};
   bool dirty = true;
-  num padding = 0;
+  int padding = 0;
 
   Map uniforms = {
   };
