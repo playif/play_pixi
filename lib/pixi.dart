@@ -30,7 +30,7 @@ part "filters/abstract_filter.dart";
 part "filters/alpha_mask_filter.dart";
 part "filters/blur_filter.dart";
 part "filters/blur_x_filter.dart";
-part "filters/blur_y_filter.dart";
+part "filters/blur_y_filter2.dart";
 part "filters/color_matrix_filter.dart";
 part "filters/color_step_filter.dart";
 part "filters/cross_hatch_filter.dart";
