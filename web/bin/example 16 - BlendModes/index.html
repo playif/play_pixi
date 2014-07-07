@@ -17,7 +17,7 @@
 			height: 100%;
 		}
 	</style>
-	<script src="../../bin/pixi.js"></script>
+	<script src="../../bin/pixi.dev.js"></script>
 
 </head>
 <body>
@@ -65,7 +65,7 @@
 		// time to add the dude to the pond container!
 		stage.addChild(dude);
 
-		dude.blendMode = PIXI.blendModes.ADD
+		dude.blendMode = PIXI.blendModes.NORMAL;
 
 		// create some extra properties that will control movement
 		// create a random direction in radians. This is a number between 0 and PI*2 which is the equivalent of 0 - 360 degrees

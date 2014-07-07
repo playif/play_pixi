@@ -17,8 +17,8 @@ class WebGLMaskManager {
     var gl = this.gl;
 
     if (this.maskStack.length == 0) {
-      gl.enable(gl.STENCIL_TEST);
-      gl.stencilFunc(gl.ALWAYS, 1, 1);
+      gl.enable(STENCIL_TEST);
+      gl.stencilFunc(ALWAYS, 1, 1);
     }
 
     //  maskData.visible = false;
@@ -26,13 +26,13 @@ class WebGLMaskManager {
     this.maskStack.add(maskData);
 
     gl.colorMask(false, false, false, false);
-    gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+    gl.stencilOp(KEEP, KEEP, INCR);
 
     WebGLGraphics.renderGraphics(maskData, renderSession);
 
     gl.colorMask(true, true, true, true);
-    gl.stencilFunc(gl.NOTEQUAL, 0, this.maskStack.length);
-    gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+    gl.stencilFunc(NOTEQUAL, 0, this.maskStack.length);
+    gl.stencilOp(KEEP, KEEP, KEEP);
   }
 
 
@@ -45,16 +45,16 @@ class WebGLMaskManager {
       gl.colorMask(false, false, false, false);
 
       //gl.stencilFunc(gl.ALWAYS,1,1);
-      gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+      gl.stencilOp(KEEP, KEEP, DECR);
 
       WebGLGraphics.renderGraphics(maskData, renderSession);
 
       gl.colorMask(true, true, true, true);
-      gl.stencilFunc(gl.NOTEQUAL, 0, this.maskStack.length);
-      gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+      gl.stencilFunc(NOTEQUAL, 0, this.maskStack.length);
+      gl.stencilOp(KEEP, KEEP, KEEP);
     }
 
-    if (this.maskStack.length == 0)gl.disable(gl.STENCIL_TEST);
+    if (this.maskStack.length == 0)gl.disable(STENCIL_TEST);
   }
 
   destroy() {

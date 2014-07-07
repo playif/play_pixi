@@ -68,7 +68,12 @@ class WebGLFilterManager {
     this.offsetX += filterBlock._filterArea.x;
     this.offsetY += filterBlock._filterArea.y;
 
-    var texture = this.texturePool.removeLast();
+    var texture = null;
+
+    if (this.texturePool.length > 0) {
+      texture = this.texturePool.removeLast();
+    }
+
     if (texture == null) {
       texture = new FilterTexture(this.gl, this.width, this.height);
     }

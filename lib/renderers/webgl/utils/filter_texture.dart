@@ -22,9 +22,7 @@ class FilterTexture {
     //gl.bindFramebuffer(FRAMEBUFFER, this.frameBuffer);
 
 
-
     gl.framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D, this.texture, 0);
-
 
 
     // required for masking a mask??
@@ -52,6 +50,8 @@ class FilterTexture {
     var gl = this.gl;
 
     gl.bindTexture(TEXTURE_2D, this.texture);
+
+
     gl.texImage2D(TEXTURE_2D, 0, RGBA, width, height, 0, RGBA, UNSIGNED_BYTE, null);
 
 

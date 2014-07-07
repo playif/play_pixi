@@ -1,7 +1,7 @@
 part of PIXI;
 
 class AbstractFilter {
-  List<AbstractFilter> passes = [this];
+  List<AbstractFilter> passes;
   List shaders = [];
   bool dirty = true;
   num padding = 0;
@@ -12,6 +12,7 @@ class AbstractFilter {
   List fragmentSrc = [];
 
   AbstractFilter() {
-    print("Filter");
+    passes = [this];
+    //print("Filter");
   }
 }

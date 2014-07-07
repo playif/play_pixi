@@ -163,6 +163,7 @@ class Sprite extends DisplayObjectContainer {
 
 
       if (this._filters != null) {
+        print("cool");
         spriteBatch.flush();
         renderSession.filterManager.pushFilter(this._filterBlock);
       }

@@ -26,7 +26,8 @@ part 'extras/ext_spine.dart';
 part 'extras/ext_strip.dart';
 part "extras/tiling_sprite.dart";
 
-part "filters/filter.dart";
+part "filters/abstract_filter.dart";
+part "filters/color_matrix_filter.dart";
 part "filters/filter_block.dart";
 
 part 'loaders/loader.dart';

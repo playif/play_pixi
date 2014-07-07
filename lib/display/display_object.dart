@@ -12,8 +12,8 @@ class DisplayObject {
 
   bool renderable = false;
   DisplayObjectContainer parent = null;
-  DisplayObjectContainer __iParent =null;
-  bool interactiveChildren=false;
+  DisplayObjectContainer __iParent = null;
+  bool interactiveChildren = false;
   bool __hit;
   bool __isOver;
   bool __mouseIsDown;
@@ -33,6 +33,7 @@ class DisplayObject {
 
   Stage stage = null;
   bool buttonMode = false;
+
   //Stage get stage => _stage;
 
   num worldAlpha = 1.0;
@@ -110,26 +111,26 @@ class DisplayObject {
     return true;
   }
 
-  FilterBlock _filterBlock=new FilterBlock();
+  FilterBlock _filterBlock = new FilterBlock();
 
-  List<Filter> _filters = null;
+  List<AbstractFilter> _filters = null;
 
-  List<Filter> get filters => _filters;
+  List<AbstractFilter> get filters => _filters;
 
-  set filters(List<Filter> value) {
-    if (value) {
+  set filters(List<AbstractFilter> value) {
+    if (value != null) {
       // now put all the passes in one place..
-      List<Filter> passes = [];
+      List<AbstractFilter> passes = [];
       for (int i = 0; i < value.length; i++) {
-        List<Filter> filterPasses = value[i].passes;
+        List<AbstractFilter> filterPasses = value[i].passes;
         for (int j = 0; j < filterPasses.length; j++) {
           passes.add(filterPasses[j]);
         }
       }
 
       // TODO change this as it is legacy
-      this._filterBlock.target=this;
-      this._filterBlock.filterPasses=passes;
+      this._filterBlock.target = this;
+      this._filterBlock.filterPasses = passes;
 //          'target':this, 'filterPasses':passes
 //      };
     }
@@ -147,7 +148,7 @@ class DisplayObject {
       this._sr = sin(this.rotation);
       this._cr = cos(this.rotation);
     }
-  //print("updated");
+    //print("updated");
 
     Matrix parentTransform = this.parent.worldTransform;
     Matrix worldTransform = this.worldTransform;

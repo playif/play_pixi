@@ -9,5 +9,5 @@ class FilterBlock {
   DisplayObject target;
   Rectangle _filterArea;
   Rectangle filterArea;
-  List<Filter> filterPasses;
+  List<AbstractFilter> filterPasses=[];
 }
