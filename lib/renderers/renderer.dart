@@ -28,4 +28,6 @@ abstract class Renderer {
   }
 
   render(Stage stage);
+
+  renderDisplayObject(DisplayObject displayObject, Point projection, [buffer]);
 }

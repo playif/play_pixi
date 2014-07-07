@@ -124,7 +124,7 @@ Renderer defaultRenderer;
 List blendModesWebGL = null;
 List blendModesCanvas = null;
 const int WEBGL_RENDERER = 0;
-const int CANVAS_RENDERER = 0;
+const int CANVAS_RENDERER = 1;
 const String VERSION = "v1.5.3";
 
 const int INTERACTION_FREQUENCY = 30;

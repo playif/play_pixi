@@ -11,20 +11,20 @@ class FilterTexture {
     frameBuffer = gl.createFramebuffer();
     texture = gl.createTexture();
 
-    gl.bindTexture(gl.TEXTURE_2D, this.texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode == scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode == scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+    gl.bindTexture(TEXTURE_2D, this.texture);
+    gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
+    gl.texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
+    gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
+    gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
+    gl.bindFramebuffer(FRAMEBUFFER, this.frameBuffer);
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
+    gl.bindFramebuffer(FRAMEBUFFER, this.frameBuffer);
+    gl.framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D, this.texture, 0);
 
     // required for masking a mask??
     this.renderBuffer = gl.createRenderbuffer();
-    gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
-    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
+    gl.bindRenderbuffer(RENDERBUFFER, this.renderBuffer);
+    gl.framebufferRenderbuffer(FRAMEBUFFER, DEPTH_STENCIL_ATTACHMENT, RENDERBUFFER, this.renderBuffer);
 
     this.resize(width, height);
   }
@@ -33,7 +33,7 @@ class FilterTexture {
     var gl = this.gl;
 
     gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.clear(COLOR_BUFFER_BIT);
   }
 
   resize(width, height) {
@@ -44,12 +44,12 @@ class FilterTexture {
 
     var gl = this.gl;
 
-    gl.bindTexture(gl.TEXTURE_2D, this.texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    gl.bindTexture(TEXTURE_2D, this.texture);
+    gl.texImage2D(TEXTURE_2D, 0, RGBA, width, height, 0, RGBA, UNSIGNED_BYTE, null);
 
     // update the stencil buffer width and height
-    gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
-    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
+    gl.bindRenderbuffer(RENDERBUFFER, this.renderBuffer);
+    gl.renderbufferStorage(RENDERBUFFER, DEPTH_STENCIL, width, height);
   }
 
   destroy() {

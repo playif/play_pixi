@@ -10,6 +10,7 @@
 		}
 	</style>
 
+
 	<script src="../../bin/pixi.dev.js"></script>
 </head>
 <body>
@@ -19,8 +20,9 @@
 	var stage = new PIXI.Stage(0x000000);
 
 	// create a renderer instance
-	//var renderer = new PIXI.autoDetectRenderer(800, 600);
-    var renderer =  new PIXI.CanvasRenderer(800, 600);
+//	var renderer = new PIXI.autoDetectRenderer(800, 600);
+
+	var renderer = new PIXI.CanvasRenderer(800, 600);
 
 	// set the canvas width and height to fill the screen
 	renderer.view.style.width = window.innerWidth + "px";
@@ -40,8 +42,8 @@
 	var outputSprite = new PIXI.Sprite(currentTexture);
 
 	// align the sprite
-	outputSprite.position.x = 800 / 2;
-	outputSprite.position.y = 600 / 2;
+	outputSprite.position.x = 800/2;
+	outputSprite.position.y = 600/2;
 	outputSprite.anchor.x = 0.5;
 	outputSprite.anchor.y = 0.5;
 
@@ -50,8 +52,8 @@
 
 	var stuffContainer = new PIXI.DisplayObjectContainer();
 
-	stuffContainer.position.x = 800 / 2;
-	stuffContainer.position.y = 600 / 2
+	stuffContainer.position.x = 800/2;
+	stuffContainer.position.y = 600/2
 
 	stage.addChild(stuffContainer);
 
@@ -75,12 +77,13 @@
 		item.anchor.y = 0.5;
 
 		stuffContainer.addChild(item);
-
+		console.log("_")
 		items.push(item);
 	};
 
 	// used for spinning!
 	var count = 0;
+
 
 	requestAnimFrame(animate);
 
@@ -88,7 +91,7 @@
 
 	    requestAnimFrame( animate );
 
-		for (var i = 0; i < items.length; i++)
+		for (var i=0; i < items.length; i++)
 		{
 			// rotate each item
 			var item = items[i];
@@ -102,12 +105,13 @@
 		renderTexture = renderTexture2;
 		renderTexture2 = temp;
 
+
 		// set the new texture
 		outputSprite.setTexture(renderTexture);
 
 		// twist this up!
 		stuffContainer.rotation -= 0.01
-		outputSprite.scale.x = outputSprite.scale.y = 1 + Math.sin(count) * 0.2;
+		outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * 0.2;
 
 		// render the stage to the texture
 		// the true clears the texture before content is rendered

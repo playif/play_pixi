@@ -44,14 +44,16 @@
             var stage = new PIXI.Stage(0x66FF99);
 
 
+
             onAssetsLoaded() {
-                var bitmapFontText = new PIXI.BitmapText("bitmap fonts are\n now supported!", {
-                        'font': "35px Desyrel", 'align': "right"
-                });
+                var bitmapFontText = new PIXI.BitmapText("bitmap fonts are\n now supported!", new PIXI.TextStyle()
+                    ..font = "35px Desyrel"
+                    ..align = "right"
+                );
                 bitmapFontText.position.x = 620 - bitmapFontText.textWidth - 20;
                 bitmapFontText.position.y = 20;
 
-                runList(bitmapFontText);
+                //runList(bitmapFontText);
 
                 stage.addChild(bitmapFontText);
             }
@@ -70,7 +72,9 @@
             stage.addChild(background);
 
             // create a renderer instance
-            var renderer = PIXI.autoDetectRenderer(620, 400);
+            var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+            //var renderer =  new PIXI.CanvasRenderer(window.innerWidth, window.innerHeight);
+
             // add the renderer view element to the DOM
             document.body.append(renderer.view);
 
@@ -117,10 +121,11 @@
             var score = 0;
             var remaining = 10;
 
-            stage.removeChildren();
+            //stage.removeChildren();
 
             animate(dt) {
-
+                renderer.render(stage);
+                PIXI.requestAnimFrame(animate);
             }
 
             PIXI.requestAnimFrame(animate);

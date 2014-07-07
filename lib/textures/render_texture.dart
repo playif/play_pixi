@@ -2,32 +2,35 @@ part of PIXI;
 
 typedef void Render(DisplayObject displayObject, Point position, bool clear);
 
-class RenderTexture extends Texture{
+class RenderTexture extends Texture {
   Renderer renderer;
   num width, height;
-  Rectangle frame = new Rectangle(0, 0, this.width, this.height);
+  Rectangle frame;
   scaleModes scaleMode;
 
   BaseTexture baseTexture = new BaseTexture();
 
-  FilterTexture textureBuffer;
+  var textureBuffer;
   Point projection;
 
 
+  static Matrix tempMatrix = new Matrix();
 
-  Matrix tempMatrix=new Matrix();
-
-  RenderTexture([num this.width=100, num this.height=100, this.renderer = defaultRenderer, scaleModes this.scaleMode=scaleModes.DEFAULT]) {
+  RenderTexture([num this.width=100, num this.height=100, this.renderer, scaleModes this.scaleMode=scaleModes.DEFAULT]):super._() {
+    if (renderer == null) {
+      renderer = defaultRenderer;
+    }
+    frame = new Rectangle(0, 0, this.width, this.height);
     baseTexture.width = width;
     baseTexture.height = height;
     baseTexture.scaleMode = scaleMode;
     baseTexture.hasLoaded = true;
-
+    print(this.renderer.type);
     if (this.renderer.type == WEBGL_RENDERER) {
       var gl = this.renderer.gl;
 
       this.textureBuffer = new FilterTexture(gl, this.width, this.height, this.baseTexture.scaleMode);
-      this.baseTexture._glTextures[gl.id] = this.textureBuffer.texture;
+      this.baseTexture._glTextures[gl] = this.textureBuffer.texture;
 
       this.render = this.renderWebGL;
       this.projection = new Point(this.width / 2, -this.height / 2);
@@ -43,33 +46,29 @@ class RenderTexture extends Texture{
 
   }
 
-  resize(num width, num height)
-  {
+  resize(num width, num height) {
     this.width = width;
     this.height = height;
 
     this.frame.width = this.width;
     this.frame.height = this.height;
 
-    if(this.renderer.type == WEBGL_RENDERER)
-    {
+    if (this.renderer.type == WEBGL_RENDERER) {
       this.projection.x = this.width / 2;
       this.projection.y = -this.height / 2;
 
       var gl = this.renderer.gl;
       gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTextures[gl.id]);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     }
-    else
-    {
+    else {
       this.textureBuffer.resize(this.width, this.height);
     }
 
     Texture.frameUpdates.add(this);
   }
 
-  renderWebGL(DisplayObject displayObject, Point position, bool clear)
-  {
+  renderWebGL(DisplayObjectContainer displayObject, Point position, bool clear) {
     //TOOD replace position with matrix..
     var gl = this.renderer.gl;
 
@@ -77,9 +76,9 @@ class RenderTexture extends Texture{
 
     gl.viewport(0, 0, this.width, this.height);
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.textureBuffer.frameBuffer );
+    gl.bindFramebuffer(FRAMEBUFFER, this.textureBuffer.frameBuffer);
 
-    if(clear)this.textureBuffer.clear();
+    if (clear)this.textureBuffer.clear();
 
     // THIS WILL MESS WITH HIT TESTING!
     var children = displayObject.children;
@@ -91,14 +90,12 @@ class RenderTexture extends Texture{
     displayObject.worldTransform.d = -1;
     displayObject.worldTransform.ty = this.projection.y * -2;
 
-    if(position)
-    {
+    if (position) {
       displayObject.worldTransform.tx = position.x;
       displayObject.worldTransform.ty -= position.y;
     }
 
-    for(var i=0,j=children.length; i<j; i++)
-    {
+    for (var i = 0, j = children.length; i < j; i++) {
       children[i].updateTransform();
     }
 
@@ -111,32 +108,29 @@ class RenderTexture extends Texture{
     displayObject.worldTransform = originalWorldTransform;
   }
 
-  void renderCanvas (DisplayObject displayObject, Point position, bool clear)
-  {
+  void renderCanvas(DisplayObjectContainer displayObject, Point position, bool clear) {
     var children = displayObject.children;
 
     var originalWorldTransform = displayObject.worldTransform;
 
     displayObject.worldTransform = RenderTexture.tempMatrix;
 
-    if(position)
-    {
+    if (position) {
       displayObject.worldTransform.tx = position.x;
       displayObject.worldTransform.ty = position.y;
     }
 
-    for(var i = 0, j = children.length; i < j; i++)
-    {
+    for (var i = 0, j = children.length; i < j; i++) {
       children[i].updateTransform();
     }
 
-    if(clear)this.textureBuffer.clear();
+    if (clear)this.textureBuffer.clear();
 
     var context = this.textureBuffer.context;
 
     this.renderer.renderDisplayObject(displayObject, context);
 
-    context.setTransform(1,0,0,1,0,0);
+    context.setTransform(1, 0, 0, 1, 0, 0);
 
     displayObject.worldTransform = originalWorldTransform;
   }

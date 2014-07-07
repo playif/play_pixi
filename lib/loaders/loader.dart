@@ -7,9 +7,9 @@ abstract class Loader extends EventTarget {
 
   String baseUrl;
 
-  RegExp baseReg = new RegExp("[^\/]*\$");
-  RegExp resultReg = new RegExp("\r?\n");
-  RegExp resultSplit = new RegExp("^\s+|\s+\$", multiLine:true);
+  static RegExp baseReg = new RegExp("[^\/]*\$");
+  static RegExp resultReg = new RegExp("\r?\n");
+  static RegExp resultSplit = new RegExp("^\s+|\s+\$", multiLine:true);
 
   HttpRequest ajaxRequest;
   bool loaded = false;

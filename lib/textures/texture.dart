@@ -28,6 +28,10 @@ class Texture extends BaseTexture {
 
   CanvasBuffer canvasBuffer;
 
+  Texture._(){
+
+  }
+
   Texture(BaseTexture baseTexture, [this.frame]) {
 
     scope = this;

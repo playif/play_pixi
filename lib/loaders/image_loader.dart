@@ -48,7 +48,7 @@ class ImageLoader extends Loader {
 
     if (!this.texture.baseTexture.hasLoaded) {
       var scope = this;
-      this.texture.baseTexture.addEventListener('loaded', () {
+      this.texture.baseTexture.addEventListener('loaded', (e) {
         scope.onLoaded();
       });
     }
