@@ -1,3 +1,7 @@
-pixi_dart
+play_pixi
 =========
-A port of pixi
+A Dart port of pixi.js
+
+* Almost full features were implemented except SPINE.
+* Almost full examples that were only minimally modified.
+

@@ -1,6 +1,6 @@
 import "dart:html";
 import "dart:math";
-import "package:pixi_dart/pixi.dart" as PIXI;
+import "../../lib/pixi.dart" as PIXI;
 
 main() {
   // create an array of assets to load

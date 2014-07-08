@@ -3,7 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/example/example_01_basics/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/example_02_SpriteSheet/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/example/example_02_sprite_sheet/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_03_movie_clip/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_03_movie_clip/tp/explosion/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_03_movie_clip/tp/packages" />

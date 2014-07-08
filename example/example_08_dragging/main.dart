@@ -1,6 +1,6 @@
 import "dart:html";
 import "dart:math";
-import "package:pixi_dart/pixi.dart" as PIXI;
+import "../../lib/pixi.dart" as PIXI;
 
 class Bunny extends PIXI.Sprite {
   Bunny(PIXI.Texture texture):super(texture);

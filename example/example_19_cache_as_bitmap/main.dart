@@ -1,6 +1,6 @@
 import "dart:html";
 import "dart:math";
-import "package:pixi_dart/pixi.dart" as PIXI;
+import "../../lib/pixi.dart" as PIXI;
 
 
 main() {
@@ -32,12 +32,11 @@ main() {
 
   stage.addChild(alienContainer);
 
-  Random random =new Random();
+  Random random = new Random();
 
   animate(dt) {
     // just for fun, lets rotate mr rabbit a little
-    for (var i = 0; i < 100; i++)
-    {
+    for (var i = 0; i < 100; i++) {
       var alien = aliens[i];
       alien.rotation += 0.1;
     }
@@ -55,11 +54,9 @@ main() {
     PIXI.requestAnimFrame(animate);
   }
 
-  onAssetsLoaded()
-  {
+  onAssetsLoaded() {
     // add a bunch of aliens with textures from image paths
-    for (var i = 0; i < 100; i++)
-    {
+    for (var i = 0; i < 100; i++) {
       var frameName = alienFrames[i % 4];
 
       // create an alien using the frame name..
@@ -85,8 +82,7 @@ main() {
   }
 
 
-  stage.mousedown = (e)
-  {
+  stage.mousedown = (e) {
     alienContainer.cacheAsBitmap = !alienContainer.cacheAsBitmap;
     //window.console.log(alienContainer.getLocalBounds());
 

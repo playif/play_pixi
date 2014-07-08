@@ -1,7 +1,8 @@
 import "dart:html";
 import "dart:math";
-import "package:pixi_dart/pixi.dart" as PIXI;
 import "dart:async";
+
+import "../../lib/pixi.dart" as PIXI;
 
 main() {
 
