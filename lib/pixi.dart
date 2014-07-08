@@ -139,8 +139,8 @@ class scaleModes {
 }
 
 Renderer defaultRenderer;
-List blendModesWebGL = null;
-List blendModesCanvas = null;
+Map blendModesWebGL = null;
+Map blendModesCanvas = null;
 const int WEBGL_RENDERER = 0;
 const int CANVAS_RENDERER = 1;
 const String VERSION = "v1.5.3";

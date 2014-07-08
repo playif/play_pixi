@@ -21,7 +21,7 @@ abstract class Renderer {
   WebGLMaskManager maskManager;
   WebGLFilterManager filterManager;
 
-  RenderSession renderSession = [];
+  RenderSession renderSession;
   Stage __stage;
 
   Renderer() {

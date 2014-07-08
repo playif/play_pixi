@@ -292,7 +292,7 @@ class WebGLRenderer extends Renderer {
     this.contextLost = true;
   }
 
-  handleContextRestored() {
+  handleContextRestored(event) {
 
     //try 'experimental-webgl'
     try {

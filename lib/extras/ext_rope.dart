@@ -3,8 +3,10 @@ part of PIXI;
 class Rope extends Strip {
   List<Point> points;
   num count = 0;
+  Texture texture;
 
-  Rope(this.texture, this.points) {
+  Rope(Texture texture, this.points, [num width, num height])
+  :super(texture, width, height) {
     this.verticies = new Float32List(points.length * 4);
     this.uvs = new Float32List(points.length * 4);
     this.colors = new Float32List(points.length * 2);

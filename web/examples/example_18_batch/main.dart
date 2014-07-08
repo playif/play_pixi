@@ -43,7 +43,7 @@ main() {
 
   Random random = new Random();
 
-  var totalDudes = renderer is PIXI.WebGLRenderer ? 5000 : 500;
+  var totalDudes = renderer is PIXI.WebGLRenderer ? 10000 : 500;
   PIXI.Texture texture = PIXI.Texture.fromImage("tinyMaggot.png");
   for (var i = 0; i < totalDudes; i++) {
 // create a new Sprite that uses the image name that we just generated as its source
@@ -51,6 +51,7 @@ main() {
 
     dude.tint = random.nextInt(0xE8D4CD);
 
+    dude.interactive=true;
 // set the anchor point so the the dude texture is centerd on the sprite
     dude.anchor.x = dude.anchor.y = 0.5;
 
@@ -74,6 +75,10 @@ main() {
     dude.speed = (2 + random.nextDouble() * 2) * 0.2;
 
     dude.offset = random.nextDouble() * 100;
+
+    dude.click=(e){
+      sprites.removeChild(dude);
+    };
 
 // finally we push the dude into the dudeArray so it it can be easily accessed later
     dudeArray.add(dude);
