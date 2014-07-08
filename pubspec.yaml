@@ -6,7 +6,7 @@ author: playif <playif@gmail.com>
 hompage: https://github.com/playif/pixi_dart
 suppressWarnings: false
 dependencies:
-  browser: any
+  browser: ">=0.10.0+2 <0.11.0"
 transformers:
 - $dart2js:
     checked: true
