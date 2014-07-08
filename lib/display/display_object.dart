@@ -51,9 +51,9 @@ class DisplayObject {
 
   String defaultCursor = 'pointer';
 
-  Matrix _worldTransform = new Matrix();
+  Matrix worldTransform = new Matrix();
 
-  Matrix get worldTransform => _worldTransform ;
+//  Matrix get worldTransform => _worldTransform ;
 
   List color = [];
 
@@ -220,14 +220,14 @@ class DisplayObject {
     this._cacheAsBitmap = false;
     var bounds = this.getLocalBounds();
 
-    if (!this._cachedSprite) {
-      var renderTexture = new RenderTexture(bounds.width | 0, bounds.height | 0);//, renderSession.renderer);
+    if (this._cachedSprite ==null) {
+      var renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor());//, renderSession.renderer);
 
       this._cachedSprite = new Sprite(renderTexture);
       this._cachedSprite.worldTransform = this.worldTransform;
     }
     else {
-      this._cachedSprite.texture.resize(bounds.width | 0, bounds.height | 0);
+      this._cachedSprite.texture.resize(bounds.width.floor(), bounds.height.floor());
     }
 
     //REMOVE filter!
@@ -235,7 +235,7 @@ class DisplayObject {
     this._filters = null;
 
     this._cachedSprite.filters = tempFilters;
-    this._cachedSprite.texture.render(this, new Point(-bounds.x, -bounds.y));
+    this._cachedSprite.texture.render(this, new Point(-bounds.x, -bounds.y),false);
 
     this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
     this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
@@ -246,7 +246,7 @@ class DisplayObject {
   }
 
   void _destroyCachedSprite() {
-    if (!this._cachedSprite)return;
+    if (this._cachedSprite == null)return;
 
     this._cachedSprite.texture.destroy(true);
     //  console.log("DESTROY")

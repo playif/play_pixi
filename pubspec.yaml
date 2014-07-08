@@ -3,9 +3,6 @@ dependencies:
   browser: any
 transformers:
 - $dart2js:
-    $exclude: "lib/extras/ext_rope.dart"
-    $exclude: "web/bin/*"
-    $exclude: "web/examples/*"
     checked: true
     minify: false
     suppressWarnings: true
@@ -13,5 +10,3 @@ transformers:
     verbose: true
     terse: true
     analyzeAll: true
-    $exclude: "bin/*"
-    $exclude: "examples/*"

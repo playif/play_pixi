@@ -132,7 +132,7 @@ class WebGLRenderer extends Renderer {
     }
 
     // update any textures this includes uvs and uploading them to the gpu
-    WebGLRenderer.updateTextures();
+    WebGLRenderer.updateTextures(gl);
 
     // update the scene graph
     stage.updateTransform();
@@ -147,7 +147,6 @@ class WebGLRenderer extends Renderer {
       }
     }
 
-    var gl = this.gl;
 
     // -- Does this need to be set every frame? -- //
     //gl.colorMask(true, true, true, this.transparent);
@@ -230,7 +229,7 @@ class WebGLRenderer extends Renderer {
   }
 
 
-  static void updateTextures() {
+  static void updateTextures(RenderingContext gl) {
     var i = 0;
 
     //TODO break this out into a texture manager...
@@ -242,7 +241,7 @@ class WebGLRenderer extends Renderer {
       WebGLRenderer.updateTextureFrame(Texture.frameUpdates[i]);
 
     for (i = 0; i < texturesToDestroy.length; i++)
-      WebGLRenderer.destroyTexture(texturesToDestroy[i]);
+      WebGLRenderer.destroyTexture(texturesToDestroy[i],gl);
 
     texturesToUpdate.length = 0;
     texturesToDestroy.length = 0;
@@ -250,19 +249,22 @@ class WebGLRenderer extends Renderer {
   }
 
 
-  static destroyTexture(Texture texture) {
+  static destroyTexture(Texture texture, RenderingContext gl) {
     //TODO break this out into a texture manager...
-
-    for (int i = texture._glTextures.length - 1; i >= 0; i--) {
-      var glTexture = texture._glTextures[i];
-      var gl = glContexts[i];
-
-      if (gl && glTexture) {
-        gl.deleteTexture(glTexture);
-      }
+    for (Texture t in texture._glTextures.values) {
+      gl.deleteTexture(t);
     }
-
-    texture._glTextures.length = 0;
+    texture._glTextures.clear();
+//    for (int i = texture._glTextures.length - 1; i >= 0; i--) {
+//      var glTexture = texture._glTextures[i];
+//      var gl = glContexts[i];
+//
+//      if (gl && glTexture) {
+//        gl.deleteTexture(glTexture);
+//      }
+//    }
+//
+//    texture._glTextures.length = 0;
   }
 
   static updateTextureFrame(Texture texture) {

@@ -101,7 +101,7 @@ class RenderTexture extends Texture {
     }
 
     // update the textures!
-    WebGLRenderer.updateTextures();
+    WebGLRenderer.updateTextures(gl);
 
     //
     this.renderer.renderDisplayObject(displayObject, this.projection, this.textureBuffer.frameBuffer);
