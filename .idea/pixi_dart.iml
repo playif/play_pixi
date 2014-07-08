@@ -17,10 +17,10 @@
       <excludeFolder url="file://$MODULE_DIR$/examples/example_18_batch/packages" />
       <excludeFolder url="file://$MODULE_DIR$/examples/example_19_cache_as_bitmap/packages" />
       <excludeFolder url="file://$MODULE_DIR$/examples/example_19_cache_as_bitmap/tp/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/examples/example_6_interactive/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/examples/example_7_transparent_background/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/examples/example_8_dragging/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/examples/example_9_tiling_texture/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/example_06_interactive/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/example_07_transparent_background/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/example_08_dragging/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/example_09_tiling_texture/packages" />
       <excludeFolder url="file://$MODULE_DIR$/examples/packages" />
       <excludeFolder url="file://$MODULE_DIR$/lib/examples/example_1_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/packages/pixi_dart" />
