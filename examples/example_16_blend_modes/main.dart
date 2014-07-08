@@ -3,6 +3,20 @@ import "dart:math";
 import "package:pixi_dart/pixi.dart" as PIXI;
 
 
+class Dude extends PIXI.Sprite {
+  Dude(PIXI.Texture texture):super(texture);
+
+  PIXI.InteractionData data;
+  bool dragging = false;
+
+  num direction;
+  num turningSpeed;
+
+  num speed;
+  num offset;
+
+}
+
 main() {
   var viewWidth = 630;
   var viewHeight = 410;
@@ -25,14 +39,17 @@ main() {
   stage.addChild(pondFloorSprite);
 
   // create an array to store a refference to the dude in the pond
-  var dudeArray = [];
+  List dudeArray = [];
 
   Random random = new Random();
 
   var totaldude = 20;
   for (var i = 0; i < totaldude; i++) {
+//    // create a new Sprite that uses the image name that we just generated as its source
+//    var dude = PIXI.Sprite.fromImage("flowerTop.png");
     // create a new Sprite that uses the image name that we just generated as its source
-    var dude = PIXI.Sprite.fromImage("flowerTop.png");
+    var texture = PIXI.Texture.fromImage("flowerTop.png");
+    Dude dude = new Dude(texture);
 
     // set the anchor point so the the dude texture is centerd on the sprite
     dude.anchor.x = dude.anchor.y = 0.5;
@@ -47,7 +64,7 @@ main() {
     // time to add the dude to the pond container!
     stage.addChild(dude);
 
-    dude.blendMode = PIXI.blendModes.NORMAL;
+    dude.blendMode = PIXI.blendModes.SCREEN;
 
     // create some extra properties that will control movement
     // create a random direction in radians. This is a number between 0 and PI*2 which is the equivalent of 0 - 360 degrees
@@ -60,7 +77,7 @@ main() {
     dude.speed = 2 + random.nextDouble() * 2;
 
     // finally we push the dude into the dudeArray so it it can be easily accessed later
-    dudeArray.push(dude);
+    dudeArray.add(dude);
   }
 
   // create a bounding box box for the little dudes

@@ -1,4 +1,9 @@
 name: pixi_dart
+version: 0.9.0
+description:
+  A dart port for PIXI.js library.
+author: playif <playif@gmail.com>
+hompage: https://github.com/playif/pixi_dart
 suppressWarnings: false
 dependencies:
   browser: any

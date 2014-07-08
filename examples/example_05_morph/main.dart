@@ -20,18 +20,20 @@ main() {
   var vx = 0;
   var vy = 0;
   var vz = 0;
-  var points1 = [];
-  var points2 = [];
-  var points3 = [];
-  var tpoint1 = [];
-  var tpoint2 = [];
-  var tpoint3 = [];
-  var balls = [];
+  var points1 = new List<num>(n);
+  var points2 = new List<num>(n);
+  var points3 = new List<num>(n);
+  var tpoint1 = new List<num>(n);
+  var tpoint2 = new List<num>(n);
+  var tpoint3 = new List<num>(n);
+  var balls = new List<num>(n);
   var renderer;
   var stage;
 
   Random random = new Random();
-
+  var ballTexture = PIXI.Texture.fromImage("assets/pixel.png");
+  renderer = PIXI.autoDetectRenderer(w, h);
+  stage = new PIXI.Stage();
 
   makeObject(t) {
     var xd;
@@ -208,7 +210,7 @@ main() {
   }
   window.onResize.listen(resize);
 
-  update() {
+  update(dt) {
     var x3d, y3d, z3d, tx, ty, tz, ox;
 
     if (d < 250) {
@@ -262,9 +264,7 @@ main() {
 
 
   start() {
-    var ballTexture = PIXI.Texture.fromImage("assets/pixel.png");
-    renderer = PIXI.autoDetectRenderer(w, h);
-    stage = new PIXI.Stage();
+
 
     document.body.append(renderer.view);
 
@@ -290,5 +290,5 @@ main() {
 
     PIXI.requestAnimFrame(update);
   }
-
+  start();
 }
