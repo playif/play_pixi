@@ -30,7 +30,7 @@
       <excludeFolder url="file://$MODULE_DIR$/example/packages" />
       <excludeFolder url="file://$MODULE_DIR$/examples/packages" />
       <excludeFolder url="file://$MODULE_DIR$/lib/examples/example_1_basics/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/pixi_dart" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/play_pixi" />
       <excludeFolder url="file://$MODULE_DIR$/web/packages" />
     </content>
     <orderEntry type="inheritedJdk" />
