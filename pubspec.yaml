@@ -5,8 +5,5 @@ transformers:
 - $dart2js:
     checked: true
     minify: false
-    suppressWarnings: true
+    suppressWarnings: false
     suppressHints: false
-    verbose: true
-    terse: true
-    analyzeAll: true
