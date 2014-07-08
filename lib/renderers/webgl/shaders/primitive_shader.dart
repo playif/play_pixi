@@ -42,6 +42,7 @@ class PrimitiveShader {
   UniformLocation offsetVector;
   UniformLocation tintColor;
   UniformLocation translationMatrix;
+  UniformLocation alpha;
 
   int aVertexPosition;
   int colorAttribute;
@@ -52,10 +53,10 @@ class PrimitiveShader {
 //  int aTextureCoord;
 
 
-  List attributes;
+  List<int> attributes;
 
 
-  num alpha;
+
 
 
   var uniforms;

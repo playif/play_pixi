@@ -37,7 +37,7 @@ class WebGLShaderManager {
     this.activateShader(this.defaultShader);
   }
 
-  setAttribs(attribs) {
+  setAttribs(List<int> attribs) {
     // reset temp state
 
     var i;
@@ -59,7 +59,7 @@ class WebGLShaderManager {
       if (this.attribState[i] != this.tempAttribState[i]) {
         this.attribState[i] = this.tempAttribState[i];
 
-        if (this.tempAttribState[i]) {
+        if (this.tempAttribState[i] == true) {
           gl.enableVertexAttribArray(i);
         }
         else {

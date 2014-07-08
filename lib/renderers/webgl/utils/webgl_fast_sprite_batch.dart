@@ -63,7 +63,7 @@ class WebGLFastSpriteBatch {
     gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
     gl.bufferData(ARRAY_BUFFER, this.vertices, DYNAMIC_DRAW);
 
-    this.currentBlendMode = 99999;
+    this.currentBlendMode = blendModes.NONE;
   }
 
   begin(SpriteBatch spriteBatch, RenderSession renderSession) {

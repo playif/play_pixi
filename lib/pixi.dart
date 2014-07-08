@@ -118,7 +118,7 @@ class blendModes {
   static const COLOR = const blendModes._(15);
   static const LUMINOSITY = const blendModes._(16);
 
-
+  static const NONE = const blendModes._(99999);
 //  static get values => [NORMAL, ADD];
 
   final int value;

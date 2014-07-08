@@ -16,7 +16,7 @@ class DisplayObjectContainer extends DisplayObject {
 
   void addChildAt(DisplayObject child, int index) {
     if (index >= 0 && index <= children.length) {
-      if (child.parent) {
+      if (child.parent != null) {
         child.parent.removeChild(child);
       }
 

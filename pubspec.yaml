@@ -7,3 +7,5 @@ transformers:
     minify: false
     suppressWarnings: false
     suppressHints: false
+    terse: true
+    verbose: true

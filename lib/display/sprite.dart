@@ -2,7 +2,7 @@ part of PIXI;
 
 class Sprite extends DisplayObjectContainer {
   Point anchor = new Point();
-  RenderTexture texture;
+  Texture texture;
   bool updateFrame = false;
   bool textureChange = false;
   num _width = 0, _height = 0;

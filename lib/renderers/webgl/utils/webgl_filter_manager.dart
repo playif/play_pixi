@@ -15,16 +15,19 @@ class WebGLFilterManager {
 
   PixiShader defaultShader;
 
-  List vertexBuffer;
+
+
   Float32List vertexArray;
 
-  var uvBuffer;
-  var buffer;
+
 
   Float32List uvArray;
 
-  var colorBuffer;
-  var indexBuffer;
+  Buffer colorBuffer;
+  Buffer indexBuffer;
+  Buffer vertexBuffer;
+  Buffer uvBuffer;
+  Buffer buffer;
 
   Float32List colorArray;
 
