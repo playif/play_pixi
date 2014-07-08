@@ -1,6 +1,6 @@
 part of PIXI;
 
-class WebGLMaskManager {
+class WebGLMaskManager extends MaskManager {
   List maskStack = [];
   int maskPosition = 0;
   RenderingContext gl;
@@ -13,7 +13,7 @@ class WebGLMaskManager {
     this.gl = gl;
   }
 
-  pushMask(maskData, renderSession) {
+  pushMask(maskData, [renderSession]) {
     var gl = this.gl;
 
     if (this.maskStack.length == 0) {

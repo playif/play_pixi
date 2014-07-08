@@ -2,7 +2,7 @@ part of PIXI;
 
 class InteractionData {
   Point global = new Point();
-  Sprite target = null;
+  DisplayObjectContainer target = null;
   Event originalEvent = null;
 
   //bool interactiveChildren = false;

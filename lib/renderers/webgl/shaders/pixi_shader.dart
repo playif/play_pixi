@@ -1,6 +1,6 @@
 part of PIXI;
 
-class PixiShader {
+class PixiShader extends Shader {
   PixiShader(this.gl) {
     this.init();
   }

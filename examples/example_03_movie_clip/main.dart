@@ -60,7 +60,7 @@ main() {
       var texture = PIXI.Texture.fromFrame("Explosion_Sequence_A ${i + 1}.png");
       explosionTextures.add(texture);
     }
-    ;
+
 
     for (var i = 0; i < 50; i++) {
       // create an explosion MovieClip
@@ -74,7 +74,7 @@ main() {
       explosion.rotation = random.nextDouble() * PI;
       explosion.scale.x = explosion.scale.y = 0.75 + random.nextDouble() * 0.5;
 
-      explosion.gotoAndPlay(random.nextDouble() * 27);
+      explosion.gotoAndPlay(random.nextInt(27));
 
       stage.addChild(explosion);
     }

@@ -1,6 +1,6 @@
 part of PIXI;
 
-class PrimitiveShader {
+class PrimitiveShader extends Shader {
   PrimitiveShader(this.gl) {
     this.init();
   }

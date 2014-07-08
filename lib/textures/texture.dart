@@ -154,6 +154,12 @@ class Texture extends BaseTexture {
   }
 
 
+//  resize(num width, num height) {
+//    throw new Exception();
+//  }
+
+
+
 }
 
 class TextureUvs {

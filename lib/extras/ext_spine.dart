@@ -1,5 +1,8 @@
 part of PIXI;
 
+Map AnimCache = {
+};
+
 class BoneData {
   String name;
   BoneData parent;
@@ -70,7 +73,7 @@ class Bone {
       this.m10 = -this.m10;
       this.m11 = -this.m11;
     }
-    if (Bone.yDown) {
+    if (yDown) {
       this.m10 = -this.m10;
       this.m11 = -this.m11;
     }
@@ -86,6 +89,6 @@ class Bone {
   }
 }
 
-class Spine  {
-
+class Spine {
+  Spine.SkeletonJson();
 }

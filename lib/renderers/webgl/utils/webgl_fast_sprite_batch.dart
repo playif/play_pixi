@@ -23,7 +23,7 @@ class WebGLFastSpriteBatch {
   blendModes currentBlendMode = blendModes.NORMAL;
   RenderSession renderSession = null;
 
-  PixiShader shader = null;
+  Shader shader = null;
   Matrix matrix = null;
 
 

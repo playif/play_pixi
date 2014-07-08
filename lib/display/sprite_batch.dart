@@ -74,8 +74,8 @@ class SpriteBatch extends DisplayObjectContainer {
         frame.y,
         frame.width,
         frame.height,
-        ((child.anchor.x) * (-frame.width * child.scale.x) + child.position.x + 0.5) | 0,
-        ((child.anchor.y) * (-frame.height * child.scale.y) + child.position.y + 0.5) | 0,
+        ((child.anchor.x) * (-frame.width * child.scale.x) + child.position.x + 0.5).floor(),
+        ((child.anchor.y) * (-frame.height * child.scale.y) + child.position.y + 0.5).floor(),
         frame.width * child.scale.x,
         frame.height * child.scale.y);
       }

@@ -6,14 +6,16 @@ class WebGLRenderer extends Renderer {
 //  static int glContextId = 0;
 
   //num width, height;
-  bool transparent;
-  bool antialias;
+//  bool transparent=false;
+//  bool antialias=false;
 
-  WebGLRenderer([int width=800, int height=600, CanvasElement view, this.transparent=false, this.antialias=false]) {
+  WebGLRenderer([int width=800, int height=600, CanvasElement view, bool transparent=false, bool antialias=false]) {
     if (defaultRenderer == null) defaultRenderer = this;
     type = WEBGL_RENDERER;
     this.width = width;
     this.height = height;
+    this.transparent = transparent;
+    this.antialias = antialias;
 
     if (view == null) {
       view = new CanvasElement();
@@ -156,7 +158,7 @@ class WebGLRenderer extends Renderer {
     // make sure we are bound to the main frame buffer
     gl.bindFramebuffer(FRAMEBUFFER, null);
 
-    if (this.transparent) {
+    if (this.transparent == true) {
       gl.clearColor(0, 0, 0, 0);
     }
     else {
@@ -206,10 +208,10 @@ class WebGLRenderer extends Renderer {
   }
 
 
-  renderDisplayObject(DisplayObject displayObject, Point projection, [buffer]) {
+  renderDisplayObject(DisplayObject displayObject, [Point projection, buffer]) {
     // reset the render session data..
     this.renderSession.drawCount = 0;
-    this.renderSession.currentBlendMode = 9999;
+    this.renderSession.currentBlendMode = blendModes.NONE;
 
     this.renderSession.projection = projection;
     this.renderSession.offset = this.offset;
@@ -241,7 +243,7 @@ class WebGLRenderer extends Renderer {
       WebGLRenderer.updateTextureFrame(Texture.frameUpdates[i]);
 
     for (i = 0; i < texturesToDestroy.length; i++)
-      WebGLRenderer.destroyTexture(texturesToDestroy[i],gl);
+      WebGLRenderer.destroyTexture(texturesToDestroy[i], gl);
 
     texturesToUpdate.length = 0;
     texturesToDestroy.length = 0;
@@ -251,7 +253,7 @@ class WebGLRenderer extends Renderer {
 
   static destroyTexture(Texture texture, RenderingContext gl) {
     //TODO break this out into a texture manager...
-    for (Texture t in texture._glTextures.values) {
+    for (var t in texture._glTextures.values) {
       gl.deleteTexture(t);
     }
     texture._glTextures.clear();
@@ -375,7 +377,7 @@ class WebGLRenderer extends Renderer {
 
 }
 
-createWebGLTexture(Texture texture, RenderingContext gl) {
+createWebGLTexture(BaseTexture texture, RenderingContext gl) {
 
 
   if (texture.hasLoaded) {

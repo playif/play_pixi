@@ -19,7 +19,7 @@ class AtlasLoader extends Loader {
     this.ajaxRequest = AjaxRequest();
     this.ajaxRequest.onReadyStateChange.listen(this.onAtlasLoaded);
     this.ajaxRequest.open('GET', this.url, async: true);
-    if (this.ajaxRequest.overrideMimeType) this.ajaxRequest.overrideMimeType('application/json');
+    this.ajaxRequest.overrideMimeType('application/json');
     this.ajaxRequest.send(null);
   }
 
@@ -33,7 +33,7 @@ class AtlasLoader extends Loader {
             },
             'frames' : []
         };
-        var result = this.ajaxRequest.responseText.split(resultReg);
+        var result = this.ajaxRequest.responseText.split(Loader.resultReg);
         var lineCount = -3;
 
         var currentImageId = 0;
@@ -47,7 +47,7 @@ class AtlasLoader extends Loader {
 
         // parser without rotation support yet!
         for (i = 0; i < result.length; i++) {
-          result[i] = result[i].replace(resultSplit, '');
+          result[i] = result[i].replace(Loader.resultSplit, '');
           if (result[i] == '') {
             nameInNextLine = i + 1;
           }
@@ -74,19 +74,19 @@ class AtlasLoader extends Loader {
                 var text = result[i].split(' ');
                 if (lineCount % 7 == 3) {
                   // position
-                  currentFrame.frame.x = Number(text[1].replace(',', ''));
-                  currentFrame.frame.y = Number(text[2]);
+                  currentFrame.frame.x = int.parse(text[1].replace(',', ''));
+                  currentFrame.frame.y = int.parse(text[2]);
                 } else if (lineCount % 7 == 4) {
                   // size
-                  currentFrame.frame.w = Number(text[1].replace(',', ''));
-                  currentFrame.frame.h = Number(text[2]);
+                  currentFrame.frame.w = int.parse(text[1].replace(',', ''));
+                  currentFrame.frame.h = int.parse(text[2]);
                 } else if (lineCount % 7 == 5) {
                   // real size
                   var realSize = {
                       'x' : 0,
                       'y' : 0,
-                      'w' : Number(text[1].replace(',', '')),
-                      'h' : Number(text[2])
+                      'w' : int.parse(text[1].replace(',', '')),
+                      'h' : int.parse(text[2])
                   };
 
                   if (realSize.w > currentFrame.frame.w || realSize.h > currentFrame.frame.h) {

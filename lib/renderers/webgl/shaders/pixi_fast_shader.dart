@@ -1,16 +1,16 @@
 part of PIXI;
 
-class PixiFastShader {
+class PixiFastShader extends Shader {
   RenderingContext gl;
   Program program = null;
   List<String> fragmentSrc = [
-  'precision lowp float;',
-  'varying vec2 vTextureCoord;',
-  'varying float vColor;',
-  'uniform sampler2D uSampler;',
-  'void main(void) {',
-  '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
-  '}'
+      'precision lowp float;',
+      'varying vec2 vTextureCoord;',
+      'varying float vColor;',
+      'uniform sampler2D uSampler;',
+      'void main(void) {',
+      '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
+      '}'
   ];
 
   List<String> vertexSrc = [
@@ -43,7 +43,7 @@ class PixiFastShader {
       '}'
   ];
 
-  int textureCount=0;
+  int textureCount = 0;
 
   UniformLocation uSampler;
   UniformLocation projectionVector;
@@ -67,10 +67,7 @@ class PixiFastShader {
   }
 
 
-
-
-  init()
-  {
+  init() {
 
     var gl = this.gl;
 
@@ -97,19 +94,17 @@ class PixiFastShader {
     this.colorAttribute = gl.getAttribLocation(program, 'aColor');
 
 
-
     // Begin worst hack eva //
 
     // WHY??? ONLY on my chrome pixel the line above returns -1 when using filters?
     // maybe its somthing to do with the current state of the gl context.
     // Im convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on my chrome pixel
     // If theres any webGL people that know why could happen please help :)
-    if(this.colorAttribute == -1)
-    {
+    if (this.colorAttribute == -1) {
       this.colorAttribute = 2;
     }
 
-    this.attributes = [this.aVertexPosition, this.aPositionCoord,  this.aScale, this.aRotation, this.aTextureCoord, this.colorAttribute];
+    this.attributes = [this.aVertexPosition, this.aPositionCoord, this.aScale, this.aRotation, this.aTextureCoord, this.colorAttribute];
 
     // End worst hack eva //
 
@@ -117,9 +112,8 @@ class PixiFastShader {
     this.program = program;
   }
 
-  destroy ()
-  {
-    this.gl.deleteProgram( this.program );
+  destroy() {
+    this.gl.deleteProgram(this.program);
     this.uniforms = null;
     this.gl = null;
 

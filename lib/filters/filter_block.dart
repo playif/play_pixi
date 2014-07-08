@@ -10,5 +10,5 @@ class FilterBlock {
   Rectangle _filterArea;
   Rectangle filterArea;
   List<AbstractFilter> filterPasses=[];
-  Texture _glFilterTexture;
+  FilterTexture _glFilterTexture;
 }

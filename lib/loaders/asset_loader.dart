@@ -27,7 +27,7 @@ class AssetLoader extends EventTarget {
     if (start == test) {
       String data = str.substring(test.length);
 
-      String sepIdx = data.indexOf(',');
+      int sepIdx = data.indexOf(',');
       if (sepIdx == -1) //malformed data URI scheme
         return null;
 
@@ -84,7 +84,7 @@ class AssetLoader extends EventTarget {
       ..loader = loader);
     if (this.onProgress != null) this.onProgress(loader);
 
-    if (!this.loadCount) {
+    if (this.loadCount == 0) {
       this.dispatchEvent(new PixiEvent()
         ..type = 'onComplete'
         ..content = this);

@@ -8,7 +8,7 @@ class WebGLFilterManager {
   num offsetX = 0;
   num offsetY = 0;
 
-  List<Texture> texturePool;
+  List<FilterTexture> texturePool;
 
   RenderSession renderSession;
   int width, height;
@@ -315,7 +315,7 @@ class WebGLFilterManager {
     filterBlock._glFilterTexture = null;
   }
 
-  applyFilterPass(AbstractFilter filter, Texture filterArea, num width, num height) {
+  applyFilterPass(AbstractFilter filter, Rectangle filterArea, num width, num height) {
     // use program
     var gl = this.gl;
     var shader = filter.shaders[gl];

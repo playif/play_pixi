@@ -1,4 +1,5 @@
 name: pixi_dart
+suppressWarnings: false
 dependencies:
   browser: any
 transformers:
@@ -7,5 +8,5 @@ transformers:
     minify: false
     suppressWarnings: false
     suppressHints: false
-    terse: true
+    terse: false
     verbose: true

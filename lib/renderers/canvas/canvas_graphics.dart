@@ -150,7 +150,7 @@ class CanvasGraphics {
       else if (data.type == Graphics.CIRC) {
           // TODO - need to be Undefined!
           context.beginPath();
-          context.arc(points[0], points[1], points[2], 0, 2 * Math.PI);
+          context.arc(points[0], points[1], points[2], 0, 2 * PI);
           context.closePath();
         }
         else if (data.type == Graphics.ELIP) {

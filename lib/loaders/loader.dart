@@ -11,10 +11,12 @@ abstract class Loader extends EventTarget {
   static RegExp resultReg = new RegExp("\r?\n");
   static RegExp resultSplit = new RegExp("^\s+|\s+\$", multiLine:true);
 
+  //static RegExp baseReg = new RegExp("[^\/]*\$");
+
   HttpRequest ajaxRequest;
   bool loaded = false;
 
-  Texture texture = null;
+  BaseTexture texture = null;
 
   Loader(this.url, this.crossorigin) {
     this.baseUrl = url.replaceFirst(baseReg, "");
@@ -45,7 +47,6 @@ abstract class Loader extends EventTarget {
 
       default:
         throw new Exception('$type is an unsupported file type');
-        break;
     }
 
   }

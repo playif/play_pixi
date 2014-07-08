@@ -5,7 +5,7 @@ class BitmapFontLoader extends Loader {
 
   String baseUrl;
 
-  RegExp baseReg = new RegExp("[^\/]*\$");
+
 
 
 
@@ -19,7 +19,7 @@ class BitmapFontLoader extends Loader {
     this.ajaxRequest.onReadyStateChange.listen(onXMLLoaded);
 
     this.ajaxRequest.open('GET', this.url, async: true);
-    if (this.ajaxRequest.overrideMimeType) this.ajaxRequest.overrideMimeType('application/xml');
+    this.ajaxRequest.overrideMimeType('application/xml');
     this.ajaxRequest.send(null);
   }
 

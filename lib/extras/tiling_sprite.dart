@@ -4,10 +4,10 @@ class TilingSprite extends Sprite {
   num _width, _height;
   Point tileScale;
   Point tilePosition;
-  bool __tilePattern = false;
+  CanvasPattern __tilePattern = null;
 
   Texture tilingTexture;
-  Texture refreshTexture;
+  bool refreshTexture = false;
 
   Point tileScaleOffset = new Point();
 
@@ -84,20 +84,18 @@ class TilingSprite extends Sprite {
 
     renderSession.spriteBatch.stop();
 
-    if (this.filters)renderSession.filterManager.popFilter();
-    if (this.mask)renderSession.maskManager.popMask(renderSession);
+    if (this.filters != null)renderSession.filterManager.popFilter();
+    if (this.mask != null)renderSession.maskManager.popMask(renderSession);
 
     renderSession.spriteBatch.start();
   }
 
-  _renderCanvas(renderSession)
-  {
-    if(this.visible == false || this.alpha == 0)return;
+  _renderCanvas(renderSession) {
+    if (this.visible == false || this.alpha == 0)return;
 
     CanvasRenderingContext2D context = renderSession.context;
 
-    if(this._mask != null)
-    {
+    if (this._mask != null) {
       renderSession.maskManager.pushMask(this._mask, context);
     }
 
@@ -111,36 +109,32 @@ class TilingSprite extends Sprite {
 //                               (this.anchor.y) * -frame.height,
 
 
-    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx , transform.ty);
+    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
 
 
-    if(!this.__tilePattern ||  this.refreshTexture)
-    {
+    if (this.__tilePattern == null || this.refreshTexture) {
       this.generateTilingTexture(false);
 
-      if(this.tilingTexture != null)
-      {
-        var source=this.tilingTexture.baseTexture.source;
+      if (this.tilingTexture != null) {
+        var source = this.tilingTexture.baseTexture.source;
 
-        if(source is CanvasElement){
-          this.__tilePattern = context.createPattern(this.tilingTexture.baseTexture.source, 'repeat');
+        if (source is CanvasElement) {
+          this.__tilePattern = context.createPattern(this.tilingTexture.baseTexture.source as CanvasElement, 'repeat');
         }
-        else if(source is ImageElement){
+        else if (source is ImageElement) {
           this.__tilePattern = context.createPatternFromImage(this.tilingTexture.baseTexture.source, 'repeat');
         }
-        else{
+        else {
           throw new Exception("null source");
         }
       }
-      else
-      {
+      else {
         return;
       }
     }
 
     // check blend mode
-    if(this.blendMode != renderSession.currentBlendMode)
-    {
+    if (this.blendMode != renderSession.currentBlendMode) {
       renderSession.currentBlendMode = this.blendMode;
       context.globalCompositeOperation = blendModesCanvas[renderSession.currentBlendMode];
     }
@@ -154,28 +148,27 @@ class TilingSprite extends Sprite {
     tilePosition.y %= this.tilingTexture.baseTexture.height;
 
     // offset
-    context.scale(tileScale.x,tileScale.y);
+    context.scale(tileScale.x, tileScale.y);
     context.translate(tilePosition.x, tilePosition.y);
 
     context.fillStyle = this.__tilePattern;
 
     // make sure to account for the anchor point..
-    context.fillRect(-tilePosition.x + (this.anchor.x * -this._width),-tilePosition.y + (this.anchor.y * -this._height),
+    context.fillRect(-tilePosition.x + (this.anchor.x * -this._width), -tilePosition.y + (this.anchor.y * -this._height),
     this._width / tileScale.x, this._height / tileScale.y);
 
-    context.scale(1/tileScale.x, 1/tileScale.y);
+    context.scale(1 / tileScale.x, 1 / tileScale.y);
     context.translate(-tilePosition.x, -tilePosition.y);
 
     context.closePath();
 
-    if(this._mask)
-    {
+    if (this._mask != null) {
       renderSession.maskManager.popMask(renderSession.context);
     }
   }
 
 
-  getBounds() {
+  Rectangle getBounds([Matrix matrix]) {
 
     var width = this._width;
     var height = this._height;
@@ -280,12 +273,11 @@ class TilingSprite extends Sprite {
     }
 
 
-
     if (newTextureRequired) {
 
       CanvasBuffer canvasBuffer;
 
-      if (this.tilingTexture && this.tilingTexture.isTiling) {
+      if (this.tilingTexture != null && this.tilingTexture.isTiling) {
         canvasBuffer = this.tilingTexture.canvasBuffer;
         canvasBuffer.resize(targetWidth, targetHeight);
         this.tilingTexture.baseTexture.width = targetWidth;
@@ -317,7 +309,7 @@ class TilingSprite extends Sprite {
     }
     else {
       //TODO - switching?
-      if (this.tilingTexture && this.tilingTexture.isTiling) {
+      if (this.tilingTexture != null && this.tilingTexture.isTiling) {
         // destroy the tiling texture!
         // TODO could store this somewhere?
         this.tilingTexture.destroy(true);

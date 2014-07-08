@@ -13,7 +13,7 @@ class CanvasTinter {
 
   static CanvasElement canvas = null;
 
-  static Texture getTintedTexture(Sprite sprite, int color) {
+  static CanvasImageSource getTintedTexture(Sprite sprite, int color) {
 
     Texture texture = sprite.texture;
 
@@ -26,7 +26,7 @@ class CanvasTinter {
       };
     }
 
-    if (texture.tintCache[stringColor]) return texture.tintCache[stringColor];
+    if (texture.tintCache[stringColor] != null) return texture.tintCache[stringColor];
 
     // clone texture..
     var canvas = CanvasTinter.canvas != null ? CanvasTinter.canvas : document.createElement("canvas");

@@ -174,7 +174,7 @@ class DisplayObjectContainer extends DisplayObject {
       this.children[i].updateTransform();
     }
 
-    Matrix bounds = this.getBounds();
+    Rectangle bounds = this.getBounds();
 
     this.worldTransform = matrixCache;
 

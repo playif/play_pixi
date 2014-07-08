@@ -1,6 +1,6 @@
 part of PIXI;
 
-class StripShader {
+class StripShader extends Shader {
   StripShader(this.gl) {
   }
 
@@ -78,5 +78,9 @@ class StripShader {
     this.alpha = gl.getUniformLocation(program, 'alpha');
 
     this.program = program;
+  }
+
+  destroy(){
+
   }
 }

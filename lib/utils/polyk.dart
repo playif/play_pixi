@@ -6,16 +6,17 @@ class PolyK {
 
   static List Triangulate(p) {
     bool sign = true;
-
+    int i = 0;
     var n = p.length >> 1;
     if (n < 3) return [];
 
     List tgs = [];
     List avl = [];
-    for (var i = 0; i < n; i++)
+
+    for ( i = 0; i < n; i++)
       avl.add(i);
 
-    int i = 0;
+
     var al = n;
     while (al > 3) {
       var i0 = avl[(i + 0) % al];
@@ -93,7 +94,7 @@ class PolyK {
     return (u >= 0) && (v >= 0) && (u + v < 1);
   }
 
-  static bool _convex(num ax, num ay, num bx, num by, num cx, num cy,num  sign) {
+  static bool _convex(num ax, num ay, num bx, num by, num cx, num cy,bool  sign) {
     return ((ay - by) * (cx - bx) + (bx - ax) * (cy - by) >= 0) == sign;
   }
 

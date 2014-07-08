@@ -1,10 +1,10 @@
 part of PIXI;
 
-class CanvasMaskManager {
+class CanvasMaskManager extends MaskManager {
   CanvasMaskManager() {
   }
 
-  pushMask(maskData, context) {
+  pushMask(maskData, [context]) {
     context.save();
 
     var cacheAlpha = maskData.alpha;
@@ -12,7 +12,7 @@ class CanvasMaskManager {
 
     context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
 
-    PIXI.CanvasGraphics.renderGraphicsMask(maskData, context);
+    CanvasGraphics.renderGraphicsMask(maskData, context);
 
     context.clip();
 
@@ -22,5 +22,13 @@ class CanvasMaskManager {
 
   popMask(context) {
     context.restore();
+  }
+
+  destroy() {
+
+  }
+
+  setContext(RenderingContext a){
+
   }
 }

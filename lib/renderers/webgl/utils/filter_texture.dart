@@ -51,6 +51,7 @@ class FilterTexture {
 
     gl.bindTexture(TEXTURE_2D, this.texture);
 
+    ImageElement image=new ImageElement();
     //int border=0;
     gl.texImage2D(TEXTURE_2D, 0, RGBA, width, height, 0, RGBA, UNSIGNED_BYTE, null);
 

@@ -1,11 +1,11 @@
 part of PIXI;
 
 abstract class Renderer {
-  int type;
-  bool transparent;
-  bool antialias;
-  num width, height;
-  CanvasElement view;
+  int type = 0;
+  bool transparent = false;
+  bool antialias = false;
+  num width = 100, height = 100;
+  CanvasElement view = null;
 
   Point projection;
   Point offset;
@@ -18,7 +18,7 @@ abstract class Renderer {
 
   WebGLShaderManager shaderManager;
   WebGLSpriteBatch spriteBatch;
-  WebGLMaskManager maskManager;
+  MaskManager maskManager;
   WebGLFilterManager filterManager;
 
   RenderSession renderSession;
@@ -29,5 +29,5 @@ abstract class Renderer {
 
   render(Stage stage);
 
-  renderDisplayObject(DisplayObject displayObject, Point projection, [buffer]);
+  renderDisplayObject(displayObject, [projection, buffer]);
 }

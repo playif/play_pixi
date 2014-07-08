@@ -1,6 +1,6 @@
 part of PIXI;
 
-typedef void Render(DisplayObject displayObject, Point position, bool clear);
+typedef void Render(DisplayObject displayObject, Point position, [bool clear]);
 
 class RenderTexture extends Texture {
   Renderer renderer;
@@ -116,7 +116,7 @@ class RenderTexture extends Texture {
 
     displayObject.worldTransform = RenderTexture.tempMatrix;
 
-    if (position) {
+    if (position != null) {
       displayObject.worldTransform.tx = position.x;
       displayObject.worldTransform.ty = position.y;
     }

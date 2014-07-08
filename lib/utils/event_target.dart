@@ -1,5 +1,12 @@
 part of PIXI;
 
+class PixiEvent {
+  String type;
+  dynamic content;
+  dynamic loader;
+
+  PixiEvent({this.type, this.content, this.loader});
+}
 
 class EventTarget {
   Map<String, List<EventFunc>> listeners = {

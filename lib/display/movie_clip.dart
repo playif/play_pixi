@@ -52,7 +52,7 @@ class MovieClip extends Sprite {
     }
     else if (round >= this.textures.length) {
       this.gotoAndStop(this.textures.length - 1);
-      if (this.onComplete) {
+      if (this.onComplete != null) {
         this.onComplete();
       }
     }
@@ -64,7 +64,7 @@ class MovieClip extends Sprite {
 
     for (var i = 0; i < frames.length; i++)
     {
-      textures.add(new Texture.fromFrame(frames[i]));
+      textures.add(Texture.fromFrame(frames[i]));
     }
 
     return new MovieClip(textures);
@@ -76,7 +76,7 @@ class MovieClip extends Sprite {
 
     for (var i = 0; i < images.length; i++)
     {
-      textures.add(new Texture.fromImage(images[i]));
+      textures.add(Texture.fromImage(images[i]));
     }
 
     return new MovieClip(textures);

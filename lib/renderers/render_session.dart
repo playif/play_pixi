@@ -8,7 +8,7 @@ class RenderSession {
   Point offset;
   int drawCount = 0;
   WebGLShaderManager shaderManager;
-  WebGLMaskManager maskManager;
+  MaskManager maskManager;
   WebGLFilterManager filterManager;
   WebGLSpriteBatch spriteBatch;
   Renderer renderer;

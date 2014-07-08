@@ -13,7 +13,7 @@ class TextStyle {
   num dropShadowDistance = 4;
   String dropShadowColor = 'black';
 
-  num tint= 0xFFFFFF;
+  num tint = 0xFFFFFF;
 
 }
 
@@ -113,7 +113,7 @@ class Text extends Sprite {
           linePositionX += (maxLineWidth - lineWidths[i]) / 2;
         }
 
-        if (this.style.fill) {
+        if (this.style.fill != null) {
           this.context.fillText(lines[i], linePositionX + xShadowOffset, linePositionY + yShadowOffset);
         }
 

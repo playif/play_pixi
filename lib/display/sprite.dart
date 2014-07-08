@@ -7,7 +7,8 @@ class Sprite extends DisplayObjectContainer {
   bool textureChange = false;
   num _width = 0, _height = 0;
   TextureUvs _uvs = null;
-  Texture tintedTexture;
+  CanvasImageSource tintedTexture;
+  CanvasBuffer buffer = null;
 
   num get width => scale.x * texture.frame.width;
 
@@ -34,11 +35,12 @@ class Sprite extends DisplayObjectContainer {
   Sprite._(){
     renderable = true;
   }
+
   Sprite(this.texture) {
     _setupTexture();
   }
 
-  void _setupTexture(){
+  void _setupTexture() {
     if (texture.baseTexture.hasLoaded) {
       this.onTextureUpdate(null);
     }
@@ -71,7 +73,7 @@ class Sprite extends DisplayObjectContainer {
     this.updateFrame = true;
   }
 
-  void getBounds(Matrix matrix) {
+  Rectangle getBounds([Matrix matrix]) {
 
     num width = this.texture.frame.width;
     num height = this.texture.frame.height;
@@ -103,8 +105,8 @@ class Sprite extends DisplayObjectContainer {
     var x4 = a * w1 + c * h0 + tx;
     var y4 = d * h0 + b * w1 + ty;
 
-    var maxX = -double.INFINITY;
-    var maxY = -double.INFINITY;
+    var maxX = double.NEGATIVE_INFINITY;
+    var maxY = double.NEGATIVE_INFINITY;
 
     var minX = double.INFINITY;
     var minY = double.INFINITY;

@@ -219,7 +219,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  Texture generateTexture() {
+  RenderTexture generateTexture([Renderer renderer]) {
     Rectangle bounds = this.getBounds();
 
     CanvasBuffer canvasBuffer = new CanvasBuffer(bounds.width, bounds.height);
@@ -254,8 +254,8 @@ class Graphics extends DisplayObjectContainer {
     else {
       renderSession.spriteBatch.stop();
 
-      if (this._mask)renderSession.maskManager.pushMask(this.mask, renderSession);
-      if (this._filters)renderSession.filterManager.pushFilter(this._filterBlock);
+      if (this._mask != null)renderSession.maskManager.pushMask(this.mask, renderSession);
+      if (this._filters != null)renderSession.filterManager.pushFilter(this._filterBlock);
 
       // check blend mode
       if (this.blendMode != renderSession.spriteBatch.currentBlendMode) {
@@ -267,7 +267,7 @@ class Graphics extends DisplayObjectContainer {
       WebGLGraphics.renderGraphics(this, renderSession);
 
       // only render if it has children!
-      if (this.children.length) {
+      if (this.children.length != 0) {
         renderSession.spriteBatch.start();
 
         // simple render children!
@@ -278,8 +278,8 @@ class Graphics extends DisplayObjectContainer {
         renderSession.spriteBatch.stop();
       }
 
-      if (this._filters)renderSession.filterManager.popFilter();
-      if (this._mask)renderSession.maskManager.popMask(renderSession);
+      if (this._filters != null)renderSession.filterManager.popFilter();
+      if (this._mask != null)renderSession.maskManager.popMask(renderSession);
 
       renderSession.drawCount++;
 
@@ -310,12 +310,12 @@ class Graphics extends DisplayObjectContainer {
   }
 
 
-  getBounds([Matrix matrix]) {
+  Rectangle getBounds([Matrix matrix]) {
     if(matrix == null){
       matrix= this.worldTransform;
     }
 
-    if (!this.bounds)this.updateBounds();
+    if (this.bounds == null)this.updateBounds();
 
     var w0 = this.bounds.x;
     var w1 = this.bounds.width + this.bounds.x;
@@ -440,7 +440,7 @@ class Graphics extends DisplayObjectContainer {
   _generateCachedSprite() {
     var bounds = this.getLocalBounds();
 
-    if (!this._cachedSprite) {
+    if (this._cachedSprite == null) {
       var canvasBuffer = new CanvasBuffer(bounds.width, bounds.height);
       var texture = Texture.fromCanvas(canvasBuffer.canvas);
 

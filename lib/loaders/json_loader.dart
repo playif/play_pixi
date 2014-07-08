@@ -1,7 +1,7 @@
 part of PIXI;
 
 class JsonLoader extends Loader {
-  Map json;
+  dynamic json;
 
   JsonLoader(String url, bool crossorigin)
   :super(url, crossorigin) {
@@ -101,7 +101,7 @@ class JsonLoader extends Loader {
     }
     else if (this.json.bones != null) {
       // spine animation
-      var spineJsonParser = new spine.SkeletonJson();
+      var spineJsonParser = new Spine.SkeletonJson();
       var skeletonData = spineJsonParser.readSkeletonData(this.json);
       AnimCache[this.url] = skeletonData;
       this.onLoaded();

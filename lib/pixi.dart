@@ -66,6 +66,7 @@ part "renderers/canvas/canvas_renderer.dart";
 part "renderers/webgl/shaders/pixi_fast_shader.dart";
 part "renderers/webgl/shaders/pixi_shader.dart";
 part "renderers/webgl/shaders/primitive_shader.dart";
+part "renderers/webgl/shaders/shader_shader.dart";
 part "renderers/webgl/shaders/strip_shader.dart";
 
 part "renderers/webgl/utils/filter_texture.dart";
@@ -78,6 +79,7 @@ part "renderers/webgl/utils/webgl_shader_utils.dart";
 part "renderers/webgl/utils/webgl_sprite_batch.dart";
 
 part "renderers/webgl/webgl_renderer.dart";
+part "renderers/mask_manager.dart";
 part 'renderers/render_session.dart';
 part "renderers/renderer.dart";
 
@@ -97,7 +99,7 @@ part "interaction_data.dart";
 part "interaction_manager.dart";
 
 
-typedef void EventFunc(Event e);
+typedef void EventFunc(PixiEvent e);
 
 class blendModes {
   static const NORMAL = const blendModes._(0);
@@ -119,6 +121,7 @@ class blendModes {
   static const LUMINOSITY = const blendModes._(16);
 
   static const NONE = const blendModes._(99999);
+
 //  static get values => [NORMAL, ADD];
 
   final int value;

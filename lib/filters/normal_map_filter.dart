@@ -43,7 +43,7 @@ class NormalMapFilter extends AbstractFilter {
     else {
       //this.boundLoadedFunction = this.onTextureLoaded.bind(this);
 
-      texture.baseTexture.addEventListener("loaded", this.boundLoadedFunction);
+      texture.baseTexture.addEventListener("loaded", this.onTextureLoaded);
     }
 
     this.fragmentSrc = [

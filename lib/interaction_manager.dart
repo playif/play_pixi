@@ -28,15 +28,15 @@ class InteractionManager {
 
   }
 
-  void collectInteractiveSprite(Sprite displayObject, iParent) {
+  void collectInteractiveSprite(DisplayObjectContainer displayObject, iParent) {
 
 
-    List<Sprite> children = displayObject.children;
+    List<DisplayObjectContainer> children = displayObject.children;
     int length = children.length;
 
     // make an interaction tree... {item.__interactiveParent}
     for (var i = length - 1; i >= 0; i--) {
-      Sprite child = children[i];
+      DisplayObjectContainer child = children[i];
 
       // push all interactive bits
       if (child._interactive) {
@@ -100,7 +100,7 @@ class InteractionManager {
   }
 
   void removeEvents() {
-    if (!this.interactionDOMElement)return;
+    if (this.interactionDOMElement ==null) return;
 
 //    this.interactionDOMElement.style['-ms-content-zooming'] = '';
 //    this.interactionDOMElement.style['-ms-touch-action'] = '';
@@ -258,7 +258,7 @@ class InteractionManager {
       DisplayObject item = this.interactiveItems[i];
       if (item.__isOver) {
         this.mouse.target = item;
-        if (item.mouseout)item.mouseout(this.mouse);
+        if (item.mouseout != null)item.mouseout(this.mouse);
         item.__isOver = false;
       }
     }
@@ -305,7 +305,7 @@ class InteractionManager {
   }
 
 
-  bool hitTest(DisplayObject item, InteractionData interactionData) {
+  bool hitTest(DisplayObjectContainer item, InteractionData interactionData) {
     Point global = interactionData.global;
 
     if (!item.worldVisible)return false;
@@ -432,8 +432,10 @@ class InteractionManager {
             //call the function!
             if (item.touchstart)item.touchstart(touchData);
             item.__isDown = true;
-            item.__touchData = item.__touchData || {
-            };
+            if(item.__touchData == null){
+              item.__touchData={};
+            }
+
             item.__touchData[touchEvent.identifier] = touchData;
 
             if (!item.interactiveChildren)break;

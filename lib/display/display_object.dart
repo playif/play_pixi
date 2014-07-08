@@ -14,10 +14,10 @@ class DisplayObject {
   DisplayObjectContainer parent = null;
   DisplayObjectContainer __iParent = null;
   bool interactiveChildren = false;
-  bool __hit;
-  bool __isOver;
-  bool __mouseIsDown;
-  bool __isDown;
+  bool __hit = false;
+  bool __isOver = false;
+  bool __mouseIsDown = false;
+  bool __isDown = false;
 
   Function click;
   Function mousemove;
@@ -81,6 +81,8 @@ class DisplayObject {
   bool _cacheAsBitmap = false;
 
   bool get cacheAsBitmap => _cacheAsBitmap;
+
+  Sprite _cachedSprite;
 
   set cacheAsBitmap(bool value) {
     if (this._cacheAsBitmap == value)return;
@@ -176,7 +178,7 @@ class DisplayObject {
     this.worldAlpha = this.alpha * this.parent.worldAlpha;
   }
 
-  Matrix getBounds([Matrix matrix]) {
+  Rectangle getBounds([Matrix matrix]) {
     matrix = matrix;//just to get passed js hinting (and preserve inheritance)
     return EmptyRectangle;
   }
@@ -190,10 +192,10 @@ class DisplayObject {
     if (this._interactive)this.stage.dirty = true;
   }
 
-  generateTexture(Renderer renderer) {
-    var bounds = this.getLocalBounds();
+  RenderTexture generateTexture(Renderer renderer) {
+    Rectangle bounds = this.getLocalBounds();
 
-    var renderTexture = new RenderTexture(bounds.width | 0, bounds.height | 0, renderer);
+    RenderTexture renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor(), renderer);
     renderTexture.render(this, new Point(-bounds.x, -bounds.y));
 
     return renderTexture;
@@ -214,20 +216,20 @@ class DisplayObject {
     }
   }
 
-  Sprite _cachedSprite;
 
   void _generateCachedSprite() {
     this._cacheAsBitmap = false;
     var bounds = this.getLocalBounds();
 
-    if (this._cachedSprite ==null) {
+    if (this._cachedSprite == null) {
       var renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor());//, renderSession.renderer);
 
       this._cachedSprite = new Sprite(renderTexture);
       this._cachedSprite.worldTransform = this.worldTransform;
     }
     else {
-      this._cachedSprite.texture.resize(bounds.width.floor(), bounds.height.floor());
+      RenderTexture texture = _cachedSprite.texture as RenderTexture;
+      texture.resize(bounds.width.floor(), bounds.height.floor());
     }
 
     //REMOVE filter!
@@ -235,7 +237,9 @@ class DisplayObject {
     this._filters = null;
 
     this._cachedSprite.filters = tempFilters;
-    this._cachedSprite.texture.render(this, new Point(-bounds.x, -bounds.y),false);
+
+    RenderTexture texture = _cachedSprite.texture as RenderTexture;
+    texture.render(this, new Point(-bounds.x, -bounds.y), false);
 
     this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
     this._cachedSprite.anchor.y = -( bounds.y / bounds.height );

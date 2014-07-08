@@ -20,9 +20,9 @@ class BaseTexture extends EventTarget {
     _hasLoaded = value;
   }
 
-  ImageElement source;
+  var source;
 
-  Map<RenderingContext, Texture> _glTextures = new Map<RenderingContext, Texture>();
+  Map<RenderingContext, dynamic> _glTextures = new Map<RenderingContext, dynamic>();
 
   String imageUrl = null;
 
@@ -31,16 +31,15 @@ class BaseTexture extends EventTarget {
   EventFunc onLoaded;
 
 
-  BaseTexture([ImageElement this.source, this.scaleMode=scaleModes.DEFAULT]) {
+  BaseTexture([this.source, this.scaleMode=scaleModes.DEFAULT]) {
 
     if (source == null) return;
 
 
     //
-    if (( (source is ImageElement && source.complete != null ) ||
-    ( source is CanvasElement && source.getContext != null ) )
-
-    && this.source.width!=0 && this.source.height !=0) {
+    if (( (source is ImageElement && source.complete != null )
+          || (source is CanvasElement) )
+        && this.source.width != 0 && this.source.height != 0) {
 
       this._hasLoaded = true;
       this.width = this.source.width;
