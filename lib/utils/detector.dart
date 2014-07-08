@@ -9,10 +9,14 @@ Renderer autoDetectRenderer([num width=800, num height=600, view, transparent=fa
 //      return false;
 //    }
 //  } )();
-
-//  if (webgl) {
+  CanvasElement canvas = new CanvasElement();
+  var gl = canvas.getContext3d();
+  if (gl != null) {
     return new WebGLRenderer(width, height, view, transparent, antialias);
-//  }
+  }
+  else{
+    return new CanvasRenderer(width, height, view, transparent);
+  }
 
 //  return new WebGLRenderer(width, height, view, transparent, antialias);
 
