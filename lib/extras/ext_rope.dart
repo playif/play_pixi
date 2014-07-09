@@ -6,7 +6,7 @@ class Rope extends Strip {
   Texture texture;
 
   Rope(Texture texture, this.points, [num width, num height])
-  :super(texture, width, height) {
+    :super(texture, width, height) {
     this.verticies = new Float32List(points.length * 4);
     this.uvs = new Float32List(points.length * 4);
     this.colors = new Float32List(points.length * 2);
@@ -16,7 +16,7 @@ class Rope extends Strip {
   }
 
   refresh() {
-    var points = this.points;
+    List<Point> points = this.points;
     if (points.length < 1) return;
 
     var uvs = this.uvs;
@@ -79,8 +79,8 @@ class Rope extends Strip {
 
   updateTransform() {
 
-    var points = this.points;
-    if (points.length < 1)return;
+    List<Point> points = this.points;
+    if (points.length < 1) return;
 
     var lastPoint = points[0];
     var nextPoint;
