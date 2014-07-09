@@ -83,10 +83,11 @@ main() {
 
     stage.addChild(pixie);
 
-    pixie.stateData.setMixByName("running", "jump", 0.2);
-    pixie.stateData.setMixByName("jump", "running", 0.4);
+    //pixie.stateData.setMixByName("running", "jump", 0.2);
+    //pixie.stateData.setMixByName("jump", "running", 0.4);
+    //pixie.stateData.setMixByName("jump", "jump", 0.1);
 
-    pixie.state.setAnimationByName("running", true);
+    pixie.state.addAnimationByName("running", true);
 
 
     stage.mousedown = (e) {

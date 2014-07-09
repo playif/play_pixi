@@ -957,7 +957,7 @@ class AnimationStateData {
 
   getMix(Animation from, Animation to) {
     num time = this.animationToMixTime["${from.name}:${to.name}"];
-    return time != 0 ? time : this.defaultMix;
+    return time != null ? time : this.defaultMix;
   }
 }
 
@@ -1016,7 +1016,7 @@ class AnimationState {
   clearAnimation() {
     this.previous = null;
     this.current = null;
-    this.queue.length = 0;
+    this.queue.clear();
   }
 
   _setAnimation(Animation animation, [bool loop=true]) {
@@ -1074,6 +1074,7 @@ class AnimationState {
       else
         delay = 0;
     }
+    //print(delay);
     entry.delay = delay;
 
     this.queue.add(entry);
@@ -1081,7 +1082,7 @@ class AnimationState {
 
   /** Returns true if no animation is set or if the current time is greater than the animation duration, regardless of looping. */
 
-  isComplete() {
+  bool isComplete() {
     return this.current == null || this.currentTime >= this.current.duration;
   }
 
@@ -1143,15 +1144,15 @@ class SkeletonJson {
     // Skins.
     Map skins = root["skins"];
     for (String skinName in skins.keys) {
-      if (!skins.containsKey(skinName)) continue;
+      //if (!skins.containsKey(skinName)) continue;
       Map skinMap = skins[skinName];
       Skin skin = new Skin(skinName);
       for (String slotName in skinMap.keys) {
-        if (!skinMap.containsKey(slotName)) continue;
+        //if (!skinMap.containsKey(slotName)) continue;
         int slotIndex = skeletonData.findSlotIndex(slotName);
         Map slotEntry = skinMap[slotName];
         for (String attachmentName in slotEntry.keys) {
-          if (!slotEntry.containsKey(attachmentName)) continue;
+          //if (!slotEntry.containsKey(attachmentName)) continue;
           Attachment attachment = this.readAttachment(skin, attachmentName, slotEntry[attachmentName]);
           if (attachment != null) skin.addAttachment(slotIndex, attachmentName, attachment);
         }
@@ -1163,7 +1164,7 @@ class SkeletonJson {
     // Animations.
     Map animations = root["animations"];
     for (String animationName in animations.keys) {
-      if (!animations.containsKey(animationName)) continue;
+      //if (!animations.containsKey(animationName)) continue;
       this.readAnimation(animationName, animations[animationName], skeletonData);
     }
 
@@ -1176,7 +1177,7 @@ class SkeletonJson {
       name = map["name"];
     }
 
-    String type = AttachmentType[map["type"] == null ? "region" : map["type"]];
+    int type = AttachmentType[map["type"] == null ? "region" : map["type"]];
 
     if (type == AttachmentType['region']) {
       Attachment attachment = new RegionAttachment();
@@ -1199,7 +1200,7 @@ class SkeletonJson {
       return attachment;
     }
 
-    throw "Unknown attachment type: " + type;
+    throw new Exception("Unknown attachment type: $type");
   }
 
   readAnimation(String name, Map map, SkeletonData skeletonData) {
@@ -1215,14 +1216,15 @@ class SkeletonJson {
 
     Map bones = map["bones"];
     for (String boneName in bones.keys) {
-      if (!bones.containsKey(boneName)) continue;
+      //if (!bones.containsKey(boneName)) continue;
       int boneIndex = skeletonData.findBoneIndex(boneName);
       if (boneIndex == -1) throw "Bone not found: " + boneName;
       Map boneMap = bones[boneName];
 
       for (String timelineName in boneMap.keys) {
-        if (!boneMap.containsKey(timelineName)) continue;
+        //if (!boneMap.containsKey(timelineName)) continue;
         List values = boneMap[timelineName];
+        //print(timelineName);
         if (timelineName == "rotate") {
           RotateTimeline timeline = new RotateTimeline(values.length);
           timeline.boneIndex = boneIndex;
@@ -1230,6 +1232,7 @@ class SkeletonJson {
           frameIndex = 0;
           for (int i = 0, n = values.length; i < n; i++) {
             valueMap = values[i];
+            //print(valueMap["time"]);
             timeline.setFrame(frameIndex, valueMap["time"], valueMap["angle"]);
             SkeletonJson.readCurve(timeline, frameIndex, valueMap);
             frameIndex++;
@@ -1310,6 +1313,7 @@ class SkeletonJson {
         }
       }
     }
+    //window.console.log(timelines);
     skeletonData.animations.add(new Animation(name, timelines, duration));
   }
 
@@ -1643,7 +1647,7 @@ class Spine extends DisplayObjectContainer {
       this.lastTime = new DateTime.now();
     }
 
-    num timeDelta = (new DateTime.now().millisecond - this.lastTime.millisecond) * 0.001;
+    num timeDelta = (new DateTime.now().millisecondsSinceEpoch - this.lastTime.millisecondsSinceEpoch) * 0.001;
     this.lastTime = new DateTime.now();
     this.state.update(timeDelta);
     this.state.apply(this.skeleton);

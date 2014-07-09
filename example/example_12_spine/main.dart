@@ -8,11 +8,26 @@ main() {
 
 
 
+  // create a renderer instance
+  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+  //var renderer = new PIXI.CanvasRenderer(window.innerWidth, window.innerHeight);
+
+
+  // set the canvas width and height to fill the screen
+  renderer.view.style.display = "block";
+
+  // add render view to DOM
+  document.body.append(renderer.view);
 
   // create an new instance of a pixi stage
   var stage = new PIXI.Stage(0xFFFFFF, true);
 
+  animate(dt) {
+    renderer.render(stage);
 
+
+    PIXI.requestAnimFrame( animate );
+  }
 
   onAssetsLoaded()
   {
@@ -55,19 +70,10 @@ main() {
 //    {
 //      window.open("https://github.com/GoodBoyDigital/pixi.js", "_blank")
 //    }
+    PIXI.requestAnimFrame(animate);
   }
 
 
-  // create a renderer instance
-  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
-  //var renderer = new PIXI.CanvasRenderer(window.innerWidth, window.innerHeight);
-
-
-  // set the canvas width and height to fill the screen
-  renderer.view.style.display = "block";
-
-  // add render view to DOM
-  document.body.append(renderer.view);
 
   // create an array of assets to load
 
@@ -82,13 +88,9 @@ main() {
   //begin load
   loader.load();
 
-  animate(dt) {
 
-    PIXI.requestAnimFrame( animate );
-    renderer.render(stage);
-  }
 
-  PIXI.requestAnimFrame(animate);
+
 
 
 

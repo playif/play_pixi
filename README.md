@@ -11,6 +11,6 @@ Change log
 ==========
 0.9.2
  * Fix example 11 (RenderingTexture) and example 15 (Filter) example in chrome.
- * Add Spine
+ * Add Spine implementation and examples
 
 [1]: https://github.com/playif/play_phaser
