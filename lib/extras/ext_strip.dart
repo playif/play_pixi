@@ -13,9 +13,9 @@ class Strip extends DisplayObjectContainer{
   bool updateFrame = false;
 
   Strip(this.texture, this.width, this.height) {
-    this.uvs = new Float32List.fromList([0, 1, 1, 1, 1, 0, 0, 1]);
-    this.verticies = new Float32List.fromList([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    this.colors = new Float32List.fromList([1, 1, 1, 1]);
+    this.uvs = new Float32List.fromList([0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0]);
+    this.verticies = new Float32List.fromList([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+    this.colors = new Float32List.fromList([1.0, 1.0, 1.0, 1.0]);
     this.indices = new Uint16List.fromList([0, 1, 2, 3]);
 
     // load the texture!

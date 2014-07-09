@@ -2,8 +2,6 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/example/example 12 - Spine/data/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/example 12 - Spine/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_01_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_02_sprite_sheet/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_03_movie_clip/packages" />
@@ -29,6 +27,8 @@
       <excludeFolder url="file://$MODULE_DIR$/example/example_18_batch/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_19_cache_as_bitmap/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_19_cache_as_bitmap/tp/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/example/example_20_rope/data/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/example/example_20_rope/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/packages" />
       <excludeFolder url="file://$MODULE_DIR$/examples/packages" />
       <excludeFolder url="file://$MODULE_DIR$/lib/examples/example_1_basics/packages" />
