@@ -90,19 +90,19 @@ main() {
     }
   };
 
-  // Add a pixi Logo!
-  var logo = PIXI.Sprite.fromImage("../../logo_small.png");
-
-  logo.anchor.x = 1;
-  logo.position.x = 620;
-  logo.scale.x = logo.scale.y = 0.5;
-  logo.position.y = 320;
-  logo.interactive = true;
-  logo.buttonMode = true;
-
-  logo.click = (e) {
-    window.open("https://github.com/GoodBoyDigital/pixi.js", "_blank");
-  };
+//  // Add a pixi Logo!
+//  var logo = PIXI.Sprite.fromImage("../../logo_small.png");
+//
+//  logo.anchor.x = 1;
+//  logo.position.x = 620;
+//  logo.scale.x = logo.scale.y = 0.5;
+//  logo.position.y = 320;
+//  logo.interactive = true;
+//  logo.buttonMode = true;
+//
+//  logo.click = (e) {
+//    window.open("https://github.com/GoodBoyDigital/pixi.js", "_blank");
+//  };
 
   var help = new PIXI.Text("Click to turn filters on / off.", new PIXI.TextStyle()
     ..font = "bold 12pt Arial"

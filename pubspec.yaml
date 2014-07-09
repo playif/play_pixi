@@ -1,5 +1,5 @@
 name: play_pixi
-version: 0.9.1
+version: 0.9.2
 description:
   A dart port for PIXI.js library.
 author: playif <playif@gmail.com>
@@ -14,3 +14,4 @@ transformers:
     suppressHints: false
     terse: false
     verbose: true
+    analyzeAll: true
