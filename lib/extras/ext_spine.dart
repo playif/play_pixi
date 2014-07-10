@@ -1643,12 +1643,13 @@ class Spine extends DisplayObjectContainer {
   }
 
   updateTransform() {
+    DateTime now= new DateTime.now();
     if (lastTime == null) {
-      this.lastTime = new DateTime.now();
+      this.lastTime = now;
     }
 
-    num timeDelta = (new DateTime.now().millisecondsSinceEpoch - this.lastTime.millisecondsSinceEpoch) * 0.001;
-    this.lastTime = new DateTime.now();
+    num timeDelta = now.difference(this.lastTime).inMilliseconds * 0.001;
+    this.lastTime = now;
     this.state.update(timeDelta);
     this.state.apply(this.skeleton);
     this.skeleton.updateWorldTransform();
