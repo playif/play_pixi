@@ -17,17 +17,24 @@ class RenderTexture extends Texture {
 
   static Matrix tempMatrix = new Matrix();
 
+  bool valid;
+
   RenderTexture([num this.width=100, num this.height=100, this.renderer, scaleModes this.scaleMode=scaleModes.DEFAULT]):super._() {
     if (renderer == null) {
       renderer = defaultRenderer;
     }
     frame = new Rectangle(0, 0, this.width, this.height);
+    crop = new Rectangle(0, 0, this.width, this.height);
+
     baseTexture.width = width;
     baseTexture.height = height;
     baseTexture.scaleMode = scaleMode;
     baseTexture.hasLoaded = true;
+    //baseTexture._glTextures = {};
+
     //print(this.renderer.type);
     if (this.renderer.type == WEBGL_RENDERER) {
+//print("here");
       var gl = this.renderer.gl;
 
       this.textureBuffer = new FilterTexture(gl, this.width, this.height, this.baseTexture.scaleMode);
@@ -42,17 +49,36 @@ class RenderTexture extends Texture {
       this.baseTexture.source = this.textureBuffer.canvas;
     }
 
+
+    this.valid = true;
     Texture.frameUpdates.add(this);
 
 
   }
 
-  resize(num width, num height) {
-    this.width = width;
-    this.height = height;
+  clear()
+  {
+    if (this.renderer.type == WEBGL_RENDERER)
+    {
+      this.renderer.gl.bindFramebuffer(this.renderer.gl.FRAMEBUFFER, this.textureBuffer.frameBuffer);
+    }
 
-    this.frame.width = this.width;
-    this.frame.height = this.height;
+    this.textureBuffer.clear();
+  }
+
+  resize(num width, num height,[bool updateBase = false]) {
+    if (width == this.width && height == this.height)
+    {
+      return;
+    }
+    //print("here");
+    this.width = this.frame.width = this.crop.width = width;
+    this.height =  this.frame.height = this.crop.height = height;
+
+    if(updateBase){
+      this.baseTexture.width = this.width;
+      this.baseTexture.height = this.height;
+    }
 
     if (this.renderer.type == WEBGL_RENDERER) {
       this.projection.x = this.width / 2;
@@ -62,14 +88,14 @@ class RenderTexture extends Texture {
       gl.bindTexture(TEXTURE_2D, this.baseTexture._glTextures[gl]);
       gl.texImage2D(TEXTURE_2D, 0, RGBA, this.width, this.height, 0, RGBA, UNSIGNED_BYTE, null);
     }
-    else {
-      this.textureBuffer.resize(this.width, this.height);
-    }
-
-    Texture.frameUpdates.add(this);
+//    else {
+//
+//    }
+    this.textureBuffer.resize(this.width, this.height);
+    //Texture.frameUpdates.add(this);
   }
 
-  renderWebGL(DisplayObjectContainer displayObject, Point position, bool clear) {
+  renderWebGL(DisplayObjectContainer displayObject, Point position, [bool clear=false]) {
     //TOOD replace position with matrix..
     var gl = this.renderer.gl;
 
@@ -82,10 +108,10 @@ class RenderTexture extends Texture {
     if (clear) this.textureBuffer.clear();
 
     // THIS WILL MESS WITH HIT TESTING!
-    var children = displayObject.children;
+    List<DisplayObject> children = displayObject.children;
 
     //TODO -? create a new one??? dont think so!
-    var originalWorldTransform = displayObject.worldTransform;
+    Matrix originalWorldTransform = displayObject.worldTransform;
     displayObject.worldTransform = RenderTexture.tempMatrix;
     // modify to flip...
     displayObject.worldTransform.d = -1;
@@ -103,6 +129,7 @@ class RenderTexture extends Texture {
     // update the textures!
     WebGLRenderer.updateTextures(gl);
 
+    this.renderer.spriteBatch.dirty = true;
     //
     this.renderer.renderDisplayObject(displayObject, this.projection, this.textureBuffer.frameBuffer);
 

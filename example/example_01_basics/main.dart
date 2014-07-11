@@ -31,6 +31,8 @@ main() {
   var texture = PIXI.Texture.fromImage("bunny.png");
   //window.console.log(texture.baseTexture);
   // create a new Sprite using the texture
+
+
   var bunny = new PIXI.Sprite(texture);
 
   //Random random = new Random();

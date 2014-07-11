@@ -140,14 +140,14 @@ class WebGLRenderer extends Renderer {
     stage.updateTransform();
 
 
-    // interaction
-    if (stage._interactive) {
-      //need to add some events!
-      if (!stage._interactiveEventsAdded) {
-        stage._interactiveEventsAdded = true;
-        stage.interactionManager.setTarget(this);
-      }
-    }
+//    // interaction
+//    if (stage._interactive) {
+//      //need to add some events!
+//      if (!stage._interactiveEventsAdded) {
+//        stage._interactiveEventsAdded = true;
+//        stage.interactionManager.setTarget(this);
+//      }
+//    }
 
 
     // -- Does this need to be set every frame? -- //

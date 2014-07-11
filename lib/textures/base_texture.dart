@@ -62,6 +62,8 @@ class BaseTexture extends EventTarget {
         scope.dispatchEvent(new PixiEvent(type: 'loaded', content: scope));
       });
     }
+
+
   }
 
 
@@ -82,7 +84,7 @@ class BaseTexture extends EventTarget {
   }
 
   static BaseTexture fromImage(String imageUrl, bool crossorigin, scaleModes scaleMode) {
-    var baseTexture = BaseTextureCache[imageUrl];
+    BaseTexture baseTexture = BaseTextureCache[imageUrl];
 
     if (crossorigin == null && imageUrl.indexOf('data:') == -1) crossorigin = true;
 

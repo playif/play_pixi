@@ -165,7 +165,7 @@ class Sprite extends DisplayObjectContainer {
 
 
       if (this._filters != null) {
-        print("cool");
+        //print("cool");
         spriteBatch.flush();
         renderSession.filterManager.pushFilter(this._filterBlock);
       }
@@ -187,6 +187,7 @@ class Sprite extends DisplayObjectContainer {
       spriteBatch.start();
     }
     else {
+
       renderSession.spriteBatch.render(this);
 
       // simple render children!
@@ -314,7 +315,7 @@ class Sprite extends DisplayObjectContainer {
   }
 
   static Sprite fromImage(String imageId, [bool crossorigin, scaleModes scaleMode]) {
-    var texture = Texture.fromImage(imageId, crossorigin, scaleMode);
+    Texture texture = Texture.fromImage(imageId, crossorigin, scaleMode);
     return new Sprite(texture);
   }
 

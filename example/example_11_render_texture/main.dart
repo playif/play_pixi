@@ -9,13 +9,13 @@ main() {
   var stage = new PIXI.Stage(0x000000);
 
   // create a renderer instance
-  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+  var renderer = PIXI.autoDetectRenderer(800, 600);
   //var renderer =  new PIXI.CanvasRenderer(800, 600);
 
   // set the canvas width and height to fill the screen
-  //renderer.view.style.width = "${window.innerWidth}px";
-  //renderer.view.style.height = "${window.innerHeight}px";
-  //renderer.view.style.display = "block";
+  renderer.view.style.width = "${window.innerWidth}px";
+  renderer.view.style.height = "${window.innerHeight}px";
+  renderer.view.style.display = "block";
 
   // add render view to DOM
   document.body.append(renderer.view);
@@ -56,13 +56,14 @@ main() {
 
   Random random = new Random();
   // now create some items and randomly position them in the stuff container
-  for (var i = 0; i < 20; i++) {
-    var item = PIXI.Sprite.fromImage(fruits[i % fruits.length]);
+  for (var i = 0; i < 80; i++) {
+    PIXI.Sprite item = PIXI.Sprite.fromImage(fruits[i%fruits.length]);
     item.position.x = random.nextInt(400) - 200;
     item.position.y = random.nextInt(400) - 200;
 
     item.anchor.x = 0.5;
     item.anchor.y = 0.5;
+
 
     stuffContainer.addChild(item);
 
@@ -75,7 +76,7 @@ main() {
 
 
   animate(dt) {
-
+    PIXI.requestAnimFrame(animate);
 
 
     for (var i = 0; i < items.length; i++) {
@@ -92,6 +93,8 @@ main() {
     renderTexture = renderTexture2;
     renderTexture2 = temp;
 
+
+    renderTexture.render(stage,new PIXI.Point(0, 0), true);
     // set the new texture
     outputSprite.setTexture(renderTexture);
 
@@ -101,12 +104,12 @@ main() {
 
     // render the stage to the texture
     // the true clears the texture before content is rendered
-    renderTexture2.render(stage, new PIXI.Point(0, 0), true);
+    renderTexture2.render(stage, new PIXI.Point(0, 0), false);
 
     // and finally render the stage
     renderer.render(stage);
 
-    PIXI.requestAnimFrame(animate);
+
   }
 
   PIXI.requestAnimFrame(animate);

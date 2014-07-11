@@ -128,7 +128,7 @@ class Texture extends BaseTexture {
   }
 
   static Texture fromImage(String imageUrl, [bool crossorigin, scaleModes scaleMode]) {
-    var texture = TextureCache[imageUrl];
+    Texture texture = TextureCache[imageUrl];
 
     if (texture == null) {
       texture = new Texture(BaseTexture.fromImage(imageUrl, crossorigin, scaleMode));

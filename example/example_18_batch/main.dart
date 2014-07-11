@@ -19,8 +19,8 @@ class Dude extends PIXI.Sprite {
 
 main() {
 
-  var viewWidth = 800;
-  var viewHeight = 600;
+  var viewWidth = window.innerWidth;
+  var viewHeight = window.innerHeight;
 
   // Create a pixi renderer
   var renderer = PIXI.autoDetectRenderer(viewWidth, viewHeight);
@@ -48,15 +48,16 @@ main() {
 
   Random random = new Random();
 
-  var totalDudes = renderer is PIXI.WebGLRenderer ? 1000 : 500;
+  var totalDudes = renderer is PIXI.WebGLRenderer ? 2000 : 500;
   PIXI.Texture texture = PIXI.Texture.fromImage("tinyMaggot.png");
   for (var i = 0; i < totalDudes; i++) {
 // create a new Sprite that uses the image name that we just generated as its source
     Dude dude = new Dude(texture);
 
     dude.tint = random.nextInt(0xE8D4CD);
+    dude.alpha=0.5;
 
-    dude.interactive=true;
+    dude.interactive = true;
 // set the anchor point so the the dude texture is centerd on the sprite
     dude.anchor.x = dude.anchor.y = 0.5;
 
@@ -81,7 +82,7 @@ main() {
 
     dude.offset = random.nextDouble() * 100;
 
-    dude.click=(e){
+    dude.click = dude.tap = (e) {
       sprites.removeChild(dude);
     };
 

@@ -28,6 +28,8 @@ class WebGLSpriteBatch {
 
   Matrix matrix = null;
 
+  bool dirty=false;
+
   WebGLSpriteBatch(RenderingContext gl) {
 
     size = maxSize;
@@ -86,11 +88,15 @@ class WebGLSpriteBatch {
       this.flush();
       this.currentBaseTexture = texture.baseTexture;
     }
+    else{
+
+    }
 
 
     // check blend mode
     if (sprite.blendMode != this.currentBlendMode) {
       this.setBlendMode(sprite.blendMode);
+
     }
 
     // get the uvs for the texture
@@ -103,7 +109,7 @@ class WebGLSpriteBatch {
     num alpha = sprite.worldAlpha;
     num tint = sprite.tint.toDouble();
 
-    var verticies = this.vertices;
+    Float32List verticies = this.vertices;
 
 
     // TODO trim??
@@ -113,6 +119,7 @@ class WebGLSpriteBatch {
     num w0, w1, h0, h1;
 
     if (sprite.texture.trim != null) {
+
       // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
       Rectangle trim = sprite.texture.trim;
 
@@ -124,6 +131,7 @@ class WebGLSpriteBatch {
 
     }
     else {
+
       w0 = (texture.frame.width ) * (1 - aX);
       w1 = (texture.frame.width ) * -aX;
 
@@ -319,8 +327,11 @@ class WebGLSpriteBatch {
     var texture = this.currentBaseTexture._glTextures[gl];
 
     if (texture == null) {
+
       texture = createWebGLTexture(this.currentBaseTexture, gl);
+      //gl.bindTexture(TEXTURE_2D, texture);
     }
+
     //print(texture);
     gl.bindTexture(TEXTURE_2D, texture);
 
@@ -328,10 +339,11 @@ class WebGLSpriteBatch {
 
     if (this.currentBatchSize > ( this.size * 0.5 )) {
       gl.bufferSubData(ARRAY_BUFFER, 0, this.vertices);
+
     }
     else {
       var view = this.vertices.sublist(0, this.currentBatchSize * 4 * this.vertSize);
-
+      //print(view.length);
       gl.bufferSubData(ARRAY_BUFFER, 0, view);
     }
 
@@ -341,6 +353,9 @@ class WebGLSpriteBatch {
     // now draw those suckas!
     //print("here");
     gl.drawElements(TRIANGLES, this.currentBatchSize * 6, UNSIGNED_SHORT, 0);
+
+
+    //print(gl.getError());
 
     // then reset the batch!
     this.currentBatchSize = 0;
