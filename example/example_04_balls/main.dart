@@ -5,9 +5,9 @@ import "../../lib/pixi.dart" as PIXI;
 main() {
   Random random = new Random();
 
-  num w = 1024;
-  num h = 768;
-  num starCount = 2500;
+  num w = 100;
+  num h = 100;
+  num starCount = 100;
   num sx = 1.0 + (random.nextDouble() / 20);
   num sy = 1.0 + (random.nextDouble() / 20);
   num slideX = w / 2;

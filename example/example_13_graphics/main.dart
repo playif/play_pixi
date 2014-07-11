@@ -87,6 +87,29 @@ main() {
     graphics.lineTo(random.nextInt(620), random.nextInt(380));
   };
 
+
+
+
+  // create a texture from an image path
+  var texture = PIXI.Texture.fromImage("bunny.png");
+  //window.console.log(texture.baseTexture);
+  // create a new Sprite using the texture
+  var bunny = new PIXI.Sprite(texture);
+
+  //Random random = new Random();
+  //bunny.tint = random.nextInt(0xFFFFFF);
+
+  // center the sprites anchor point
+  bunny.anchor.x = 0.5;
+  bunny.anchor.y = 0.5;
+
+  // move the sprite t the center of the screen
+  bunny.position.x = 100;
+  bunny.position.y = 100;
+
+  stage.addChild(bunny);
+
+
   animate(dt) {
 
     thing.clear();
