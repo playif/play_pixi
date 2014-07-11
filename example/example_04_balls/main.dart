@@ -13,7 +13,7 @@ main() {
   num slideX = w / 2;
   num slideY = h / 2;
   List stars = [];
-  var renderer;
+  PIXI.Renderer renderer;
   PIXI.Stage stage;
 
 
@@ -69,7 +69,10 @@ main() {
     stage = new PIXI.Stage();
 
     document.body.append(renderer.view);
+
+    renderer.view.style.position="absolute";
     renderer.view.style.display = "block";
+
     for (var i = 0; i < starCount; i++) {
       var tempBall = new PIXI.Sprite(ballTexture);
 
@@ -85,8 +88,8 @@ main() {
       stage.addChild(tempBall);
     }
 
-    document.getElementById('rnd').onClick.listen(newWave);
-    document.getElementById('sx').innerHtml = 'SX:  $sx <br />SY: $sy';
+    //document.getElementById('rnd').onClick.listen(newWave);
+    //document.getElementById('sx').innerHtml = 'SX:  $sx <br />SY: $sy';
 
     resize();
 

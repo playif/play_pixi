@@ -34,7 +34,7 @@ main() {
   Random random = new Random();
   var ballTexture = PIXI.Texture.fromImage("assets/pixel.png");
   renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
-  renderer.view.style.display = "block";
+
   stage = new PIXI.Stage();
 
   makeObject(t) {
@@ -269,6 +269,7 @@ main() {
 
 
     document.body.append(renderer.view);
+    renderer.view.style.display = "block";
 
     makeObject(0);
 

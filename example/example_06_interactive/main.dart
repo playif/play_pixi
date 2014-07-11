@@ -14,6 +14,8 @@ main() {
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
   renderer.view.style.display = "block";
+  renderer.view.style.width="${window.innerWidth}px";
+  renderer.view.style.height="${window.innerHeight}px";
 
   // create a background..
   var background = PIXI.Sprite.fromImage("button_test_BG.jpg");

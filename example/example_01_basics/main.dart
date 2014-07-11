@@ -4,11 +4,11 @@ import "../../lib/pixi.dart" as PIXI;
 
 main() {
 
-  window.console.log(window.navigator.userAgent);
-  window.console.log(window.navigator.appCodeName);
-  window.console.log(window.navigator.appName);
-  window.console.log(window.navigator.appVersion);
-  window.console.log(window.navigator.maxTouchPoints);
+//  window.console.log(window.navigator.userAgent);
+//  window.console.log(window.navigator.appCodeName);
+//  window.console.log(window.navigator.appName);
+//  window.console.log(window.navigator.appVersion);
+//  window.console.log(window.navigator.maxTouchPoints);
 
   // create an new instance of a pixi stage
   var stage = new PIXI.Stage(0x660099);

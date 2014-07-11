@@ -30,4 +30,6 @@ abstract class Renderer {
   render(Stage stage);
 
   renderDisplayObject(displayObject, [projection, buffer]);
+
+  resize(int width,int height);
 }

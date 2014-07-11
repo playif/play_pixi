@@ -247,7 +247,7 @@ class TilingSprite extends Sprite {
 
     if (!texture.baseTexture.hasLoaded) return;
 
-    Texture baseTexture = texture.baseTexture;
+    BaseTexture baseTexture = texture.baseTexture;
     Rectangle frame = texture.frame;
 
     num targetWidth, targetHeight;

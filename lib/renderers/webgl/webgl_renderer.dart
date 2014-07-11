@@ -278,7 +278,7 @@ class WebGLRenderer extends Renderer {
     texture._updateWebGLuvs();
   }
 
-  resize(width, height) {
+  resize(int width, int height) {
     this.width = width;
     this.height = height;
 

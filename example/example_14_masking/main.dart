@@ -50,15 +50,20 @@ main() {
   // create a renderer instance
   var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
 
-  renderer.view.style.position = "absolute";
-  renderer.view.style.marginLeft = "-310px";
-  renderer.view.style.marginTop = "-190px";
-  renderer.view.style.top = "50%";
-  renderer.view.style.left = "50%";
-  renderer.view.style.display = "block";
+//  renderer.view.style.position = "absolute";
+//  renderer.view.style.marginLeft = "-310px";
+//  renderer.view.style.marginTop = "-190px";
+//  renderer.view.style.top = "50%";
+//  renderer.view.style.left = "50%";
 
   // add render view to DOM
   document.body.append(renderer.view);
+
+  renderer.view.style.display = "block";
+  renderer.view.style.width="${window.innerWidth}px";
+  renderer.view.style.height="${window.innerHeight}px";
+
+
 
   // lets create moving shape
   var thing = new PIXI.Graphics();
