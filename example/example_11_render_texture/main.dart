@@ -56,7 +56,7 @@ main() {
 
   Random random = new Random();
   // now create some items and randomly position them in the stuff container
-  for (var i = 0; i < 80; i++) {
+  for (var i = 0; i < 10; i++) {
     PIXI.Sprite item = PIXI.Sprite.fromImage(fruits[i%fruits.length]);
     item.position.x = random.nextInt(400) - 200;
     item.position.y = random.nextInt(400) - 200;
