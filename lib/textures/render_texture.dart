@@ -60,7 +60,7 @@ class RenderTexture extends Texture {
   {
     if (this.renderer.type == WEBGL_RENDERER)
     {
-      this.renderer.gl.bindFramebuffer(this.renderer.gl.FRAMEBUFFER, this.textureBuffer.frameBuffer);
+      this.renderer.gl.bindFramebuffer(FRAMEBUFFER, this.textureBuffer.frameBuffer);
     }
 
     this.textureBuffer.clear();

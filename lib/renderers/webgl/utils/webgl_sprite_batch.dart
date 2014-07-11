@@ -352,6 +352,8 @@ class WebGLSpriteBatch {
 
     // now draw those suckas!
     //print("here");
+
+    //gl.drawArrays(TRIANGLES, 0,this.currentBatchSize * 6);
     gl.drawElements(TRIANGLES, this.currentBatchSize * 6, UNSIGNED_SHORT, 0);
 
 
