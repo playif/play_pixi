@@ -23,7 +23,7 @@ class Matrix {
 
   //TODO
 
-  toArray(bool transpose) {
+  Float32List toArray(bool transpose) {
     //if(array == null) array = new Float32List(9);
     Float32List array = new Float32List(9);
 

@@ -11,7 +11,7 @@ class WebGLShaderManager {
   PrimitiveShader primitiveShader;
   PixiShader defaultShader;
   PixiFastShader fastShader;
-  PixiShader currentShader;
+  Shader currentShader;
 
   WebGLShaderManager(gl) {
     for (var i = 0; i < this.maxAttibs; i++) {

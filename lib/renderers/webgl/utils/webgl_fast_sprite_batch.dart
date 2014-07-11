@@ -24,7 +24,7 @@ class WebGLFastSpriteBatch {
   RenderSession renderSession = null;
 
   Shader shader = null;
-  Matrix matrix = null;
+  Float32List matrix = null;
 
 
   WebGLFastSpriteBatch(RenderingContext gl) {

@@ -5,8 +5,8 @@ import "../../lib/pixi.dart" as PIXI;
 main() {
   Random random = new Random();
 
-  num w = window.innerWidth;
-  num h = window.innerHeight;
+  num w = 800;
+  num h = 600;
   num starCount = 100;
   num sx = 1.0 + (random.nextDouble() / 20);
   num sy = 1.0 + (random.nextDouble() / 20);
@@ -65,14 +65,14 @@ main() {
   start() {
     //print(w);
     PIXI.Texture ballTexture = PIXI.Texture.fromImage("assets/bubble_32x32.png");
-    renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+    renderer = PIXI.autoDetectRenderer(w,h);
     stage = new PIXI.Stage();
 
     document.body.append(renderer.view);
 
     renderer.view.style.position="absolute";
     renderer.view.style.display = "block";
-
+    renderer.view.className = "rendererView";
     for (var i = 0; i < starCount; i++) {
       var tempBall = new PIXI.Sprite(ballTexture);
 

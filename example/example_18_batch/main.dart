@@ -30,6 +30,11 @@ main() {
   // add render view to DOM
   document.body.append(renderer.view);
 
+  resize([e]) {
+    renderer.resize(window.innerWidth, window.innerHeight);
+  }
+  window.onResize.listen(resize);
+
   // create an new instance of a pixi stage
   var stage = new PIXI.Stage(0xFFFFFF);
 

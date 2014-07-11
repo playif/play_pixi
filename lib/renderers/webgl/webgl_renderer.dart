@@ -279,6 +279,8 @@ class WebGLRenderer extends Renderer {
   }
 
   resize(int width, int height) {
+    window.console.log(width);
+
     this.width = width;
     this.height = height;
 
