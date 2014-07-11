@@ -15,7 +15,12 @@ main() {
 
   // create a renderer instance
   var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, null);
-
+  renderer.view.className = "rendererView";
+  resize([e]) {
+    renderer.resize(window.innerWidth, window.innerHeight);
+  }
+  window.onResize.listen(resize);
+  resize();
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
   renderer.view.style.display = "block";
