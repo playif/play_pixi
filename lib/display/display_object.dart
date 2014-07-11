@@ -27,7 +27,13 @@ class DisplayObject {
   Function mouseup;
   Function mouseupoutside;
 
+  Function touchmove;
+  Function touchstart;
+  Function touchend;
+  Function tap;
+  Function touchendoutside;
 
+  Map<int, InteractionData> __touchData={};
   //bool buttonMode = false;
   //DisplayObjectContainer get parent => _parent;
 
@@ -68,15 +74,17 @@ class DisplayObject {
 
   Rectangle _currentBounds = null;
 
-  Rectangle _mask = null;
+  DisplayObject _mask = null;
 
-  Rectangle get mask => _mask;
+  DisplayObject get mask => _mask;
 
-  set mask(Rectangle value) {
+  set mask(DisplayObject value) {
     if (this._mask != null)this._mask.isMask = false;
     this._mask = value;
     if (this._mask != null)this._mask.isMask = true;
   }
+
+  bool isMask = false;
 
   bool _cacheAsBitmap = false;
 

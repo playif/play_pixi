@@ -18,9 +18,9 @@ main() {
 
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
-  renderer.view.style.position = "absolute";
-  renderer.view.style.top = "0px";
-  renderer.view.style.left = "0px";
+  renderer.view.style.display = "block";
+//  renderer.view.style.top = "0px";
+//  renderer.view.style.left = "0px";
 
 
   // create a texture from an image path
@@ -45,7 +45,7 @@ main() {
 
 
     // use the mousedown and touchstart
-    bunny.mousedown = (PIXI.InteractionData data) {
+    bunny.mousedown = bunny.touchstart = (PIXI.InteractionData data) {
       // stop the default event...
       data.originalEvent.preventDefault();
 
@@ -58,7 +58,7 @@ main() {
     };
 
     // set the events for when the mouse is released or a touch is released
-    bunny.mouseup = bunny.mouseupoutside = (PIXI.InteractionData data) {
+    bunny.mouseup = bunny.mouseupoutside = bunny.touchend = bunny.touchendoutside = (PIXI.InteractionData data) {
       bunny.alpha = 1;
       bunny.dragging = false;
       // set the interaction data to null
@@ -66,7 +66,7 @@ main() {
     } ;
 
     // set the callbacks for when the mouse or a touch moves
-    bunny.mousemove = (PIXI.InteractionData data) {
+    bunny.mousemove = bunny.touchmove = (PIXI.InteractionData data) {
       //print(bunny.dragging);
       if (bunny.dragging) {
         var newPosition = bunny.data.getLocalPosition(bunny.parent);
@@ -86,7 +86,6 @@ main() {
   for (var i = 0; i < 10; i++) {
     createBunny(random.nextInt(window.innerWidth), random.nextInt(window.innerHeight));
   }
-
 
 
   animate(dt) {

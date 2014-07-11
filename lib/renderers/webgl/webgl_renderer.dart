@@ -251,7 +251,7 @@ class WebGLRenderer extends Renderer {
   }
 
 
-  static destroyTexture(Texture texture, RenderingContext gl) {
+  static destroyTexture(BaseTexture texture, RenderingContext gl) {
     //TODO break this out into a texture manager...
     for (var t in texture._glTextures.values) {
       gl.deleteTexture(t);

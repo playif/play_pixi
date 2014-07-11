@@ -11,8 +11,8 @@ main() {
 
   //document.addEventListener('DOMContentLoaded', start, false);
 
-  var w = 1024;
-  var h = 768;
+  var w = window.innerWidth;
+  var h = window.innerHeight;
 
   var n = 2000;
   var d = 1;
@@ -33,7 +33,8 @@ main() {
 
   Random random = new Random();
   var ballTexture = PIXI.Texture.fromImage("assets/pixel.png");
-  renderer = PIXI.autoDetectRenderer(w, h);
+  renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+  renderer.view.style.display = "block";
   stage = new PIXI.Stage();
 
   makeObject(t) {

@@ -3,20 +3,28 @@ import "dart:math";
 import "../../lib/pixi.dart" as PIXI;
 
 main() {
+
+  window.console.log(window.navigator.userAgent);
+  window.console.log(window.navigator.appCodeName);
+  window.console.log(window.navigator.appName);
+  window.console.log(window.navigator.appVersion);
+  window.console.log(window.navigator.maxTouchPoints);
+
   // create an new instance of a pixi stage
   var stage = new PIXI.Stage(0x660099);
 
   // create a renderer instance
   //var renderer =  new PIXI.CanvasRenderer(200, 200);
-  var renderer = new PIXI.WebGLRenderer(200, 200);
-  //var renderer = PIXI.autoDetectRenderer(200,200);
+  //var renderer = new PIXI.WebGLRenderer(200, 200);
+  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
 
 
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
+
   renderer.view.style.display = "block";
-  renderer.view.style.width="${window.innerWidth}px";
-  renderer.view.style.height="${window.innerHeight}px";
+  //renderer.view.style.width="${window.innerWidth}px";
+  //renderer.view.style.height="${window.innerHeight}px";
 
 
   // create a texture from an image path
@@ -37,6 +45,9 @@ main() {
   bunny.position.y = 100;
 
   stage.addChild(bunny);
+
+
+  //window.console.log(window.navigator.requestMidiAccess());
 
   animate(num delta) {
     PIXI.requestAnimFrame(animate);

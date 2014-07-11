@@ -7,8 +7,6 @@ Rectangle EmptyRectangle = new Rectangle(0, 0, 0, 0);
 class Rectangle {
   num x, y, width, height;
 
-  bool isMask = false;
-
   Rectangle([this.x=0, this.y=0, this.width=0, this.height=0]);
 
   Rectangle clone() {

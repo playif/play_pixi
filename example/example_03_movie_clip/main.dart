@@ -17,12 +17,12 @@ main() {
   var stage = new PIXI.Stage(0xFFFFFF);
 
   // create a renderer instance.
-  //var renderer = PIXI.autoDetectRenderer(800, 600);
-  var renderer = new PIXI.CanvasRenderer(800, 600);
+  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+  //var renderer = new PIXI.CanvasRenderer(window.innerWidth, window.innerHeight);
 
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
-
+  renderer.view.style.display = "block";
   // create an empty container
   var alienContainer = new PIXI.DisplayObjectContainer();
   alienContainer.position.x = 400;

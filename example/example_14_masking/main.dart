@@ -48,7 +48,7 @@ main() {
   stage.addChild(container);
 
   // create a renderer instance
-  var renderer = PIXI.autoDetectRenderer(620, 380);
+  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
 
   renderer.view.style.position = "absolute";
   renderer.view.style.marginLeft = "-310px";
@@ -71,9 +71,9 @@ main() {
 
   var count = 0;
 
-  stage.click = (e) {
+  stage.click = stage.tap = (e) {
     print("cool");
-    if (container.mask ==null) {
+    if (container.mask == null) {
       container.mask = thing;
       //PIXI.runList(stage);
     }
@@ -107,7 +107,6 @@ main() {
   help.position.y = 350;
   help.position.x = 10;
   stage.addChild(help);
-
 
 
   animate(dt) {

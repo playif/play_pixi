@@ -9,11 +9,11 @@ main() {
   var stage = new PIXI.Stage(0x000000, interactive);
 
   // create a renderer instance.
-  var renderer = PIXI.autoDetectRenderer(620, 400);
+  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
 
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
-
+  renderer.view.style.display = "block";
 
   // create a background..
   var background = PIXI.Sprite.fromImage("button_test_BG.jpg");
@@ -49,7 +49,7 @@ main() {
     button.interactive = true;
 
     // set the mousedown and touchstart callback..
-    button.mousedown = (data) {
+    button.mousedown = button.touchstart = (data) {
       print("mousedown");
       //button.isdown = true;
       button.setTexture(textureButtonDown);
@@ -57,7 +57,7 @@ main() {
     };
 
     // set the mouseup and touchend callback..
-    button.mouseup = button.mouseupoutside = (data) {
+    button.mouseup = button.mouseupoutside = button.touchend = button.touchendoutside = (data) {
       print("mouseup");
       //button.isdown = false;
 
@@ -70,7 +70,7 @@ main() {
     };
 
     // set the mouseover callback..
-    button.mouseover = (data) {
+    button.mouseover = button.touchmove = (data) {
       print("over");
       //button.isOver = true;
 
@@ -81,7 +81,7 @@ main() {
     };
 
     // set the mouseout callback..
-    button.mouseout = (data) {
+    button.mouseout = button.touchend = (data) {
       print("mouseout");
       //button.isOver = false;
       //if (button.isdown)

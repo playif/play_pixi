@@ -19,7 +19,7 @@ main() {
 
   // add render view to DOM
   document.body.append(renderer.view);
-
+  renderer.view.style.display = "block";
   // OOH! SHINY!
   // create two render textures.. these dynamic textures will be used to draw the scene into itself
   var renderTexture = new PIXI.RenderTexture(800, 600);

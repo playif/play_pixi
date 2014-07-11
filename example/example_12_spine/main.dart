@@ -59,7 +59,7 @@ main() {
 
       stage.addChild(spineBoy);
 
-      stage.click = (e) {
+      stage.click =stage.tap = (e) {
         spineBoy.state.setAnimationByName("jump", false);
         spineBoy.state.addAnimationByName("walk", true);
       };

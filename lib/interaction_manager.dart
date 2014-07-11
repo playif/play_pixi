@@ -4,7 +4,7 @@ class InteractionManager {
   Stage stage;
   InteractionData mouse = new InteractionData();
 
-  Map touchs = {
+  Map<int, InteractionData> touchs = {
   };
 
   Point tempPoint = new Point();
@@ -20,9 +20,9 @@ class InteractionManager {
 
   bool dirty;
 
-  String currentCursorStyle= 'inherit';
+  String currentCursorStyle = 'inherit';
 
-  bool mouseOut=false;
+  bool mouseOut = false;
 
   InteractionManager(this.stage) {
 
@@ -100,7 +100,7 @@ class InteractionManager {
   }
 
   void removeEvents() {
-    if (this.interactionDOMElement ==null) return;
+    if (this.interactionDOMElement == null) return;
 
 //    this.interactionDOMElement.style['-ms-content-zooming'] = '';
 //    this.interactionDOMElement.style['-ms-touch-action'] = '';
@@ -233,7 +233,7 @@ class InteractionManager {
     for (var i = 0; i < length; i++) {
       DisplayObject item = this.interactiveItems[i];
 
-      if (item.mousedown != null || item.click !=null) {
+      if (item.mousedown != null || item.click != null) {
         item.__mouseIsDown = true;
         item.__hit = this.hitTest(item, this.mouse);
 
@@ -284,7 +284,7 @@ class InteractionManager {
 
       if (item.__hit && !up) {
         //call the function!
-        if (item.mouseup !=null) {
+        if (item.mouseup != null) {
           item.mouseup(this.mouse);
         }
         if (item.__isDown) {
@@ -295,7 +295,7 @@ class InteractionManager {
       }
       else {
         if (item.__isDown) {
-          if (item.mouseupoutside !=null)item.mouseupoutside(this.mouse);
+          if (item.mouseupoutside != null) item.mouseupoutside(this.mouse);
         }
       }
 
@@ -372,71 +372,91 @@ class InteractionManager {
     return false;
   }
 
-  void onTouchMove(TouchEvent event) {
-    var rect = this.interactionDOMElement.getBoundingClientRect();
-    var changedTouches = event.changedTouches;
-    var touchData;
-    var i = 0;
+  void onTouchMove(event) {
+    JsObject ev = new JsObject.fromBrowserObject(event);
+
+    JsArray changedTouches = new JsArray.from(ev["changedTouches"]);
+    InteractionData touchData;
+    int i = 0;
+
 
     for (i = 0; i < changedTouches.length; i++) {
-      var touchEvent = changedTouches[i];
-      touchData = this.touchs[touchEvent.identifier];
+      JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
+      touchData = this.touchs[touchEvent['identifier']];
       touchData.originalEvent = event;
 
-      // update the touch position
-      touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
-      touchData.global.y = (touchEvent.clientY - rect.top) * (this.target.height / rect.height);
-//      if (navigator.isCocoonJS) {
-//        touchData.global.x = touchEvent.clientX;
-//        touchData.global.y = touchEvent.clientY;
-//      }
+
+      if (window.navigator.appVersion.contains("CocoonJS")) {
+        touchData.global.x = touchEvent["clientX"];
+        touchData.global.y = touchEvent["clientY"];
+      }
+      else {
+        var rect = this.interactionDOMElement.getBoundingClientRect();
+        // update the touch position
+        touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
+        touchData.global.y = (touchEvent["clientY"] - rect.top) * (this.target.height / rect.height);
+      }
 
       for (var j = 0; j < this.interactiveItems.length; j++) {
-        var item = this.interactiveItems[j];
-        if (item.touchmove && item.__touchData[touchEvent.identifier]) item.touchmove(touchData);
+        DisplayObject item = this.interactiveItems[j];
+        if (item.touchmove != null && item.__touchData[touchEvent['identifier']] != null) item.touchmove(touchData);
       }
     }
   }
 
-  void onTouchStart(TouchEvent event) {
-    var rect = this.interactionDOMElement.getBoundingClientRect();
+  void onTouchStart(event) {
+    //window.console.log(event);
+    JsObject ev = new JsObject.fromBrowserObject(event);
 
-    if (AUTO_PREVENT_DEFAULT)event.preventDefault();
+    if (AUTO_PREVENT_DEFAULT) event.preventDefault();
 
-    var changedTouches = event.changedTouches;
+    JsArray changedTouches = new JsArray.from(ev["changedTouches"]);
     for (var i = 0; i < changedTouches.length; i++) {
-      var touchEvent = changedTouches[i];
+      JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
+      InteractionData touchData;
+      if (this.pool.length > 0) {
+        touchData = this.pool.removeLast();
+      }
 
-      var touchData = this.pool.removeLast();
-      if (!touchData)touchData = new InteractionData();
+
+      if (touchData == null) touchData = new InteractionData();
 
       touchData.originalEvent = event;
 
-      this.touchs[touchEvent.identifier] = touchData;
-      touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
-      touchData.global.y = (touchEvent.clientY - rect.top) * (this.target.height / rect.height);
+      this.touchs[touchEvent['identifier']] = touchData;
+
 //      if (navigator.isCocoonJS) {
 //        touchData.global.x = touchEvent.clientX;
 //        touchData.global.y = touchEvent.clientY;
 //      }
+      if (window.navigator.appVersion.contains("CocoonJS")) {
+        touchData.global.x = touchEvent["clientX"];
+        touchData.global.y = touchEvent["clientY"];
+      }
+      else {
+        var rect = this.interactionDOMElement.getBoundingClientRect();
+        touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
+        touchData.global.y = (touchEvent["clientY"] - rect.top) * (this.target.height / rect.height);
+      }
 
-      var length = this.interactiveItems.length;
+      int length = this.interactiveItems.length;
 
-      for (var j = 0; j < length; j++) {
-        var item = this.interactiveItems[j];
+      for (int j = 0; j < length; j++) {
+        DisplayObject item = this.interactiveItems[j];
 
-        if (item.touchstart || item.tap) {
+        if (item.touchstart != null || item.tap != null) {
           item.__hit = this.hitTest(item, touchData);
 
           if (item.__hit) {
             //call the function!
-            if (item.touchstart)item.touchstart(touchData);
+            if (item.touchstart != null) item.touchstart(touchData);
             item.__isDown = true;
-            if(item.__touchData == null){
-              item.__touchData={};
+            if (item.__touchData == null) {
+              item.__touchData = {
+              };
             }
 
-            item.__touchData[touchEvent.identifier] = touchData;
+            item.__touchData[touchEvent['identifier']] = touchData;
 
             if (!item.interactiveChildren)break;
           }
@@ -445,58 +465,61 @@ class InteractionManager {
     }
   }
 
-  void onTouchEnd(TouchEvent event) {
-    //this.mouse.originalEvent = event || window.event; //IE uses window.event
-    var rect = this.interactionDOMElement.getBoundingClientRect();
-    var changedTouches = event.changedTouches;
+  void onTouchEnd(event) {
+    JsObject ev = new JsObject.fromBrowserObject(event);
 
-    for (var i = 0; i < changedTouches.length; i++) {
-      var touchEvent = changedTouches[i];
-      var touchData = this.touchs[touchEvent.identifier];
-      var up = false;
-      touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
-      touchData.global.y = (touchEvent.clientY - rect.top) * (this.target.height / rect.height);
-//      if (navigator.isCocoonJS) {
-//        touchData.global.x = touchEvent.clientX;
-//        touchData.global.y = touchEvent.clientY;
-//      }
+    JsArray changedTouches = new JsArray.from(ev["changedTouches"]);
+    for (int i = 0; i < changedTouches.length; i++) {
+      JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
+      InteractionData touchData = this.touchs[touchEvent['identifier']];
+      bool up = false;
 
-      var length = this.interactiveItems.length;
-      for (var j = 0; j < length; j++) {
-        var item = this.interactiveItems[j];
+      if (window.navigator.appVersion.contains("CocoonJS")) {
+        touchData.global.x = touchEvent["clientX"];
+        touchData.global.y = touchEvent["clientY"];
+      }
+      else {
+        var rect = this.interactionDOMElement.getBoundingClientRect();
+        touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
+        touchData.global.y = (touchEvent["clientY"] - rect.top) * (this.target.height / rect.height);
+      }
 
-        if (item.__touchData && item.__touchData[touchEvent.identifier]) {
+      int length = this.interactiveItems.length;
+      for (int j = 0; j < length; j++) {
+        DisplayObject item = this.interactiveItems[j];
 
-          item.__hit = this.hitTest(item, item.__touchData[touchEvent.identifier]);
+        if (item.__touchData != null && item.__touchData[touchEvent['identifier']] != null) {
+
+          item.__hit = this.hitTest(item, item.__touchData[touchEvent['identifier']]);
 
           // so this one WAS down...
           touchData.originalEvent = event;
           // hitTest??
 
-          if (item.touchend || item.tap) {
+          if (item.touchend != null || item.tap != null) {
             if (item.__hit && !up) {
-              if (item.touchend)item.touchend(touchData);
+              if (item.touchend != null)item.touchend(touchData);
               if (item.__isDown) {
-                if (item.tap)item.tap(touchData);
+                if (item.tap != null)item.tap(touchData);
               }
 
               if (!item.interactiveChildren)up = true;
             }
             else {
               if (item.__isDown) {
-                if (item.touchendoutside)item.touchendoutside(touchData);
+                if (item.touchendoutside != null)item.touchendoutside(touchData);
               }
             }
 
             item.__isDown = false;
           }
 
-          item.__touchData[touchEvent.identifier] = null;
+          item.__touchData[touchEvent['identifier']] = null;
         }
       }
       // remove the touch..
       this.pool.add(touchData);
-      this.touchs[touchEvent.identifier] = null;
+      this.touchs[touchEvent['identifier']] = null;
     }
   }
 }

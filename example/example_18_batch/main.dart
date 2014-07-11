@@ -43,7 +43,7 @@ main() {
 
   Random random = new Random();
 
-  var totalDudes = renderer is PIXI.WebGLRenderer ? 10000 : 500;
+  var totalDudes = renderer is PIXI.WebGLRenderer ? 1000 : 500;
   PIXI.Texture texture = PIXI.Texture.fromImage("tinyMaggot.png");
   for (var i = 0; i < totalDudes; i++) {
 // create a new Sprite that uses the image name that we just generated as its source

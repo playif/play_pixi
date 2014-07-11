@@ -9,7 +9,7 @@ main() {
 
   //stage.setInteractive(true);
 
-  var renderer = PIXI.autoDetectRenderer(620, 380);
+  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
   //var renderer =  new PIXI.CanvasRenderer(620, 380);
 
   renderer.view.style.display = "block";
@@ -55,7 +55,7 @@ main() {
   graphics.lineStyle(10, 0x00FF00, 0.5);
   graphics.drawRect(150, 250, 100, 100);
 
-  graphics.drawEllipse(40,40,100,30);
+  graphics.drawEllipse(40, 40, 100, 30);
 
   graphics.endFill();
 
@@ -80,14 +80,12 @@ main() {
 
   Random random = new Random();
 // Just click on the stage to draw random lines
-  stage.click = (e) {
+  stage.click = stage.tap = (e) {
     print("here");
     graphics.lineStyle(random.nextInt(30), random.nextInt(0xFFFFFF), 1);
     graphics.moveTo(random.nextInt(620), random.nextInt(380));
     graphics.lineTo(random.nextInt(620), random.nextInt(380));
   };
-
-
 
 
   // create a texture from an image path

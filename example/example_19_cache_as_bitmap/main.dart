@@ -23,7 +23,7 @@ main() {
 
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
-
+  renderer.view.style.display = "block";
 
   // create an empty container
   var alienContainer = new PIXI.DisplayObjectContainer();
@@ -82,7 +82,7 @@ main() {
   }
 
 
-  stage.mousedown = (e) {
+  stage.mousedown = stage.tap = (e) {
     alienContainer.cacheAsBitmap = !alienContainer.cacheAsBitmap;
     //window.console.log(alienContainer.getLocalBounds());
 

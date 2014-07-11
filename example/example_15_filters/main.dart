@@ -4,8 +4,8 @@ import "../../lib/pixi.dart" as PIXI;
 
 main() {
 
-  var renderer = PIXI.autoDetectRenderer(620, 380);
-
+  var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+  renderer.view.style.display = "block";
   // create an new instance of a pixi stage
   var stage = new PIXI.Stage(0xFFFFFF, true);
 
@@ -79,7 +79,7 @@ main() {
   var count = 0;
   var switchy = false;
 
-  stage.click = (e) {
+  stage.click = stage.tap = (e) {
     switchy = !switchy;
 
     if (!switchy) {

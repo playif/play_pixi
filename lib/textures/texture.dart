@@ -28,6 +28,8 @@ class Texture extends BaseTexture {
 
   CanvasBuffer canvasBuffer;
 
+  Rectangle crop;
+
   Texture._(){
     scope = this;
   }
@@ -46,6 +48,8 @@ class Texture extends BaseTexture {
     if (baseTexture is Texture)
       baseTexture = (baseTexture as Texture).baseTexture;
     this.baseTexture = baseTexture;
+
+    this.crop = new Rectangle(0, 0, 1, 1);
 
     if (baseTexture.hasLoaded) {
 
@@ -79,6 +83,11 @@ class Texture extends BaseTexture {
   }
 
   setFrame(Rectangle frame) {
+//    window.console.log(frame.x);
+//    window.console.log(frame.width);
+//    window.console.log(frame.height);
+//    window.console.log(frame.y);
+
     this.frame = frame;
     this.width = frame.width;
     this.height = frame.height;

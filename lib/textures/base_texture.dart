@@ -37,7 +37,7 @@ class BaseTexture extends EventTarget {
 
 
     //
-    if (( (source is ImageElement && source.complete != null )
+    if (( (source is ImageElement && source.complete == true)
           || (source is CanvasElement) )
         && this.source.width != 0 && this.source.height != 0) {
 
