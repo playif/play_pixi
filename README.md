@@ -14,6 +14,7 @@ Change log
 0.9.3
  * Fix touch event in cocoonJS
  * Fix type error
+ * Fix mobile view size.
 
 0.9.2
  * Fix example 11 (RenderingTexture) and example 15 (Filter) example in chrome.
