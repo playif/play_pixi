@@ -16,7 +16,7 @@ class Strip extends DisplayObjectContainer {
   Buffer _uvBuffer;
   Buffer _colorBuffer;
 
-  int count=0;
+  int count = 0;
 
   Strip(this.texture) {
     this.uvs = new Float32List.fromList([0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0]);
@@ -84,19 +84,19 @@ class Strip extends DisplayObjectContainer {
 
 
     gl.bindBuffer(ARRAY_BUFFER, this._vertexBuffer);
-    gl.bufferData(ARRAY_BUFFER, this.verticies, gl.DYNAMIC_DRAW);
+    gl.bufferData(ARRAY_BUFFER, this.verticies, DYNAMIC_DRAW);
 
     gl.bindBuffer(ARRAY_BUFFER, this._uvBuffer);
-    gl.bufferData(ARRAY_BUFFER, this.uvs, gl.STATIC_DRAW);
+    gl.bufferData(ARRAY_BUFFER, this.uvs, STATIC_DRAW);
 
     gl.bindBuffer(ARRAY_BUFFER, this._colorBuffer);
-    gl.bufferData(ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    gl.bufferData(ARRAY_BUFFER, this.colors, STATIC_DRAW);
 
     gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this._indexBuffer);
-    gl.bufferData(ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+    gl.bufferData(ELEMENT_ARRAY_BUFFER, this.indices, STATIC_DRAW);
   }
 
-  _renderStrip(renderSession) {
+  _renderStrip(RenderSession renderSession) {
     var gl = renderSession.gl;
     var projection = renderSession.projection,
     offset = renderSession.offset,
@@ -104,7 +104,7 @@ class Strip extends DisplayObjectContainer {
 
 
     // gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mat4Real);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.blendFunc(ONE, ONE_MINUS_SRC_ALPHA);
     // set uniforms
     gl.uniformMatrix3fv(shader.translationMatrix, false, this.worldTransform.toArray(true));
     gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
@@ -112,52 +112,57 @@ class Strip extends DisplayObjectContainer {
     gl.uniform1f(shader.alpha, 1);
 
     if (!this.dirty) {
-      gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.verticies);
-      gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(ARRAY_BUFFER, this._vertexBuffer);
+      gl.bufferSubData(ARRAY_BUFFER, 0, this.verticies);
+      gl.vertexAttribPointer(shader.aVertexPosition, 2, FLOAT, false, 0, 0);
 
       // update the uvs
-      gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
-      gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(ARRAY_BUFFER, this._uvBuffer);
+      gl.vertexAttribPointer(shader.aTextureCoord, 2, FLOAT, false, 0, 0);
 
-      gl.activeTexture(gl.TEXTURE0);
+      gl.activeTexture(TEXTURE0);
       // bind the current texture
-      gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id] || createWebGLTexture(this.texture.baseTexture, gl));
+      gl.bindTexture(TEXTURE_2D, this.texture.baseTexture._glTextures[gl] == null ?
+      createWebGLTexture(this.texture.baseTexture, gl) :
+      this.texture.baseTexture._glTextures[gl]);
 
       // dont need to upload!
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+      gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this._indexBuffer);
 
 
     }
     else {
       this.dirty = false;
-      gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, this.verticies, gl.STATIC_DRAW);
-      gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(ARRAY_BUFFER, this._vertexBuffer);
+      gl.bufferData(ARRAY_BUFFER, this.verticies, STATIC_DRAW);
+      gl.vertexAttribPointer(shader.aVertexPosition, 2, FLOAT, false, 0, 0);
 
       // update the uvs
-      gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, this.uvs, gl.STATIC_DRAW);
-      gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(ARRAY_BUFFER, this._uvBuffer);
+      gl.bufferData(ARRAY_BUFFER, this.uvs, STATIC_DRAW);
+      gl.vertexAttribPointer(shader.aTextureCoord, 2, FLOAT, false, 0, 0);
 
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id] || createWebGLTexture(this.texture.baseTexture, gl));
+      gl.activeTexture(TEXTURE0);
+      gl.bindTexture(TEXTURE_2D,
+      this.texture.baseTexture._glTextures[gl] == null ?
+      createWebGLTexture(this.texture.baseTexture, gl) :
+      this.texture.baseTexture._glTextures[gl]);
 
       // dont need to upload!
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+      gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+      gl.bufferData(ELEMENT_ARRAY_BUFFER, this.indices, STATIC_DRAW);
 
     }
     //console.log(gl.TRIANGLE_STRIP)
     //
     //
-    gl.drawElements(gl.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(TRIANGLE_STRIP, this.indices.length, UNSIGNED_SHORT, 0);
 
 
   }
 
 
-  _renderCanvas(renderSession) {
+  _renderCanvas(RenderSession renderSession) {
     var context = renderSession.context;
 
     var transform = this.worldTransform;

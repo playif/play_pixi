@@ -7,10 +7,10 @@ class Rope extends Strip {
 //  num width;
 //  num height;
 
-  Rope(Texture texture, this.points, [num width, num height])
+  Rope(Texture texture, this.points)
   :super(texture) {
-    this.width = width;
-    this.height = height;
+//    this.width = width;
+//    this.height = height;
 
     this.verticies = new Float32List(points.length * 4);
     this.uvs = new Float32List(points.length * 4);
