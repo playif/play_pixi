@@ -11,6 +11,9 @@ The final goal of this package is to build Phaser game engine naming [play_phase
 
 Change log
 ==========
+0.9.4
+ * upgrade to PIXI v1.6.0
+
 0.9.3
  * Fix touch event in cocoonJS
  * Fix type error
