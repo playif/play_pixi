@@ -20,7 +20,7 @@ Type Matrix2 = determineMatrixArrayType();
 
 
 class Matrix {
-  num a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0;
+  double a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0;
 
   Float32List array =null;
 
@@ -43,10 +43,10 @@ class Matrix {
     if (transpose) {
       array[0] = this.a;
       array[1] = this.c;
-      array[2] = .0;
+      array[2] = 0.0;
       array[3] = this.b;
       array[4] = this.d;
-      array[5] = .0;
+      array[5] = 0.0;
       array[6] = this.tx;
       array[7] = this.ty;
       array[8] = 1.0;
@@ -58,8 +58,8 @@ class Matrix {
       array[3] = this.c;
       array[4] = this.d;
       array[5] = this.ty;
-      array[6] = .0;
-      array[7] = .0;
+      array[6] = 0.0;
+      array[7] = 0.0;
       array[8] = 1.0;
     }
 

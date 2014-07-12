@@ -7,7 +7,7 @@ main() {
   var count = 0;
 
   // create an new instance of a pixi stage
-  var stage = new PIXI.Stage(0xace455);
+  var stage = new PIXI.Stage(0xace455, true);
 
   // create a renderer instance.
   var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
@@ -27,11 +27,18 @@ main() {
   List<PIXI.Point> points = [];
   for (var i = 0; i < 20; i++) {
     var segSize = length;
-    points.add(new PIXI.Point(i * length, 0));
+
+    points.add(new PIXI.Point(( i) * segSize, -i * 2));
   }
 
   PIXI.Rope strip = new PIXI.Rope(PIXI.Texture.fromImage("snake.png"), points);
+  //PIXI.Rope strip2 = new PIXI.Rope(PIXI.Texture.fromImage("snake.png"), points);
+
+  //PIXI.Sprite test=new PIXI.Sprite(PIXI.Texture.fromImage("snake.png"));
+  //stage.addChild(test);
+
   strip.x = -918 / 2;
+  //strip.y =918 / 2;
 
   var snakeContainer = new PIXI.DisplayObjectContainer();
   snakeContainer.position.x = window.innerWidth / 2;
@@ -41,7 +48,19 @@ main() {
   stage.addChild(snakeContainer);
 
   snakeContainer.addChild(strip);
+  //snakeContainer.addChild(strip2);
 
+//  stage.mousemove = (e) {
+//    num x = e.global.x;
+//    num y = e.global.y;
+//    var length = 918 / 20;
+//    points[points.length - 1].x = x;
+//    points[points.length - 1].y = y;
+//    for (var i = points.length - 2;i >= 0;i--) {
+//      points[i].x = points[i + 1].x;
+//      points[i].y = points[i + 1].y;
+//    }
+//  };
 
   animate(dt) {
 
@@ -53,12 +72,7 @@ main() {
 
       points[i].y = sin(i * 0.5 + count) * 30;
 
-      points[i].x = i * length + cos(i * 0.3 + count) * 40 ;
-      //print(i);
-//      if (i > 10) {
-//        print("here");
-//        points[i].x += count;
-//      }
+      points[i].x = i * length + cos(i * 0.3 + count) * 20 ;
 
     }
 

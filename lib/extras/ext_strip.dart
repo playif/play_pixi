@@ -18,7 +18,10 @@ class Strip extends DisplayObjectContainer {
 
   int count = 0;
 
-  Strip(this.texture) {
+//  num tint=0xFFFFFF;
+
+  Strip(Texture texture) {
+    this.texture = texture;
     this.uvs = new Float32List.fromList([0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0]);
     this.verticies = new Float32List.fromList([0.0, 0.0, 100.0, 0.0, 100.0, 100.0, 0.0, 100.0]);
     this.colors = new Float32List.fromList([1.0, 1.0, 1.0, 1.0]);
@@ -38,14 +41,14 @@ class Strip extends DisplayObjectContainer {
 //    this.renderable = true;
   }
 
-  setTexture(Texture texture) {
-    //TODO SET THE TEXTURES
-    //TODO VISIBILITY
-    this.texture = texture;
-    this.width = texture.frame.width;
-    this.height = texture.frame.height;
-    this.updateFrame = true;
-  }
+//  setTexture(Texture texture) {
+//    //TODO SET THE TEXTURES
+//    //TODO VISIBILITY
+//    this.texture = texture;
+//    this.width = texture.frame.width;
+//    this.height = texture.frame.height;
+//    this.updateFrame = true;
+//  }
 
   onTextureUpdate(e) {
     this.updateFrame = true;
@@ -63,7 +66,7 @@ class Strip extends DisplayObjectContainer {
     if (this._vertexBuffer == null)this._initWebGL(renderSession);
 
     renderSession.shaderManager.setShader(renderSession.shaderManager.stripShader);
-
+    //renderSession.spriteBatch.render(this);
     this._renderStrip(renderSession);
 
     ///renderSession.shaderManager.activateDefaultShader();
@@ -168,7 +171,7 @@ class Strip extends DisplayObjectContainer {
     var transform = this.worldTransform;
 
     if (renderSession.roundPixels) {
-      context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx | 0, transform.ty | 0);
+      context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());
     }
     else {
       context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
@@ -252,6 +255,5 @@ class Strip extends DisplayObjectContainer {
       context.restore();
     }
   }
-
 
 }

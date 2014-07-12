@@ -61,7 +61,7 @@ class WebGLShaderManager {
 
     // set the new attribs
     for (i = 0; i < attribs.length; i++) {
-      var attribId = attribs[i];
+      int attribId = attribs[i];
       this.tempAttribState[attribId] = true;
     }
 
@@ -80,7 +80,7 @@ class WebGLShaderManager {
     }
   }
 
-  setShader(shader) {
+  setShader( shader) {
     //if(this.currentShader == shader)return;
     if (this._currentId == shader._UID) return false;
     this._currentId = shader._UID;

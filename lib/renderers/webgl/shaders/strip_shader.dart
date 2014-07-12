@@ -11,13 +11,13 @@ class StripShader extends Shader {
   List<String> fragmentSrc = [
       'precision mediump float;',
       'varying vec2 vTextureCoord;',
-//      'varying float vColor;',
+      //   'varying float vColor;',
       'uniform float alpha;',
       'uniform sampler2D uSampler;',
 
       'void main(void) {',
       '   gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y));',
-//  '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);',//gl_FragColor * alpha;',
+      //  '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);',//gl_FragColor * alpha;',
       '}'
   ];
 
@@ -27,17 +27,15 @@ class StripShader extends Shader {
       'uniform mat3 translationMatrix;',
       'uniform vec2 projectionVector;',
       'uniform vec2 offsetVector;',
-
-
       //  'uniform float alpha;',
-// 'uniform vec3 tint;',
+      // 'uniform vec3 tint;',
       'varying vec2 vTextureCoord;',
-//  'varying vec4 vColor;',
+      //  'varying vec4 vColor;',
 
       'void main(void) {',
-      '   vec3 v = translationMatrix * vec3(aVertexPosition, 1.0);',
+      '   vec3 v = translationMatrix * vec3(aVertexPosition , 1.0);',
       '   v -= offsetVector.xyx;',
-      '   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / projectionVector.y + 1.0 , 0.0, 1.0);',
+      '   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);',
       '   vTextureCoord = aTextureCoord;',
       // '   vColor = aColor * vec4(tint * alpha, alpha);',
       '}'
@@ -62,9 +60,7 @@ class StripShader extends Shader {
 
   init() {
 
-    //var gl = gl;
-
-    Program program = compileProgram(gl, this.vertexSrc, this.fragmentSrc);
+    var program = compileProgram(gl, this.vertexSrc, this.fragmentSrc);
     gl.useProgram(program);
 
     // get and store the uniforms for the shader
