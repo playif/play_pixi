@@ -20,7 +20,7 @@ class Strip extends DisplayObjectContainer {
 
   Strip(this.texture) {
     this.uvs = new Float32List.fromList([0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0]);
-    this.verticies = new Float32List.fromList([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+    this.verticies = new Float32List.fromList([0.0, 0.0, 100.0, 0.0, 100.0, 100.0, 0.0, 100.0]);
     this.colors = new Float32List.fromList([1.0, 1.0, 1.0, 1.0]);
     this.indices = new Uint16List.fromList([0, 1, 2, 3]);
     this.dirty = true;
@@ -98,9 +98,9 @@ class Strip extends DisplayObjectContainer {
 
   _renderStrip(RenderSession renderSession) {
     var gl = renderSession.gl;
-    var projection = renderSession.projection,
-    offset = renderSession.offset,
-    shader = renderSession.shaderManager.stripShader;
+    Point projection = renderSession.projection,
+    offset = renderSession.offset;
+    Shader shader = renderSession.shaderManager.stripShader;
 
 
     // gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mat4Real);
@@ -109,7 +109,7 @@ class Strip extends DisplayObjectContainer {
     gl.uniformMatrix3fv(shader.translationMatrix, false, this.worldTransform.toArray(true));
     gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
     gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
-    gl.uniform1f(shader.alpha, 1);
+    gl.uniform1f(shader.alpha, 1.0);
 
     if (!this.dirty) {
       gl.bindBuffer(ARRAY_BUFFER, this._vertexBuffer);

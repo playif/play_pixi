@@ -44,11 +44,13 @@ main() {
   graphics.lineTo(330, 120);
   graphics.lineTo(410, 200);
   graphics.lineTo(210, 300);
-  graphics.endFill();
+//  graphics.endFill();
 
 // draw a rectangle
   graphics.lineStyle(2, 0x0000FF, 1);
-  graphics.drawRect(50, 250, 100, 100);
+  graphics.drawRoundedRect(50, 250, 100, 100,10);
+  //graphics.drawRect(50, 250, 100, 100);
+
 
   // draw a rectangle
   graphics.beginFill(0xFF700B, 1);

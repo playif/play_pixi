@@ -49,7 +49,7 @@ class Rope extends Strip {
     int index;
     num amount;
 
-    Point point = new Point(0, 0);
+    Point point;
 
     for (int i = 1; i < total; i++) {
 
@@ -107,7 +107,7 @@ class Rope extends Strip {
     int total = points.length, index;
     num ratio, perpLength, n;
 
-    Point point = new Point(0, 0);
+    Point point;
 
     for (int i = 0; i < total; i++) {
       point = points[i];

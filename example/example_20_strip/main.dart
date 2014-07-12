@@ -11,6 +11,7 @@ main() {
 
   // create a renderer instance.
   var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+  //var renderer = new PIXI.CanvasRenderer(window.innerWidth, window.innerHeight);
 
   var target = new PIXI.Point();
 
@@ -30,17 +31,16 @@ main() {
   }
 
   PIXI.Rope strip = new PIXI.Rope(PIXI.Texture.fromImage("snake.png"), points);
-  strip.x = -918/2;
+  strip.x = -918 / 2;
 
   var snakeContainer = new PIXI.DisplayObjectContainer();
-  snakeContainer.position.x = window.innerWidth/2;
-  snakeContainer.position.y = window.innerHeight/2;
+  snakeContainer.position.x = window.innerWidth / 2;
+  snakeContainer.position.y = window.innerHeight / 2;
 
-  snakeContainer.scale.set( window.innerWidth / 1100);
+  snakeContainer.scale.set(window.innerWidth / 1100);
   stage.addChild(snakeContainer);
 
   snakeContainer.addChild(strip);
-
 
 
   animate(dt) {
@@ -51,18 +51,23 @@ main() {
 
     for (var i = 0; i < points.length; i++) {
 
-      points[i].y = sin(i *0.5  + count) * 30;
+      points[i].y = sin(i * 0.5 + count) * 30;
 
-      points[i].x = i * length + cos(i *0.3  + count) * 20;
+      points[i].x = i * length + cos(i * 0.3 + count) * 40 ;
+      //print(i);
+//      if (i > 10) {
+//        print("here");
+//        points[i].x += count;
+//      }
 
-    };
+    }
+
 
     // render the stage
     renderer.render(stage);
 
     PIXI.requestAnimFrame(animate);
   }
-
 
 
   // start animating

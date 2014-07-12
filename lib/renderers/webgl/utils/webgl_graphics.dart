@@ -266,7 +266,7 @@ class WebGLGraphics {
           WebGLGraphics.buildCircle(data, webGLData);
         }
         else if (data.type == Graphics.RREC) {
-            WebGLGraphics.buildRoundedRectangle(data, webGL);
+            WebGLGraphics.buildRoundedRectangle(data, webGLData);
           }
 
       }

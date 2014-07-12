@@ -397,7 +397,7 @@ class Graphics extends DisplayObjectContainer {
       ..fillAlpha = this.fillAlpha
       ..fill = this.filling
       ..points = [x, y, width, height]
-      ..type = RECT;
+      ..type = Graphics.RECT;
 
 
     this.graphicsData.add(this.currentPath);
@@ -406,7 +406,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  drawRoundedRect(num x, num y, num width, num height, num radius) {
+  Graphics drawRoundedRect(num x, num y, num width, num height, num radius) {
     if (this.currentPath.points.length == 0) {
       if (this.graphicsData.length > 0) {
         this.graphicsData.removeLast();
@@ -421,7 +421,7 @@ class Graphics extends DisplayObjectContainer {
       ..fillAlpha = this.fillAlpha
       ..fill = this.filling
       ..points = [x, y, width, height, radius]
-      ..type = RREC;
+      ..type = Graphics.RREC;
 
 
     this.graphicsData.add(this.currentPath);
@@ -432,7 +432,7 @@ class Graphics extends DisplayObjectContainer {
   }
 
 
-  drawCircle(x, y, radius) {
+  Graphics drawCircle(num x, num y, num radius) {
     if (this.currentPath.points.length == 0) {
       if (this.graphicsData.length > 0) {
         this.graphicsData.removeLast();
@@ -447,7 +447,7 @@ class Graphics extends DisplayObjectContainer {
       ..fillAlpha = this.fillAlpha
       ..fill = this.filling
       ..points = [x, y, radius, radius]
-      ..type = CIRC;
+      ..type = Graphics.CIRC;
 
     this.graphicsData.add(this.currentPath);
     this.dirty = true;
@@ -455,7 +455,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  drawEllipse(x, y, width, height) {
+  Graphics drawEllipse(x, y, width, height) {
     if (this.currentPath.points.length == 0) {
       if (this.graphicsData.length > 0) {
         this.graphicsData.removeLast();
@@ -470,7 +470,7 @@ class Graphics extends DisplayObjectContainer {
       ..fillAlpha = this.fillAlpha
       ..fill = this.filling
       ..points = [x, y, width, height]
-      ..type = ELIP;
+      ..type = Graphics.ELIP;
 
 
     this.graphicsData.add(this.currentPath);
@@ -479,7 +479,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  clear() {
+  Graphics clear() {
     this.lineWidth = 0;
     this.filling = false;
 
