@@ -14,11 +14,13 @@ class Texture extends BaseTexture {
   Rectangle trim = null;
   BaseTexture scope;
   TextureUvs _uvs = null;
+  bool valid = false;
   static List<Texture> frameUpdates = [];
 
   BaseTexture baseTexture;
 
-
+  num width;
+  num height;
 
   Map tintCache;
 
@@ -80,6 +82,7 @@ class Texture extends BaseTexture {
 
   destroy([bool destroyBase=false]) {
     if (destroyBase) this.baseTexture.destroy();
+    this.valid = false;
   }
 
   setFrame(Rectangle frame) {
@@ -88,29 +91,43 @@ class Texture extends BaseTexture {
 //    window.console.log(frame.height);
 //    window.console.log(frame.y);
 
+    this.noFrame = false;
+
     this.frame = frame;
     this.width = frame.width;
     this.height = frame.height;
 
+    this.crop.x = frame.x;
+       this.crop.y = frame.y;
+      this.crop.width = frame.width;
+    this.crop.height = frame.height;
+
+
     //print("$width ${frame.x} ${this.baseTexture.width } $height  ${frame.y} ${this.baseTexture.height}");
 
-    if (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height) {
+    if (this.trim == null && (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height)){
       throw new Exception('Texture Error: frame does not fit inside the base Texture dimensions');
     }
 
-    this.updateFrame = true;
+    //this.updateFrame = true;
+
+    this.valid = frame !=null
+    && frame.width !=null
+    && frame.width !=0
+    && frame.height !=null
+    && frame.height !=0
+    && this.baseTexture.source !=null
+    && this.baseTexture.hasLoaded;
 
     Texture.frameUpdates.add(this);
 
-
-    //this.dispatchEvent( { type: 'update', content: this } );
   }
 
   void _updateWebGLuvs() {
 
     if (this._uvs ==null)this._uvs = new TextureUvs();
 
-    Rectangle frame = this.frame;
+    Rectangle frame = this.crop;
     num tw = this.baseTexture.width;
     num th = this.baseTexture.height;
 

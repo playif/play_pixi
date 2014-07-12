@@ -46,6 +46,7 @@ class MovieClip extends Sprite {
     this.currentFrame += this.animationSpeed;
 
     int round = this.currentFrame.ceil();
+    this.currentFrame = this.currentFrame % this.textures.length;
 
     if (this.loop || round < this.textures.length) {
       this.setTexture(this.textures[round % this.textures.length]);

@@ -32,7 +32,7 @@ class EventTarget {
 
     if (listeners[ type ].indexOf(listener) == -1) {
 
-      listeners[ type ].add(listener);
+      listeners[ type ].insert(0,listener);
     }
 
   }
@@ -45,7 +45,8 @@ class EventTarget {
 
     }
 
-    for (int i = 0, l = listeners[event.type].length; i < l; i++) {
+    for(int  i = listeners[ event.type ].length-1; i >= 0; i--) {
+    //for (int i = 0, l = listeners[event.type].length; i < l; i++) {
 
       listeners[event.type][i](event);
 
@@ -54,6 +55,8 @@ class EventTarget {
   }
 
   removeEventListener(type, listener) {
+
+    if ( listeners[ type ] == null ) return;
 
     var index = listeners[ type ].indexOf(listener);
 

@@ -12,7 +12,7 @@ class CanvasGraphics {
       var data = graphics.graphicsData[i];
       var points = data.points;
 
-      context.strokeStyle = color = '#' + "${data.lineColor.floor().toRadixString(16)}".padLeft(6,'0');
+      context.strokeStyle = color = '#' + "${data.lineColor.floor().toRadixString(16)}".padLeft(6, '0');
       //print(color);
       context.lineWidth = data.lineWidth;
 
@@ -32,7 +32,7 @@ class CanvasGraphics {
 
         if (data.fill) {
           context.globalAlpha = data.fillAlpha * worldAlpha;
-          context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6,'0');
+          context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6, '0');
           context.fill();
         }
         if (data.lineWidth != 0) {
@@ -44,7 +44,7 @@ class CanvasGraphics {
 
         if (data.fill) {
           context.globalAlpha = data.fillAlpha * worldAlpha;
-          context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6,'0');
+          context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6, '0');
           context.fillRect(points[0], points[1], points[2], points[3]);
 
         }
@@ -62,7 +62,7 @@ class CanvasGraphics {
 
           if (data.fill) {
             context.globalAlpha = data.fillAlpha * worldAlpha;
-            context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6,'0');
+            context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6, '0');
             context.fill();
           }
           if (data.lineWidth != 0) {
@@ -71,8 +71,6 @@ class CanvasGraphics {
           }
         }
         else if (data.type == Graphics.ELIP) {
-
-            // ellipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
 
             var ellipseData = data.points;
 
@@ -102,14 +100,52 @@ class CanvasGraphics {
 
             if (data.fill) {
               context.globalAlpha = data.fillAlpha * worldAlpha;
-              context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6,'0');
+              context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6, '0');
               context.fill();
             }
-            if (data.lineWidth !=0) {
+            if (data.lineWidth != 0) {
               context.globalAlpha = data.lineAlpha * worldAlpha;
               context.stroke();
             }
           }
+          else if (data.type == Graphics.RREC) {
+              num rx = points[0];
+              num ry = points[1];
+              num width = points[2];
+              num height = points[3];
+              num radius = points[4];
+
+
+              num maxRadius = (min(width, height) / 2).floor();
+              radius = radius > maxRadius ? maxRadius : radius;
+
+
+              context.beginPath();
+              context.moveTo(rx, ry + radius);
+              context.lineTo(rx, ry + height - radius);
+              context.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
+              context.lineTo(rx + width - radius, ry + height);
+              context.quadraticCurveTo(rx + width, ry + height, rx + width, ry + height - radius);
+              context.lineTo(rx + width, ry + radius);
+              context.quadraticCurveTo(rx + width, ry, rx + width - radius, ry);
+              context.lineTo(rx + radius, ry);
+              context.quadraticCurveTo(rx, ry, rx, ry + radius);
+              context.closePath();
+
+
+              if (data.fill) {
+                context.globalAlpha = data.fillAlpha * worldAlpha;
+                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fill();
+
+
+              }
+              if (data.lineWidth != 0) {
+                context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.stroke();
+              }
+            }
+
     }
   }
 
@@ -181,6 +217,31 @@ class CanvasGraphics {
             context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
             context.closePath();
           }
+          else if (data.type == Graphics.RREC) {
+              num rx = points[0];
+              num ry = points[1];
+              num width = points[2];
+              num height = points[3];
+              num radius = points[4];
+
+
+              num maxRadius = (min(width, height) / 2 ).floor();
+              radius = radius > maxRadius ? maxRadius : radius;
+
+
+              context.beginPath();
+              context.moveTo(rx, ry + radius);
+              context.lineTo(rx, ry + height - radius);
+              context.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
+              context.lineTo(rx + width - radius, ry + height);
+              context.quadraticCurveTo(rx + width, ry + height, rx + width, ry + height - radius);
+              context.lineTo(rx + width, ry + radius);
+              context.quadraticCurveTo(rx + width, ry, rx + width - radius, ry);
+              context.lineTo(rx + radius, ry);
+              context.quadraticCurveTo(rx, ry, rx, ry + radius);
+              context.closePath();
+            }
+
     }
   }
 

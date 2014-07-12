@@ -10,6 +10,7 @@ class Sprite extends DisplayObjectContainer {
   CanvasImageSource tintedTexture;
   CanvasBuffer buffer = null;
 
+
   num get width => scale.x * texture.frame.width;
 
   set width(num value) {
@@ -60,7 +61,7 @@ class Sprite extends DisplayObjectContainer {
     }
 
     this.cachedTint = 0xFFFFFF;
-    this.updateFrame = true;
+    //this.updateFrame = true;
   }
 
   onTextureUpdate(PixiEvent e) {
@@ -70,7 +71,7 @@ class Sprite extends DisplayObjectContainer {
     if (this._height != 0) this.scale.y = this._height / this.texture.frame.height;
 
 
-    this.updateFrame = true;
+    //this.updateFrame = true;
   }
 
   Rectangle getBounds([Matrix matrix]) {
@@ -157,18 +158,18 @@ class Sprite extends DisplayObjectContainer {
     if (this._mask != null || this._filters != null) {
       WebGLSpriteBatch spriteBatch = renderSession.spriteBatch;
 
+      if (this._filters != null) {
+        //print("cool");
+        spriteBatch.flush();
+        renderSession.filterManager.pushFilter(this._filterBlock);
+      }
+
       if (this._mask != null) {
         spriteBatch.stop();
         renderSession.maskManager.pushMask(this.mask, renderSession);
         spriteBatch.start();
       }
 
-
-      if (this._filters != null) {
-        //print("cool");
-        spriteBatch.flush();
-        renderSession.filterManager.pushFilter(this._filterBlock);
-      }
 
       // add this sprite to the batch
       spriteBatch.render(this);
@@ -181,8 +182,9 @@ class Sprite extends DisplayObjectContainer {
       // time to stop the sprite batch as either a mask element or a filter draw will happen next
       spriteBatch.stop();
 
-      if (this._filters != null)renderSession.filterManager.popFilter();
+
       if (this._mask != null)renderSession.maskManager.popMask(renderSession);
+      if (this._filters != null)renderSession.filterManager.popFilter();
 
       spriteBatch.start();
     }
@@ -206,13 +208,14 @@ class Sprite extends DisplayObjectContainer {
     if (this.visible == false || this.alpha == 0)return;
 
 
-    Rectangle frame = this.texture.frame;
-    CanvasRenderingContext2D context = renderSession.context;
-    Texture texture = this.texture;
+//    Rectangle frame = this.texture.frame;
+//    CanvasRenderingContext2D context = renderSession.context;
+//    Texture texture = this.texture;
 
     if (this.blendMode != renderSession.currentBlendMode) {
       renderSession.currentBlendMode = this.blendMode;
-      context.globalCompositeOperation = blendModesCanvas[renderSession.currentBlendMode];
+      //context.globalCompositeOperation = blendModesCanvas[renderSession.currentBlendMode];
+      renderSession.context.globalCompositeOperation = blendModesCanvas[renderSession.currentBlendMode];
     }
 
     if (this._mask != null) {
@@ -221,32 +224,48 @@ class Sprite extends DisplayObjectContainer {
 
 
     //ignore null sources
-    if (frame != null && frame.width != 0 && frame.height != 0 && texture.baseTexture.source != null) {
-      context.globalAlpha = this.worldAlpha;
+//    if (frame != null && frame.width != 0 && frame.height != 0 && texture.baseTexture.source != null) {
+    if (this.texture.valid) {
+      renderSession.context.globalAlpha = this.worldAlpha;
 
-      Matrix transform = this.worldTransform;
+      //Matrix transform = this.worldTransform;
 
       // allow for trimming
       if (renderSession.roundPixels != null) {
-        context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());
+        //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());
+        renderSession.context.setTransform(
+            this.worldTransform.a,
+            this.worldTransform.c,
+            this.worldTransform.b,
+            this.worldTransform.d,
+            this.worldTransform.tx.floor(),
+            this.worldTransform.ty.floor());
       }
       else {
-        context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+        //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+        renderSession.context.setTransform(
+            this.worldTransform.a,
+            this.worldTransform.c,
+            this.worldTransform.b,
+            this.worldTransform.d,
+            this.worldTransform.tx == null ? 0 : this.worldTransform.tx,
+            this.worldTransform.ty == null ? 0 : this.worldTransform.ty);
       }
 
 
       //if smoothingEnabled is supported and we need to change the smoothing property for this texture
       if (renderSession.scaleMode != this.texture.baseTexture.scaleMode) {
         renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-        context.imageSmoothingEnabled = (renderSession.scaleMode == scaleModes.LINEAR);
+        renderSession.context.imageSmoothingEnabled = (renderSession.scaleMode == scaleModes.LINEAR);
       }
+
+      num dx = (this.texture.trim == null) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
+      num dy = (this.texture.trim == null) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
+
 
       if (this.tint != 0xFFFFFF) {
 
         if (this.cachedTint != this.tint) {
-          // no point tinting an image that has not loaded yet!
-          if (!texture.baseTexture.hasLoaded)return;
-
           this.cachedTint = this.tint;
 
           //TODO clean up caching - how to clean up the caches?
@@ -254,52 +273,61 @@ class Sprite extends DisplayObjectContainer {
 
         }
 
-        context.drawImageScaledFromSource(this.tintedTexture,
+        renderSession.context.drawImageScaledFromSource(this.tintedTexture,
         0,
         0,
-        frame.width,
-        frame.height,
-        (this.anchor.x) * -frame.width,
-        (this.anchor.y) * -frame.height,
-        frame.width,
-        frame.height);
+        this.texture.crop.width,
+        this.texture.crop.height,
+        dx,
+        dy,
+        this.texture.crop.width,
+        this.texture.crop.height);
       }
       else {
 
 
-        if (texture.trim != null) {
-          Rectangle trim = texture.trim;
-
-          context.drawImageScaledFromSource(this.texture.baseTexture.source,
-          frame.x,
-          frame.y,
-          frame.width,
-          frame.height,
-          trim.x - this.anchor.x * trim.width,
-          trim.y - this.anchor.y * trim.height,
-          frame.width,
-          frame.height);
-        }
-        else {
-          //window.console.log(this.texture.baseTexture.source);
-          context.drawImageScaledFromSource(this.texture.baseTexture.source,
-          frame.x,
-          frame.y,
-          frame.width,
-          frame.height,
-          (this.anchor.x) * -frame.width,
-          (this.anchor.y) * -frame.height,
-          frame.width,
-          frame.height);
-        }
+//        if (texture.trim != null) {
+//          Rectangle trim = texture.trim;
+//
+//          context.drawImageScaledFromSource(this.texture.baseTexture.source,
+//          frame.x,
+//          frame.y,
+//          frame.width,
+//          frame.height,
+//          trim.x - this.anchor.x * trim.width,
+//          trim.y - this.anchor.y * trim.height,
+//          frame.width,
+//          frame.height);
+//        }
+//        else {
+//          //window.console.log(this.texture.baseTexture.source);
+//          context.drawImageScaledFromSource(this.texture.baseTexture.source,
+//          frame.x,
+//          frame.y,
+//          frame.width,
+//          frame.height,
+//          (this.anchor.x) * -frame.width,
+//          (this.anchor.y) * -frame.height,
+//          frame.width,
+//          frame.height);
+//        }
+        renderSession.context.drawImageScaledFromSource(
+            this.texture.baseTexture.source,
+            this.texture.crop.x,
+            this.texture.crop.y,
+            this.texture.crop.width,
+            this.texture.crop.height,
+            dx,
+            dy,
+            this.texture.crop.width,
+            this.texture.crop.height);
 
       }
     }
 
     // OVERWRITE
     for (int i = 0, j = this.children.length; i < j; i++) {
-      DisplayObject child = this.children[i];
-      child._renderCanvas(renderSession);
+      this.children[i]._renderCanvas(renderSession);
     }
 
     if (this._mask != null) {

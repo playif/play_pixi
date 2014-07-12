@@ -11,6 +11,9 @@ class RenderSession {
   MaskManager maskManager;
   WebGLFilterManager filterManager;
   WebGLSpriteBatch spriteBatch;
+  WebGLBlendModeManager blendModeManager;
+  //WebGLBlendModeManager blendModeManager;
+
   Renderer renderer;
 
   blendModes currentBlendMode;

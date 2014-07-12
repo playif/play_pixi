@@ -1,22 +1,19 @@
-
 part of PIXI;
 
 
 class Circle {
-  num x,y,radius;
+  num x, y, radius;
 
   Circle([this.x=0, this.y=0, this.radius=0]) {
 
   }
 
-  Circle clone ()
-  {
+  Circle clone() {
     return new Circle(x, y, radius);
   }
 
-  bool contains(num x, num y)
-  {
-    if(this.radius <= 0)
+  bool contains(num x, num y) {
+    if (this.radius <= 0)
       return false;
 
     var dx = (this.x - x),
@@ -28,4 +25,9 @@ class Circle {
 
     return (dx + dy <= r2);
   }
+
+  Rectangle getBounds() {
+    return new Rectangle(this.x - this.radius, this.y - this.radius, 2 * this.radius, 2 * this.radius);
+  }
+
 }

@@ -19,6 +19,8 @@ class DisplayObject {
   bool __mouseIsDown = false;
   bool __isDown = false;
 
+  bool dirty=false;
+
   Function click;
   Function mousemove;
   Function mousedown;
@@ -214,6 +216,8 @@ class DisplayObject {
   }
 
   _renderCachedSprite(RenderSession renderSession) {
+    this._cachedSprite.worldAlpha = this.worldAlpha;
+
     if (renderSession.gl != null) {
       this._cachedSprite._renderWebGL(renderSession);
       //PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);

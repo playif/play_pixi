@@ -98,8 +98,8 @@ class CanvasRenderer extends Renderer {
     this.renderSession = new RenderSession()
       ..context = this.context
       ..maskManager = this.maskManager
-      ..scaleMode = null;
-
+      ..scaleMode = null
+      ..smoothProperty = null;
 
 //    if (context.imageSmoothingEnabled)
 //      this.renderSession.smoothProperty = "imageSmoothingEnabled";
@@ -121,6 +121,13 @@ class CanvasRenderer extends Renderer {
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.globalAlpha = 1;
+
+    //TODO
+//    if (navigator.isCocoonJS && this.view.screencanvas) {
+//      this.context.fillStyle = "black";
+//      this.context.clear();
+//    }
+
 
     if (!this.transparent && this.clearBeforeRender) {
       this.context.fillStyle = stage.backgroundColorString;

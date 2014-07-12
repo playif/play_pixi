@@ -83,15 +83,17 @@ class JsonLoader extends Loader {
             ..height = rect['h']
           );
 
+          TextureCache[i].crop = new Rectangle(rect.x, rect.y, rect.w, rect.h);
+
           // check to see ifthe sprite ha been trimmed..
           if (frameData[i]['trimmed']) {
 
-            var texture = TextureCache[i];
+            //var texture = TextureCache[i];
 
             var actualSize = frameData[i]['sourceSize'];
             var realSize = frameData[i]['spriteSourceSize'];
 
-            texture.trim = new Rectangle(realSize['x'], realSize['y'], actualSize['w'], actualSize['h']);
+            TextureCache[i].trim = new Rectangle(realSize['x'], realSize['y'], actualSize['w'], actualSize['h']);
           }
         }
       }

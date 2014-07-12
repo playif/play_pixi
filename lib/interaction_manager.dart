@@ -135,19 +135,20 @@ class InteractionManager {
     // yes for now :)
     // OPTIMISE - how often to check??
     if (this.dirty) {
-      this.dirty = false;
-
-      int len = this.interactiveItems.length;
-
-      for (i = 0; i < len; i++) {
-        this.interactiveItems[i].interactiveChildren = false;
-      }
-
-      this.interactiveItems.clear();
-
-      if (this.stage.interactive)this.interactiveItems.add(this.stage);
-      // go through and collect all the objects that are interactive..
-      this.collectInteractiveSprite(this.stage, this.stage);
+//      this.dirty = false;
+//
+//      int len = this.interactiveItems.length;
+//
+//      for (i = 0; i < len; i++) {
+//        this.interactiveItems[i].interactiveChildren = false;
+//      }
+//
+//      this.interactiveItems.clear();
+//
+//      if (this.stage.interactive)this.interactiveItems.add(this.stage);
+//      // go through and collect all the objects that are interactive..
+//      this.collectInteractiveSprite(this.stage, this.stage);
+      this.rebuildInteractiveGraph();
     }
 
     // loop through interactive objects!
@@ -197,7 +198,30 @@ class InteractionManager {
     }
   }
 
+  rebuildInteractiveGraph() {
+    this.dirty = false;
+
+    int len = this.interactiveItems.length;
+
+    for (int i = 0; i < len; i++) {
+      this.interactiveItems[i].interactiveChildren = false;
+    }
+
+    this.interactiveItems = [];
+
+    if (this.stage.interactive)this.interactiveItems.add(this.stage);
+    // go through and collect all the objects that are interactive..
+    this.collectInteractiveSprite(this.stage, this.stage);
+  }
+
+
+
   onMouseMove(MouseEvent event) {
+    if(this.dirty)
+    {
+      this.rebuildInteractiveGraph();
+    }
+
     this.mouse.originalEvent = event; //IE uses window.event
     // TODO optimize by not check EVERY TIME! maybe half as often? //
     var rect = this.interactionDOMElement.getBoundingClientRect();
@@ -218,6 +242,11 @@ class InteractionManager {
   }
 
   void onMouseDown(MouseEvent event) {
+    if(this.dirty)
+    {
+      this.rebuildInteractiveGraph();
+    }
+
     this.mouse.originalEvent = event; //IE uses window.event
 
     if (AUTO_PREVENT_DEFAULT) this.mouse.originalEvent.preventDefault();
@@ -250,6 +279,11 @@ class InteractionManager {
   }
 
   void onMouseOut(MouseEvent event) {
+    if(this.dirty)
+    {
+      this.rebuildInteractiveGraph();
+    }
+
     int length = this.interactiveItems.length;
 
     this.interactionDOMElement.style.cursor = 'inherit';
@@ -271,6 +305,10 @@ class InteractionManager {
   }
 
   onMouseUp(MouseEvent event) {
+    if(this.dirty)
+    {
+      this.rebuildInteractiveGraph();
+    }
 
     this.mouse.originalEvent = event; //IE uses window.event
 
@@ -373,6 +411,11 @@ class InteractionManager {
   }
 
   void onTouchMove(event) {
+    if(this.dirty)
+    {
+      this.rebuildInteractiveGraph();
+    }
+
     JsObject ev = new JsObject.fromBrowserObject(event);
 
     JsArray changedTouches = new JsArray.from(ev["changedTouches"]);
@@ -405,6 +448,11 @@ class InteractionManager {
   }
 
   void onTouchStart(event) {
+    if(this.dirty)
+    {
+      this.rebuildInteractiveGraph();
+    }
+
     //window.console.log(event);
     JsObject ev = new JsObject.fromBrowserObject(event);
 
@@ -466,6 +514,11 @@ class InteractionManager {
   }
 
   void onTouchEnd(event) {
+    if(this.dirty)
+    {
+      this.rebuildInteractiveGraph();
+    }
+
     JsObject ev = new JsObject.fromBrowserObject(event);
 
     JsArray changedTouches = new JsArray.from(ev["changedTouches"]);

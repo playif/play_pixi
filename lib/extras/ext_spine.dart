@@ -979,13 +979,14 @@ class AnimationState {
   bool previousLoop = false;
   num mixTime = 0;
   num mixDuration = 0;
+  num animationSpeed= 1;
 
   AnimationState(this.stateData) {
 
   }
 
   update(delta) {
-    this.currentTime += delta;
+    this.currentTime += (delta * this.animationSpeed); //timeScale: Multiply delta by the speed of animation required.;
     this.previousTime += delta;
     this.mixTime += delta;
 

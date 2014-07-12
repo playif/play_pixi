@@ -30,20 +30,26 @@ class BaseTexture extends EventTarget {
 
   EventFunc onLoaded;
 
+  bool premultipliedAlpha;
+  List _dirty;
 
   BaseTexture([this.source, this.scaleMode=scaleModes.DEFAULT]) {
+
+    this.premultipliedAlpha = true;
+    this._dirty = [];
 
     if (source == null) return;
 
 
     //
     if (( (source is ImageElement && source.complete == true)
-          || (source is CanvasElement) )
-        && this.source.width != 0 && this.source.height != 0) {
+    || (source is CanvasElement) )
+    && this.source.width != 0 && this.source.height != 0) {
 
       this._hasLoaded = true;
       this.width = this.source.width;
       this.height = this.source.height;
+
 
       texturesToUpdate.add(this);
     }
@@ -56,11 +62,22 @@ class BaseTexture extends EventTarget {
         scope.hasLoaded = true;
         scope.width = scope.source.width;
         scope.height = scope.source.height;
+        for (int i = 0; i < scope._glTextures.length; i++) {
+          scope._dirty[i] = true;
+        }
 
         // add it to somewhere...
-        texturesToUpdate.add(scope);
+        //texturesToUpdate.add(scope);
         scope.dispatchEvent(new PixiEvent(type: 'loaded', content: scope));
       });
+
+      this.source.onerror.listen(() {
+        scope.dispatchEvent({
+            'type': 'error', 'content': scope
+        });
+      });
+
+
     }
 
 
@@ -68,11 +85,19 @@ class BaseTexture extends EventTarget {
 
 
   void destroy() {
+
     if (this.imageUrl != null) {
       BaseTextureCache.remove(this.imageUrl);
+      TextureCache.remove(this.imageUrl);
       this.imageUrl = null;
       this.source.src = null;
     }
+    else {
+      HtmlElement sor = source as HtmlElement;
+      if (sor != null && sor.dataset['_pixiId'] != null)
+        BaseTextureCache.remove(sor.dataset['_pixiId']);
+    }
+
     this.source = null;
     texturesToDestroy.add(this);
   }

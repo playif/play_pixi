@@ -28,12 +28,12 @@ class SpriteBatch extends DisplayObjectContainer {
 
     renderSession.spriteBatch.stop();
 
-    renderSession.shaderManager.activateShader(renderSession.shaderManager.fastShader);
+    renderSession.shaderManager.setShader(renderSession.shaderManager.fastShader);
 
     this.fastSpriteBatch.begin(this, renderSession);
     this.fastSpriteBatch.render(this);
 
-    renderSession.shaderManager.activateShader(renderSession.shaderManager.defaultShader);
+    //renderSession.shaderManager.activateShader(renderSession.shaderManager.defaultShader);
 
     renderSession.spriteBatch.start();
 

@@ -17,6 +17,7 @@ class Graphics extends DisplayObjectContainer {
   static int RECT = 1;
   static int CIRC = 2;
   static int ELIP = 3;
+  static int RREC = 4;
 
   num fillAlpha = 1;
   num fillColor = 0x0;
@@ -31,20 +32,23 @@ class Graphics extends DisplayObjectContainer {
 
   GraphicsData currentPath = new GraphicsData();
 
-  Map _webGL = {};
+  Map _webGL = {
+  };
 
   bool isMask = false;
 
   Rectangle bounds = null;
 
   int boundsPadding = 10;
-  bool dirty = false;
+
+  //bool dirty = false;
   bool clearDirty = false;
 
 
   Graphics() {
     renderable = true;
     blendMode = blendModes.NORMAL;
+    dirty = true;
   }
 
 
@@ -118,7 +122,250 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  beginFill([num color, num alpha=1]) {
+
+  quadraticCurveTo(num cpX, num cpY, num toX, num toY) {
+    // this.currentPath.points.push(toX, toY)
+    //return;
+    num xa,
+    ya,
+    n = 20;
+    List<num> points = this.currentPath.points;
+
+    num fromX = points[points.length - 2];
+    num fromY = points[points.length - 1];
+
+
+    int j = 0;
+    for (int i = 1; i <= n; i++) {
+      j = i / n;
+
+
+      xa = fromX + ( (cpX - fromX) * j );
+      ya = fromY + ( (cpY - fromY) * j );
+
+
+      points.addAll([ xa + ( ((cpX + ( (toX - cpX) * j )) - xa) * j ),
+      ya + ( ((cpY + ( (toY - cpY) * j )) - ya) * j ) ]);
+    }
+
+
+    this.dirty = true;
+
+
+    return this;
+  }
+
+  Graphics bezierCurveTo(num cpX, num cpY, num cpX2, num cpY2, num toX, num toY) {
+    num n = 20,
+    dt,
+    dt2,
+    dt3,
+    t2,
+    t3;
+    List<num> points = this.currentPath.points;
+
+
+    num fromX = points[points.length - 2];
+    num fromY = points[points.length - 1];
+
+    int j = 0;
+
+
+    for (int i = 1; i < n; i++) {
+      j = i / n;
+
+
+      dt = (1 - j);
+      dt2 = dt * dt;
+      dt3 = dt2 * dt;
+
+
+      t2 = j * j;
+      t3 = t2 * j;
+
+      points.addAll([dt3 * fromX + 3 * dt2 * j * cpX + 3 * dt * t2 * cpX2 + t3 * toX,
+      dt3 * fromY + 3 * dt2 * j * cpY + 3 * dt * t2 * cpY2 + t3 * toY]);
+
+    }
+
+    this.dirty = true;
+
+
+    return this;
+  }
+
+
+/*
+ * arcTo()
+ *
+ * "borrowed" from https://code.google.com/p/fxcanvas/ - thanks google!
+ */
+
+  Graphics arcTo(num x1, num y1, num x2, num y2, num radius) {
+    // check that path contains subpaths
+    //if (path.commands.length == 0)
+//        moveTo(x1, y1);
+    List<num> points = this.currentPath.points;
+
+
+    num fromX = points[points.length - 2];
+    num fromY = points[points.length - 1];
+
+
+//    points.push( x1,  y1);
+
+
+    num a1 = fromY - y1;
+    num b1 = fromX - x1;
+    num a2 = y2 - y1;
+    num b2 = x2 - x1;
+    num mm = (a1 * b2 - b1 * a2).abs();
+
+
+    if (mm < 1.0e-8 || radius == 0) {
+      points.addAll([x1, y1]);
+    }
+    else {
+      num dd = a1 * a1 + b1 * b1;
+      num cc = a2 * a2 + b2 * b2;
+      num tt = a1 * a2 + b1 * b2;
+      num k1 = radius * sqrt(dd) / mm;
+      num k2 = radius * sqrt(cc) / mm;
+      num j1 = k1 * tt / dd;
+      num j2 = k2 * tt / cc;
+      num cx = k1 * b2 + k2 * b1;
+      num cy = k1 * a2 + k2 * a1;
+      num px = b1 * (k2 + j1);
+      num py = a1 * (k2 + j1);
+      num qx = b2 * (k1 + j2);
+      num qy = a2 * (k1 + j2);
+      num startAngle = atan2(py - cy, px - cx);
+      num endAngle = atan2(qy - cy, qx - cx);
+      // not required?
+      //   points.push(px + x1 , py + y1);
+      this.arc(cx + x1, cy + y1, radius, startAngle, endAngle, b1 * a2 > b2 * a1);
+    }
+
+
+    this.dirty = true;
+
+
+    return this;
+  }
+
+
+/*
+ * Arc init! TODO add docs
+ */
+
+  Graphics arc(num cx, num cy, num radius, num startAngle, num endAngle, num anticlockwise) {
+    num startX = cx + cos(startAngle) * radius;
+    num startY = cy + sin(startAngle) * radius;
+
+
+    // check that path contains subpaths
+    // if (path.commands.length == 0)
+    //   this.moveTo(startX, startY);
+    // else
+    List<num> points = this.currentPath.points;
+
+    num fromX = points[points.length - 2];
+    num fromY = points[points.length - 1];
+
+
+    if (fromX != startX || fromY != startY) points.addAll([startX, startY]);
+
+
+    if (startAngle == endAngle)return this;
+
+
+    if (!anticlockwise && endAngle <= startAngle) {
+      endAngle += PI * 2;
+    }
+    else if (anticlockwise && startAngle <= endAngle) {
+      startAngle += PI * 2;
+    }
+
+
+    num sweep = anticlockwise ? (startAngle - endAngle) * -1 : (endAngle - startAngle);
+    num segs = ( (sweep).abs() / (PI * 2) ) * 40;
+
+
+    if (sweep == 0) return this;
+
+
+    num theta = sweep / (segs * 2);
+    num theta2 = theta * 2;
+
+
+    num cTheta = cos(theta);
+    num sTheta = sin(theta);
+
+    num remainder = ( segs % 1 ) / segs;
+
+
+    for (int i = 0; i <= segs; i++) {
+      num real = i + remainder * i;
+
+
+      num angle = ((theta) + startAngle + (theta2 * real));
+
+
+      num c = cos(angle);
+      num s = -sin(angle);
+
+
+      points.addAll([( (cTheta * c) + (sTheta * s) ) * radius + cx,
+      ( (cTheta * -s) + (sTheta * c) ) * radius + cy]);
+    }
+
+
+    this.dirty = true;
+
+
+    return this;
+  }
+
+
+  /**
+   * Draws a line using the current line style from the current drawing position to (x, y);
+   * the current drawing position is then set to (x, y).
+   *
+   * @method lineTo
+   * @param x {Number} the X coordinate to draw to
+   * @param y {Number} the Y coordinate to draw to
+   */
+
+  Graphics drawPath(List<num> path) {
+    if (this.currentPath.points.length == 0) {
+      if (this.graphicsData.length > 0) {
+        this.graphicsData.removeLast();
+      }
+    }
+
+    this.currentPath = new GraphicsData()
+      ..lineWidth = this.lineWidth
+      ..lineColor = this.lineColor
+      ..lineAlpha = this.lineAlpha
+      ..fillColor = this.fillColor
+      ..fillAlpha = this.fillAlpha
+      ..fill = this.filling
+      ..points = []
+      ..type = Graphics.POLY;
+
+
+    this.graphicsData.add(this.currentPath);
+
+
+    this.currentPath.points = this.currentPath.points.addAll(path);
+    this.dirty = true;
+
+
+    return this;
+  }
+
+
+  Graphics beginFill([num color, num alpha=1]) {
 
     this.filling = true;
     this.fillColor = color;
@@ -127,7 +374,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  endFill() {
+  Graphics endFill() {
     this.filling = false;
     this.fillColor = null;
     this.fillAlpha = 1;
@@ -135,7 +382,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  drawRect(x, y, width, height) {
+  Graphics drawRect(num x, num y, num width, num height) {
     if (this.currentPath.points.length == 0) {
       if (this.graphicsData.length > 0) {
         this.graphicsData.removeLast();
@@ -158,6 +405,32 @@ class Graphics extends DisplayObjectContainer {
 
     return this;
   }
+
+  drawRoundedRect(num x, num y, num width, num height, num radius) {
+    if (this.currentPath.points.length == 0) {
+      if (this.graphicsData.length > 0) {
+        this.graphicsData.removeLast();
+      }
+    }
+
+    this.currentPath = new GraphicsData()
+      ..lineWidth = this.lineWidth
+      ..lineColor = this.lineColor
+      ..lineAlpha = this.lineAlpha
+      ..fillColor = this.fillColor
+      ..fillAlpha = this.fillAlpha
+      ..fill = this.filling
+      ..points = [x, y, width, height, radius]
+      ..type = RREC;
+
+
+    this.graphicsData.add(this.currentPath);
+    this.dirty = true;
+
+
+    return this;
+  }
+
 
   drawCircle(x, y, radius) {
     if (this.currentPath.points.length == 0) {
@@ -253,6 +526,7 @@ class Graphics extends DisplayObjectContainer {
     }
     else {
       renderSession.spriteBatch.stop();
+      renderSession.blendModeManager.setBlendMode(this.blendMode);
 
       if (this._mask != null)renderSession.maskManager.pushMask(this.mask, renderSession);
       if (this._filters != null)renderSession.filterManager.pushFilter(this._filterBlock);
@@ -279,7 +553,8 @@ class Graphics extends DisplayObjectContainer {
       }
 
       if (this._filters != null)renderSession.filterManager.popFilter();
-      if (this._mask != null)renderSession.maskManager.popMask(renderSession);
+      //if (this._mask != null)renderSession.maskManager.popMask(renderSession);
+      if (this._mask)renderSession.maskManager.popMask(this.mask, renderSession);
 
       renderSession.drawCount++;
 
@@ -300,6 +575,11 @@ class Graphics extends DisplayObjectContainer {
       context.globalCompositeOperation = blendModesCanvas[renderSession.currentBlendMode];
     }
 
+    if (this._mask != null) {
+      renderSession.maskManager.pushMask(this._mask, renderSession.context);
+    }
+
+
     context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
     CanvasGraphics.renderGraphics(this, context);
 
@@ -307,12 +587,17 @@ class Graphics extends DisplayObjectContainer {
     for (int i = 0, j = this.children.length; i < j; i++) {
       this.children[i]._renderCanvas(renderSession);
     }
+
+    if (this._mask != null) {
+      renderSession.maskManager.popMask(renderSession.context);
+    }
+
   }
 
 
   Rectangle getBounds([Matrix matrix]) {
-    if(matrix == null){
-      matrix= this.worldTransform;
+    if (matrix == null) {
+      matrix = this.worldTransform;
     }
 
     if (this.bounds == null)this.updateBounds();

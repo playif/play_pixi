@@ -7,14 +7,37 @@ class DisplayObjectContainer extends DisplayObject {
 //  Stage stage = null;
 //  bool visible = true;
 
+  num _width;
+
+  num get width {
+    return this.scale.x * this.getLocalBounds().width;
+  }
+
+  set width(num value) {
+    this.scale.x = value / (this.getLocalBounds().width / this.scale.x);
+    this._width = value;
+  }
+
+  num _height;
+
+  num get height {
+    return this.scale.y * this.getLocalBounds().height;
+  }
+
+  set height(num value) {
+    this.scale.y = value / (this.getLocalBounds().height / this.scale.y);
+    this._height = value;
+  }
+
+
   DisplayObjectContainer() {
   }
 
-  void addChild(DisplayObject child) {
-    addChildAt(child, children.length);
+  DisplayObject addChild(DisplayObject child) {
+    return addChildAt(child, children.length);
   }
 
-  void addChildAt(DisplayObject child, int index) {
+  DisplayObject addChildAt(DisplayObject child, int index) {
     if (index >= 0 && index <= children.length) {
       if (child.parent != null) {
         child.parent.removeChild(child);
@@ -25,6 +48,8 @@ class DisplayObjectContainer extends DisplayObject {
       children.insert(index, child);
 
       if (stage != null)child.setStageReference(stage);
+
+      return child;
     }
     else {
       throw new Exception('$child  The index $index supplied is out of bounds ${children.length}');
@@ -49,7 +74,7 @@ class DisplayObjectContainer extends DisplayObject {
 
   }
 
-  getChildAt(int index) {
+  DisplayObject getChildAt(int index) {
     if (index >= 0 && index < children.length) {
       return children[index];
     }
@@ -58,11 +83,11 @@ class DisplayObjectContainer extends DisplayObject {
     }
   }
 
-  removeChild(DisplayObject child) {
+  DisplayObject removeChild(DisplayObject child) {
     return removeChildAt(children.indexOf(child));
   }
 
-  removeChildAt(int index) {
+  DisplayObject removeChildAt(int index) {
     var child = getChildAt(index);
     if (stage != null)
       child.removeStageReference();
@@ -73,7 +98,7 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
 
-  removeChildren([int begin=0, int end]) {
+  List<DisplayObject> removeChildren([int begin=0, int end]) {
     end = end == null ? children.length : end;
     int range = end - begin;
 
@@ -214,16 +239,18 @@ class DisplayObjectContainer extends DisplayObject {
     int i, j;
 
     if (this._mask != null || this._filters != null) {
+      if (this._filters != null) {
+        renderSession.spriteBatch.flush();
+        renderSession.filterManager.pushFilter(this._filterBlock);
+      }
+
       if (this._mask != null) {
         renderSession.spriteBatch.stop();
         renderSession.maskManager.pushMask(this.mask, renderSession);
         renderSession.spriteBatch.start();
       }
 
-      if (this._filters != null) {
-        renderSession.spriteBatch.flush();
-        renderSession.filterManager.pushFilter(this._filterBlock);
-      }
+
 
       // simple render children!
       for (int i = 0, j = this.children.length; i < j; i++) {
@@ -232,8 +259,9 @@ class DisplayObjectContainer extends DisplayObject {
 
       renderSession.spriteBatch.stop();
 
-      if (this._filters != null)renderSession.filterManager.popFilter();
+
       if (this._mask != null)renderSession.maskManager.popMask(renderSession);
+      if (this._filters != null)renderSession.filterManager.popFilter();
 
       renderSession.spriteBatch.start();
     }

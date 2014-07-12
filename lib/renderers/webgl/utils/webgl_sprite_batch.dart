@@ -2,6 +2,7 @@ part of PIXI;
 
 class WebGLSpriteBatch {
   RenderingContext gl;
+
 //  int glID;
   int vertSize = 6;
   int maxSize = 6000;
@@ -21,14 +22,14 @@ class WebGLSpriteBatch {
   int currentBatchSize = 0;
   BaseTexture currentBaseTexture = null;
 
-  blendModes currentBlendMode = blendModes.NORMAL;
+//  blendModes currentBlendMode = blendModes.NORMAL;
   RenderSession renderSession = null;
 
   PixiShader shader = null;
 
   Matrix matrix = null;
 
-  bool dirty=false;
+  bool dirty = false;
 
   WebGLSpriteBatch(RenderingContext gl) {
 
@@ -48,6 +49,8 @@ class WebGLSpriteBatch {
     }
 
     this.setContext(gl);
+
+    this.dirty = true;
   }
 
   setContext(RenderingContext gl) {
@@ -66,7 +69,7 @@ class WebGLSpriteBatch {
     gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
     gl.bufferData(ARRAY_BUFFER, this.vertices, DYNAMIC_DRAW);
 
-    this.currentBlendMode = blendModes.NONE;
+//    this.currentBlendMode = blendModes.NONE;
   }
 
   begin(RenderSession renderSession) {
@@ -82,25 +85,24 @@ class WebGLSpriteBatch {
 
   render(Sprite sprite) {
     Texture texture = sprite.texture;
-
+    var blendChange = this.renderSession.blendModeManager.currentBlendMode != sprite.blendMode;
     // check texture..
-    if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size) {
+    if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size || blendChange) {
       this.flush();
       this.currentBaseTexture = texture.baseTexture;
-    }
-    else{
-
-    }
-
-
-    // check blend mode
-    if (sprite.blendMode != this.currentBlendMode) {
-      this.setBlendMode(sprite.blendMode);
+//    }
+//
+//
+//    // check blend mode
+//    if (sprite.blendMode != this.renderSession.blendModeManager.currentBlendMode) {
+//      //this.setBlendMode(sprite.blendMode);
+//      this.flush();
+      this.renderSession.blendModeManager.setBlendMode(sprite.blendMode);
 
     }
 
     // get the uvs for the texture
-    TextureUvs uvs = (sprite._uvs == null) ? sprite.texture._uvs : sprite._uvs;
+    TextureUvs uvs = texture._uvs;
     // if the uvs have not updated then no point rendering just yet!
     //print(sprite.texture._uvs);
     if (uvs == null) return;
@@ -118,16 +120,16 @@ class WebGLSpriteBatch {
 
     num w0, w1, h0, h1;
 
-    if (sprite.texture.trim != null) {
+    if (texture.trim != null) {
 
       // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
-      Rectangle trim = sprite.texture.trim;
+      Rectangle trim = texture.trim;
 
       w1 = trim.x - aX * trim.width;
-      w0 = w1 + texture.frame.width;
+      w0 = w1 + texture.crop.width;
 
       h1 = trim.y - aY * trim.height;
-      h0 = h1 + texture.frame.height;
+      h0 = h1 + texture.crop.height;
 
     }
     else {
@@ -157,8 +159,8 @@ class WebGLSpriteBatch {
     // xy
 
 
-    verticies[index++] =  a * w1 + c * h1 + tx;
-    verticies[index++] =  d * h1 + b * w1 + ty;
+    verticies[index++] = a * w1 + c * h1 + tx;
+    verticies[index++] = d * h1 + b * w1 + ty;
     // uv
     verticies[index++] = uvs.x0;
     verticies[index++] = uvs.y0;
@@ -205,14 +207,13 @@ class WebGLSpriteBatch {
   renderTilingSprite(TilingSprite tilingSprite) {
     Texture texture = tilingSprite.tilingTexture;
 
-    if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size) {
+    bool blendChange = this.renderSession.blendModeManager.currentBlendMode != tilingSprite.blendMode;
+
+    // check texture..
+    if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size || blendChange) {
       this.flush();
       this.currentBaseTexture = texture.baseTexture;
-    }
-
-    // check blend mode
-    if (tilingSprite.blendMode != this.currentBlendMode) {
-      this.setBlendMode(tilingSprite.blendMode);
+      this.renderSession.blendModeManager.setBlendMode(tilingSprite.blendMode);
     }
 
     // set the textures uvs temporarily
@@ -323,6 +324,31 @@ class WebGLSpriteBatch {
 
     //var gl = this.gl;
 
+    setShader(this.renderSession.shaderManager.defaultShader);
+
+    //TODO - im usre this can be done better - will look to tweak this for 1.7..
+    if (this.dirty) {
+      this.dirty = false;
+      // bind the main texture
+      gl.activeTexture(TEXTURE0);
+
+      // bind the buffers
+      gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
+      gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+
+      // set the projection
+      Point projection = this.renderSession.projection;
+      gl.uniform2f(this.shader.projectionVector, projection.x, projection.y);
+
+      // set the pointers
+      int stride = this.vertSize * 4;
+      gl.vertexAttribPointer(this.shader.aVertexPosition, 2, FLOAT, false, stride, 0);
+      gl.vertexAttribPointer(this.shader.aTextureCoord, 2, FLOAT, false, stride, 2 * 4);
+      gl.vertexAttribPointer(this.shader.colorAttribute, 2, FLOAT, false, stride, 4 * 4);
+
+    }
+
+
     // bind the current texture
     var texture = this.currentBaseTexture._glTextures[gl];
 
@@ -334,6 +360,14 @@ class WebGLSpriteBatch {
 
     //print(texture);
     gl.bindTexture(TEXTURE_2D, texture);
+
+    // check if a texture is dirty..
+    if (this.currentBaseTexture._dirty[gl]) {
+      updateWebGLTexture(this.currentBaseTexture, gl);
+    }
+
+    // upload the verts to the buffer
+
 
     // upload the verts to the buffer
 
@@ -372,40 +406,40 @@ class WebGLSpriteBatch {
   }
 
   start() {
-    var gl = this.gl;
-
-    // bind the main texture
-    gl.activeTexture(TEXTURE0);
-
-    // bind the buffers
-    gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
-    gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-
-    // set the projection
-    var projection = this.renderSession.projection;
-    //print(projection.y);
-    gl.uniform2f(this.shader.projectionVector, projection.x, projection.y);
-
-    // set the pointers
-    var stride = this.vertSize * 4;
-    gl.vertexAttribPointer(this.shader.aVertexPosition, 2, FLOAT, false, stride, 0);
-    gl.vertexAttribPointer(this.shader.aTextureCoord, 2, FLOAT, false, stride, 2 * 4);
-    gl.vertexAttribPointer(this.shader.colorAttribute, 2, FLOAT, false, stride, 4 * 4);
-
-    // set the blend mode..
-    if (this.currentBlendMode != blendModes.NORMAL) {
-      this.setBlendMode(blendModes.NORMAL);
-    }
+//    var gl = this.gl;
+//
+//    // bind the main texture
+//    gl.activeTexture(TEXTURE0);
+//
+//    // bind the buffers
+//    gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
+//    gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+//
+//    // set the projection
+//    var projection = this.renderSession.projection;
+//    //print(projection.y);
+//    gl.uniform2f(this.shader.projectionVector, projection.x, projection.y);
+//
+//    // set the pointers
+//    var stride = this.vertSize * 4;
+//    gl.vertexAttribPointer(this.shader.aVertexPosition, 2, FLOAT, false, stride, 0);
+//    gl.vertexAttribPointer(this.shader.aTextureCoord, 2, FLOAT, false, stride, 2 * 4);
+//    gl.vertexAttribPointer(this.shader.colorAttribute, 2, FLOAT, false, stride, 4 * 4);
+    this.dirty = true;
+//    // set the blend mode..
+//    if (this.currentBlendMode != blendModes.NORMAL) {
+//      this.setBlendMode(blendModes.NORMAL);
+//    }
   }
 
-  setBlendMode(blendModes blendMode) {
-    this.flush();
-
-    this.currentBlendMode = blendMode;
-
-    var blendModeWebGL = blendModesWebGL[this.currentBlendMode];
-    this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
-  }
+//  setBlendMode(blendModes blendMode) {
+//    this.flush();
+//
+//    this.currentBlendMode = blendMode;
+//
+//    var blendModeWebGL = blendModesWebGL[this.currentBlendMode];
+//    this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
+//  }
 
 
   destroy() {

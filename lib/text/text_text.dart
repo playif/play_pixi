@@ -154,8 +154,8 @@ class Text extends Sprite {
   updateTexture() {
     this.texture.baseTexture.width = this.canvas.width;
     this.texture.baseTexture.height = this.canvas.height;
-    this.texture.frame.width = this.canvas.width;
-    this.texture.frame.height = this.canvas.height;
+    this.texture.crop.width = this.texture.frame.width = this.canvas.width;
+    this.texture.crop.height = this.texture.frame.height = this.canvas.height;
 
     this._width = this.canvas.width;
     this._height = this.canvas.height;
@@ -235,10 +235,15 @@ class Text extends Sprite {
     return result;
   }
 
-  destroy([destroyTexture]) {
-    if (destroyTexture != null) {
-      this.texture.destroy();
-    }
+  destroy([destroyBaseTexture]) {
+//    if (destroyTexture != null) {
+//      this.texture.destroy();
+//    }
+
+    this.context = null;
+    this.canvas = null;
+
+    this.texture.destroy(destroyBaseTexture == null ? true : destroyBaseTexture);
   }
 
 

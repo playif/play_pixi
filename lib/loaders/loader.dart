@@ -30,6 +30,7 @@ abstract class Loader extends EventTarget {
       case 'jpeg':
       case 'png':
       case 'gif':
+      case 'webp':
         return new ImageLoader(url, crossorigin);
 
       case 'json':

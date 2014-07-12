@@ -4,6 +4,7 @@ abstract class Renderer {
   int type = 0;
   bool transparent = false;
   bool antialias = false;
+  bool preserveDrawingBuffer=false;
   num width = 100, height = 100;
   CanvasElement view = null;
 
@@ -11,6 +12,7 @@ abstract class Renderer {
   Point offset;
 
   bool contextLost = false;
+
 
   Map options;
 

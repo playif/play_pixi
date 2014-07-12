@@ -37,13 +37,27 @@ class TilingSprite extends Sprite {
     this._height = value;
   }
 
-  onTextureUpdate(e) {
-    // so if _width is 0 then width was not set..
-    //if(this._width)this.scale.x = this._width / this.texture.frame.width;
-    //if(this._height)this.scale.y = this._height / this.texture.frame.height;
-    // alert(this._width)
-    this.updateFrame = true;
+//  onTextureUpdate(e) {
+//    // so if _width is 0 then width was not set..
+//    //if(this._width)this.scale.x = this._width / this.texture.frame.width;
+//    //if(this._height)this.scale.y = this._height / this.texture.frame.height;
+//    // alert(this._width)
+//    this.updateFrame = true;
+//  }
+
+  setTexture(Texture texture) {
+    if (this.texture == texture) return;
+
+
+    this.texture = texture;
+
+
+    this.refreshTexture = true;
+
+
+    this.cachedTint = 0xFFFFFF;
   }
+
 
   _renderWebGL(RenderSession renderSession) {
 
@@ -154,8 +168,11 @@ class TilingSprite extends Sprite {
     context.fillStyle = this.__tilePattern;
 
     // make sure to account for the anchor point..
-    context.fillRect(-tilePosition.x + (this.anchor.x * -this._width), -tilePosition.y + (this.anchor.y * -this._height),
-    this._width / tileScale.x, this._height / tileScale.y);
+    context.fillRect(-tilePosition.x + (this.anchor.x * -this._width),
+    -tilePosition.y + (this.anchor.y * -this._height),
+    this._width / tileScale.x,
+    this._height / tileScale.y);
+
 
     context.scale(1 / tileScale.x, 1 / tileScale.y);
     context.translate(-tilePosition.x, -tilePosition.y);
@@ -165,6 +182,11 @@ class TilingSprite extends Sprite {
     if (this._mask != null) {
       renderSession.maskManager.popMask(renderSession.context);
     }
+
+    for (int i = 0, j = this.children.length; i < j; i++) {
+      this.children[i]._renderCanvas(renderSession);
+    }
+
   }
 
 
@@ -247,13 +269,13 @@ class TilingSprite extends Sprite {
 
     if (!texture.baseTexture.hasLoaded) return;
 
-    BaseTexture baseTexture = texture.baseTexture;
+    //BaseTexture baseTexture = texture.baseTexture;
     Rectangle frame = texture.frame;
 
     num targetWidth, targetHeight;
 
     // check that the frame is the same size as the base texture.
-    var isFrame = frame.width != baseTexture.width || frame.height != baseTexture.height;
+    bool isFrame = frame.width != texture.baseTexture.width || frame.height != texture.baseTexture.height;
 
     bool newTextureRequired = false;
 
@@ -269,7 +291,7 @@ class TilingSprite extends Sprite {
     else {
       targetWidth = getNextPowerOfTwo(frame.width);
       targetHeight = getNextPowerOfTwo(frame.height);
-      if (frame.width != targetWidth && frame.height != targetHeight)newTextureRequired = true;
+      if (frame.width != targetWidth || frame.height != targetHeight) newTextureRequired = true;
     }
 
 
@@ -294,14 +316,15 @@ class TilingSprite extends Sprite {
       }
 
       canvasBuffer.context.drawImageScaledFromSource(texture.baseTexture.source,
-      frame.x,
-      frame.y,
-      frame.width,
-      frame.height,
+      texture.crop.x,
+      texture.crop.y,
+      texture.crop.width,
+      texture.crop.height,
       0,
       0,
       targetWidth,
       targetHeight);
+
 
       this.tileScaleOffset.x = frame.width / targetWidth;
       this.tileScaleOffset.y = frame.height / targetHeight;

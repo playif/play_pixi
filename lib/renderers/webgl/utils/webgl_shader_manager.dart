@@ -3,15 +3,21 @@ part of PIXI;
 class WebGLShaderManager {
   RenderingContext gl;
   int maxAttibs = 10;
+  int _currentId;
   Map<int, bool> attribState = {
   };
   Map<int, bool> tempAttribState = {
   };
+  Map shaderMap = [];
 
   PrimitiveShader primitiveShader;
   PixiShader defaultShader;
   PixiFastShader fastShader;
   Shader currentShader;
+
+  ComplexPrimitiveShader complexPrimativeShader;
+  StripShader stripShader;
+
 
   WebGLShaderManager(gl) {
     for (var i = 0; i < this.maxAttibs; i++) {
@@ -27,6 +33,10 @@ class WebGLShaderManager {
     // the next one is used for rendering primatives
     this.primitiveShader = new PrimitiveShader(gl);
 
+    // the next one is used for rendering triangle strips
+    this.complexPrimativeShader = new ComplexPrimitiveShader(gl);
+
+
     // this shader is used for the default sprite rendering
     this.defaultShader = new PixiShader(gl);
 
@@ -34,7 +44,10 @@ class WebGLShaderManager {
     this.fastShader = new PixiFastShader(gl);
 
 
-    this.activateShader(this.defaultShader);
+    //this.activateShader(this.defaultShader);
+    this.stripShader = new StripShader(gl);
+
+    this.setShader(this.defaultShader);
   }
 
   setAttribs(List<int> attribs) {
@@ -69,32 +82,35 @@ class WebGLShaderManager {
     }
   }
 
-  activateShader(shader) {
+  setShader(shader) {
     //if(this.currentShader == shader)return;
+    if (this._currentId == shader._UID)return false;
+    this._currentId = shader._UID;
 
     this.currentShader = shader;
 
     this.gl.useProgram(shader.program);
     this.setAttribs(shader.attributes);
-
-  }
-
-  activatePrimitiveShader() {
-    var gl = this.gl;
-
-    gl.useProgram(this.primitiveShader.program);
-
-    this.setAttribs(this.primitiveShader.attributes);
-
-  }
-
-
-  deactivatePrimitiveShader() {
-    var gl = this.gl;
-
-    gl.useProgram(this.defaultShader.program);
-
-    this.setAttribs(this.defaultShader.attributes);
+//
+//  }
+//
+//  activatePrimitiveShader() {
+//    var gl = this.gl;
+//
+//    gl.useProgram(this.primitiveShader.program);
+//
+//    this.setAttribs(this.primitiveShader.attributes);
+//
+//  }
+//
+//
+//  deactivatePrimitiveShader() {
+//    var gl = this.gl;
+//
+//    gl.useProgram(this.defaultShader.program);
+//
+//    this.setAttribs(this.defaultShader.attributes);
+    return true;
   }
 
   destroy() {
@@ -107,6 +123,8 @@ class WebGLShaderManager {
     this.defaultShader.destroy();
 
     this.fastShader.destroy();
+
+    this.stripShader.destroy();
 
     this.gl = null;
   }

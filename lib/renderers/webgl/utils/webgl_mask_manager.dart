@@ -5,56 +5,67 @@ class WebGLMaskManager extends MaskManager {
   int maskPosition = 0;
   RenderingContext gl;
 
+  bool reverse;
+  int count;
+
   WebGLMaskManager(gl) {
     this.setContext(gl);
+
+    this.reverse = false;
+    this.count = 0;
+
   }
 
   setContext(gl) {
     this.gl = gl;
   }
 
-  pushMask(maskData, [renderSession]) {
-    var gl = this.gl;
+  pushMask(maskData, [RenderSession renderSession]) {
+    var gl = renderSession.gl;
 
-    if (this.maskStack.length == 0) {
-      gl.enable(STENCIL_TEST);
-      gl.stencilFunc(ALWAYS, 1, 1);
+    if (maskData.dirty) {
+      //gl.enable(STENCIL_TEST);
+      //gl.stencilFunc(ALWAYS, 1, 1);
+      WebGLGraphics.updateGraphics(maskData, gl);
     }
 
     //  maskData.visible = false;
 
-    this.maskStack.add(maskData);
+//    this.maskStack.add(maskData);
+//
+//    gl.colorMask(false, false, false, false);
+//    gl.stencilOp(KEEP, KEEP, INCR);
+//
+//    WebGLGraphics.renderGraphics(maskData, renderSession);
+    if(maskData._webGL[gl.id].data.length ==0)return;
 
-    gl.colorMask(false, false, false, false);
-    gl.stencilOp(KEEP, KEEP, INCR);
-
-    WebGLGraphics.renderGraphics(maskData, renderSession);
-
-    gl.colorMask(true, true, true, true);
-    gl.stencilFunc(NOTEQUAL, 0, this.maskStack.length);
-    gl.stencilOp(KEEP, KEEP, KEEP);
+//    gl.colorMask(true, true, true, true);
+//    gl.stencilFunc(NOTEQUAL, 0, this.maskStack.length);
+//    gl.stencilOp(KEEP, KEEP, KEEP);
+    renderSession.stencilManager.pushStencil(maskData, maskData._webGL[gl.id].data[0], renderSession);
   }
 
 
-  popMask(RenderSession renderSession) {
+  popMask(maskData, RenderSession renderSession) {
     var gl = this.gl;
 
-    var maskData = this.maskStack.removeLast();
-
-    if (maskData != null) {
-      gl.colorMask(false, false, false, false);
-
-      //gl.stencilFunc(gl.ALWAYS,1,1);
-      gl.stencilOp(KEEP, KEEP, DECR);
-
-      WebGLGraphics.renderGraphics(maskData, renderSession);
-
-      gl.colorMask(true, true, true, true);
-      gl.stencilFunc(NOTEQUAL, 0, this.maskStack.length);
-      gl.stencilOp(KEEP, KEEP, KEEP);
-    }
-
-    if (this.maskStack.length == 0)gl.disable(STENCIL_TEST);
+//    var maskData = this.maskStack.removeLast();
+//
+//    if (maskData != null) {
+//      gl.colorMask(false, false, false, false);
+//
+//      //gl.stencilFunc(gl.ALWAYS,1,1);
+//      gl.stencilOp(KEEP, KEEP, DECR);
+//
+//      WebGLGraphics.renderGraphics(maskData, renderSession);
+//
+//      gl.colorMask(true, true, true, true);
+//      gl.stencilFunc(NOTEQUAL, 0, this.maskStack.length);
+//      gl.stencilOp(KEEP, KEEP, KEEP);
+//    }
+//
+//    if (this.maskStack.length == 0)gl.disable(STENCIL_TEST);
+    renderSession.stencilManager.popStencil(maskData, maskData._webGL[gl.id].data[0], renderSession);
   }
 
   destroy() {

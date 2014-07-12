@@ -7,6 +7,10 @@ abstract class Shader {
   UniformLocation offsetVector;
   UniformLocation dimensions;
   UniformLocation uMatrix;
+  UniformLocation tintColor;
+  UniformLocation color;
+  UniformLocation translationMatrix;
+  UniformLocation alpha;
 
   int aVertexPosition;
   int aPositionCoord;
@@ -17,6 +21,7 @@ abstract class Shader {
 
   List attributes;
 
+  int _UID;
 
   init();
   destroy();

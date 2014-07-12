@@ -28,7 +28,7 @@ class Rope extends Strip {
 
 
     uvs[0] = 0.0;
-    uvs[1] = 1.0;
+    uvs[1] = 0.0;
     uvs[2] = 0.0;
     uvs[3] = 1.0;
 
@@ -91,10 +91,10 @@ class Rope extends Strip {
     this.count -= 0.2;
 
     var verticies = this.verticies;
-    verticies[0] = lastPoint.x + perp.x.toDouble();
-    verticies[1] = lastPoint.y + perp.y.toDouble(); //+ 200
-    verticies[2] = lastPoint.x - perp.x.toDouble();
-    verticies[3] = lastPoint.y - perp.y.toDouble();//+200
+//    verticies[0] = lastPoint.x + perp.x.toDouble();
+//    verticies[1] = lastPoint.y + perp.y.toDouble(); //+ 200
+//    verticies[2] = lastPoint.x - perp.x.toDouble();
+//    verticies[3] = lastPoint.y - perp.y.toDouble();//+200
     // time to do some smart drawing!
 
     int total = points.length, index;
@@ -102,7 +102,7 @@ class Rope extends Strip {
 
     Point point = new Point(0,0);
 
-    for (int i = 1; i < total; i++) {
+    for (int i = 0; i < total; i++) {
       point = points[i];
       index = i * 4;
 
@@ -142,7 +142,7 @@ class Rope extends Strip {
   setTexture(Texture texture) {
     // stop current texture
     this.texture = texture;
-    this.updateFrame = true;
+    //this.updateFrame = true;
   }
 
 }

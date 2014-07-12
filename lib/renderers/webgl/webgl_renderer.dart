@@ -9,13 +9,15 @@ class WebGLRenderer extends Renderer {
 //  bool transparent=false;
 //  bool antialias=false;
 
-  WebGLRenderer([int width=800, int height=600, CanvasElement view, bool transparent=false, bool antialias=false]) {
+
+  WebGLRenderer([int width=800, int height=600, CanvasElement view, bool transparent=false, bool antialias=false, bool preserveDrawingBuffer=false]) {
     if (defaultRenderer == null) defaultRenderer = this;
     type = WEBGL_RENDERER;
     this.width = width;
     this.height = height;
     this.transparent = transparent;
     this.antialias = antialias;
+    this.preserveDrawingBuffer = preserveDrawingBuffer;
 
     if (view == null) {
       view = new CanvasElement();
@@ -38,7 +40,8 @@ class WebGLRenderer extends Renderer {
         'alpha': this.transparent,
         'antialias':this.antialias, // SPEED UP??
         'premultipliedAlpha':transparent,
-        'stencil':true
+        'stencil':true,
+        'preserveDrawingBuffer': preserveDrawingBuffer
     };
 
     //try 'experimental-webgl'
@@ -55,7 +58,7 @@ class WebGLRenderer extends Renderer {
       }
     }
 
-    var gl = this.gl;
+    //var gl = this.gl;
     //this.glId = WebGLRenderer.glContextId ++;
 
     glContexts.add(gl);
@@ -99,8 +102,11 @@ class WebGLRenderer extends Renderer {
     // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager = new WebGLShaderManager(gl); // deals with managing the shader programs and their attribs
     this.spriteBatch = new WebGLSpriteBatch(gl); // manages the rendering of sprites
+    //this.primitiveBatch = new PIXI.WebGLPrimitiveBatch(gl);               // primitive batch renderer
     this.maskManager = new WebGLMaskManager(gl); // manages the masks using the stencil buffer
     this.filterManager = new WebGLFilterManager(gl, this.transparent); // manages the filters
+    this.stencilManager = new WebGLStencilManager(gl);
+    this.blendModeManager = new WebGLBlendModeManager(gl);
 
     this.renderSession = new RenderSession();
     this.renderSession.gl = this.gl;
@@ -108,7 +114,10 @@ class WebGLRenderer extends Renderer {
     this.renderSession.shaderManager = this.shaderManager;
     this.renderSession.maskManager = this.maskManager;
     this.renderSession.filterManager = this.filterManager;
+    this.renderSession.blendModeManager = this.blendModeManager;
+    // this.renderSession.primitiveBatch = this.primitiveBatch;
     this.renderSession.spriteBatch = this.spriteBatch;
+    this.renderSession.stencilManager = this.stencilManager;
     this.renderSession.renderer = this;
 
     gl.useProgram(this.shaderManager.defaultShader.program);
@@ -209,6 +218,7 @@ class WebGLRenderer extends Renderer {
 
 
   renderDisplayObject(DisplayObject displayObject, [Point projection, buffer]) {
+    this.renderSession.blendModeManager.setBlendMode(blendModes.NORMAL);
     // reset the render session data..
     this.renderSession.drawCount = 0;
     this.renderSession.currentBlendMode = blendModes.NONE;
@@ -220,6 +230,8 @@ class WebGLRenderer extends Renderer {
     // start the sprite batch
     this.spriteBatch.begin(this.renderSession);
 
+    //    this.primitiveBatch.begin(this.renderSession);
+
     // start the filter manager
     this.filterManager.begin(this.renderSession, buffer);
 
@@ -228,6 +240,8 @@ class WebGLRenderer extends Renderer {
 
     // finish the sprite batch
     this.spriteBatch.end();
+
+  //    this.primitiveBatch.end();
   }
 
 
@@ -271,7 +285,7 @@ class WebGLRenderer extends Renderer {
 
   static updateTextureFrame(Texture texture) {
 
-    texture.updateFrame = false;
+    //texture.updateFrame = false;
 
     // now set the uvs. Figured that the uv data sits with a texture rather than a sprite.
     // so uv data is stored on the texture itself
@@ -320,6 +334,7 @@ class WebGLRenderer extends Renderer {
     // need to set the context...
     this.shaderManager.setContext(gl);
     this.spriteBatch.setContext(gl);
+    this.primitiveBatch.setContext(gl);
     this.maskManager.setContext(gl);
     this.filterManager.setContext(gl);
 
@@ -364,6 +379,7 @@ class WebGLRenderer extends Renderer {
     // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager.destroy();
     this.spriteBatch.destroy();
+    this.primitiveBatch.destroy();
     this.maskManager.destroy();
     this.filterManager.destroy();
 
@@ -388,7 +404,9 @@ createWebGLTexture(BaseTexture texture, RenderingContext gl) {
 
     gl.bindTexture(TEXTURE_2D, texture._glTextures[gl]);
 
-    gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+    //gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
 
     gl.texImage2D(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, texture.source);
     gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
@@ -406,6 +424,7 @@ createWebGLTexture(BaseTexture texture, RenderingContext gl) {
     }
 
     gl.bindTexture(TEXTURE_2D, null);
+    texture._dirty[gl] = false;
   }
 
   return texture._glTextures[gl];
@@ -414,7 +433,7 @@ createWebGLTexture(BaseTexture texture, RenderingContext gl) {
 updateWebGLTexture(BaseTexture texture, RenderingContext gl) {
   if (texture._glTextures[gl] != null) {
     gl.bindTexture(TEXTURE_2D, texture._glTextures[gl]);
-    gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+    gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
 
     gl.texImage2D(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, texture.source);
     gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
@@ -431,7 +450,8 @@ updateWebGLTexture(BaseTexture texture, RenderingContext gl) {
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT);
     }
 
-    gl.bindTexture(TEXTURE_2D, null);
+    //gl.bindTexture(TEXTURE_2D, null);
+    texture._dirty[gl] = false;
   }
 
 }

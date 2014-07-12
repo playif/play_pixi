@@ -4,14 +4,14 @@ class PolyK {
   PolyK._() {
   }
 
-  static List Triangulate(p) {
+  static List<num> Triangulate(p) {
     bool sign = true;
     int i = 0;
     var n = p.length >> 1;
     if (n < 3) return [];
 
-    List tgs = [];
-    List avl = [];
+    List<num> tgs = [];
+    List<num> avl = [];
 
     for ( i = 0; i < n; i++)
       avl.add(i);

@@ -56,26 +56,23 @@ class RenderTexture extends Texture {
 
   }
 
-  clear()
-  {
-    if (this.renderer.type == WEBGL_RENDERER)
-    {
+  clear() {
+    if (this.renderer.type == WEBGL_RENDERER) {
       this.renderer.gl.bindFramebuffer(FRAMEBUFFER, this.textureBuffer.frameBuffer);
     }
 
     this.textureBuffer.clear();
   }
 
-  resize(num width, num height,[bool updateBase = false]) {
-    if (width == this.width && height == this.height)
-    {
+  resize(num width, num height, [bool updateBase = false]) {
+    if (width == this.width && height == this.height) {
       return;
     }
     //print("here");
-    this.width = this.frame.width = this.crop.width = width;
-    this.height =  this.frame.height = this.crop.height = height;
+    this.width = this.frame.width = width;
+    this.height = this.frame.height = height;
 
-    if(updateBase){
+    if (updateBase) {
       this.baseTexture.width = this.width;
       this.baseTexture.height = this.height;
     }
@@ -84,9 +81,9 @@ class RenderTexture extends Texture {
       this.projection.x = this.width / 2;
       this.projection.y = -this.height / 2;
 
-      var gl = this.renderer.gl;
-      gl.bindTexture(TEXTURE_2D, this.baseTexture._glTextures[gl]);
-      gl.texImage2D(TEXTURE_2D, 0, RGBA, this.width, this.height, 0, RGBA, UNSIGNED_BYTE, null);
+//      var gl = this.renderer.gl;
+//      gl.bindTexture(TEXTURE_2D, this.baseTexture._glTextures[gl]);
+//      gl.texImage2D(TEXTURE_2D, 0, RGBA, this.width, this.height, 0, RGBA, UNSIGNED_BYTE, null);
     }
 //    else {
 //
@@ -134,6 +131,8 @@ class RenderTexture extends Texture {
     this.renderer.renderDisplayObject(displayObject, this.projection, this.textureBuffer.frameBuffer);
 
     displayObject.worldTransform = originalWorldTransform;
+
+    this.renderer.spriteBatch.dirty = true;
   }
 
   void renderCanvas(DisplayObjectContainer displayObject, Point position, bool clear) {
@@ -147,6 +146,11 @@ class RenderTexture extends Texture {
       displayObject.worldTransform.tx = position.x;
       displayObject.worldTransform.ty = position.y;
     }
+    else {
+      displayObject.worldTransform.tx = 0;
+      displayObject.worldTransform.ty = 0;
+    }
+
 
     for (var i = 0, j = children.length; i < j; i++) {
       children[i].updateTransform();

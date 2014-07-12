@@ -124,6 +124,7 @@ class WebGLFilterManager {
 
     //print(filterArea.width / 2.0);
     // update projection
+    this.renderSession.shaderManager.setShader(this.defaultShader);
     gl.uniform2f(this.defaultShader.projectionVector, filterArea.width / 2.0, -filterArea.height / 2.0);
     gl.uniform2f(this.defaultShader.offsetVector, -filterArea.x.toDouble(), -filterArea.y.toDouble());
 
@@ -307,7 +308,8 @@ class WebGLFilterManager {
     this.applyFilterPass(filter, filterArea, sizeX, sizeY);
 
     // now restore the regular shader..
-    gl.useProgram(this.defaultShader.program);
+    //gl.useProgram(this.defaultShader.program);
+    this.renderSession.shaderManager.setShader(this.defaultShader);
     gl.uniform2f(this.defaultShader.projectionVector, sizeX / 2, -sizeY / 2);
     gl.uniform2f(this.defaultShader.offsetVector, -offsetX, -offsetY);
 
@@ -331,8 +333,8 @@ class WebGLFilterManager {
     }
 
     // set the shader
-    gl.useProgram(shader.program);
-
+    //gl.useProgram(shader.program);
+    this.renderSession.shaderManager.setShader(shader);
     gl.uniform2f(shader.projectionVector, width / 2, -height / 2);
     gl.uniform2f(shader.offsetVector, 0, 0);
 
@@ -427,7 +429,7 @@ class WebGLFilterManager {
     this.offsetX = 0;
     this.offsetY = 0;
 
-    //TODO report BUG
+
     // destroy textures
     for (var i = 0; i < this.texturePool.length; i++) {
       this.texturePool[i].destroy();

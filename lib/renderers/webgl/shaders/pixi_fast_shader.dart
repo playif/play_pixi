@@ -63,6 +63,7 @@ class PixiFastShader extends Shader {
   var uniforms;
 
   PixiFastShader(this.gl) {
+    this._UID = PIXI._UID++;
     this.init();
   }
 

@@ -2,6 +2,7 @@ part of PIXI;
 
 class PixiShader extends Shader {
   PixiShader(this.gl) {
+    this._UID = PIXI._UID++;
     this.init();
   }
 

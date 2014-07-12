@@ -11,9 +11,11 @@ import "dart:typed_data";
 
 
 part "core/circle.dart";
+part "core/ellipse.dart";
 part "core/matrix.dart";
 part "core/point.dart";
 part "core/rectangle.dart";
+
 
 part "display/display_object.dart";
 part "display/display_object_container.dart";
@@ -59,11 +61,13 @@ part "loaders/sprite_sheet_loader.dart";
 
 part "primitives/graphics.dart";
 
+
 part "renderers/canvas/utils/canvas_mask_manager.dart";
 part "renderers/canvas/utils/canvas_tinter.dart";
 part "renderers/canvas/canvas_graphics.dart";
 part "renderers/canvas/canvas_renderer.dart";
 
+part "renderers/webgl/shaders/complex_primitive_shader.dart";
 part "renderers/webgl/shaders/pixi_fast_shader.dart";
 part "renderers/webgl/shaders/pixi_shader.dart";
 part "renderers/webgl/shaders/primitive_shader.dart";
@@ -71,6 +75,7 @@ part "renderers/webgl/shaders/shader_shader.dart";
 part "renderers/webgl/shaders/strip_shader.dart";
 
 part "renderers/webgl/utils/filter_texture.dart";
+part "renderers/webgl/utils/webgl_blend_mode_manager.dart";
 part "renderers/webgl/utils/webgl_fast_sprite_batch.dart";
 part "renderers/webgl/utils/webgl_filter_manager.dart";
 part "renderers/webgl/utils/webgl_graphics.dart";
@@ -78,6 +83,8 @@ part "renderers/webgl/utils/webgl_mask_manager.dart";
 part "renderers/webgl/utils/webgl_shader_manager.dart";
 part "renderers/webgl/utils/webgl_shader_utils.dart";
 part "renderers/webgl/utils/webgl_sprite_batch.dart";
+part "renderers/webgl/utils/webgl_stencil_manager.dart";
+
 
 part "renderers/webgl/webgl_renderer.dart";
 part "renderers/mask_manager.dart";
@@ -147,13 +154,15 @@ Map blendModesWebGL = null;
 Map blendModesCanvas = null;
 const int WEBGL_RENDERER = 0;
 const int CANVAS_RENDERER = 1;
-const String VERSION = "v1.5.3";
+const String VERSION = "v1.6.0";
 
 const int INTERACTION_FREQUENCY = 30;
 const bool AUTO_PREVENT_DEFAULT = true;
 
 const num RAD_TO_DEG = 180 / PI;
 const num DEG_TO_RAD = PI / 180;
+
+int _UID = 0;
 
 Function requestAnimFrame = window.requestAnimationFrame;
 
