@@ -46,7 +46,7 @@ class WebGLMaskManager extends MaskManager {
   }
 
 
-  popMask(maskData, [RenderSession renderSession]) {
+  popMask(Graphics maskData, [RenderSession renderSession]) {
     var gl = this.gl;
 
 //    var maskData = this.maskStack.removeLast();
@@ -65,6 +65,7 @@ class WebGLMaskManager extends MaskManager {
 //    }
 //
 //    if (this.maskStack.length == 0)gl.disable(STENCIL_TEST);
+    if(maskData._webGL[gl].data.length ==0)return;
     renderSession.stencilManager.popStencil(maskData, maskData._webGL[gl].data[0], renderSession);
   }
 

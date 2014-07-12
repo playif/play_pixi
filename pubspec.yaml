@@ -1,7 +1,7 @@
 name: play_pixi
 version: 0.9.3
 description:
-  A dart port for PIXI.js library.
+  A Dart port for PIXI.js (v1.6.0) library.
 author: playif <playif@gmail.com>
 homepage: https://github.com/playif/play_pixi
 dependencies:

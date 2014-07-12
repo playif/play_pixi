@@ -48,7 +48,7 @@ main() {
 
 // draw a rectangle
   graphics.lineStyle(2, 0x0000FF, 1);
-  graphics.drawRoundedRect(50, 250, 100, 100,10);
+  graphics.drawRoundedRect(50, 250, 100, 100,40);
   //graphics.drawRect(50, 250, 100, 100);
 
 

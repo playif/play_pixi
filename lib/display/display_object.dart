@@ -78,7 +78,7 @@ class DisplayObject {
 
   DisplayObject _mask = null;
 
-  DisplayObject get mask => _mask;
+  Graphics get mask => _mask;
 
   set mask(DisplayObject value) {
     if (this._mask != null)this._mask.isMask = false;
