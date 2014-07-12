@@ -135,7 +135,7 @@ class CanvasGraphics {
 
               if (data.fill) {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = color = '#' + "${data.fillColor.floor().toRadixString(16)}".padLeft(6, '0');
                 context.fill();
 
 

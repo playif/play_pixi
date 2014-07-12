@@ -4,12 +4,19 @@ class Rope extends Strip {
   List<Point> points;
   num count = 0;
 
+//  num width;
+//  num height;
+
   Rope(Texture texture, this.points, [num width, num height])
-  :super(texture, width, height) {
+  :super(texture) {
+    this.width = width;
+    this.height = height;
+
     this.verticies = new Float32List(points.length * 4);
     this.uvs = new Float32List(points.length * 4);
     this.colors = new Float32List(points.length * 2);
     this.indices = new Uint16List(points.length * 2);
+
 
     this.refresh();
   }
@@ -42,7 +49,7 @@ class Rope extends Strip {
     int index;
     num amount;
 
-    Point point= new Point(0,0);
+    Point point = new Point(0, 0);
 
     for (int i = 1; i < total; i++) {
 
@@ -100,7 +107,7 @@ class Rope extends Strip {
     int total = points.length, index;
     num ratio, perpLength, n;
 
-    Point point = new Point(0,0);
+    Point point = new Point(0, 0);
 
     for (int i = 0; i < total; i++) {
       point = points[i];

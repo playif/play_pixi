@@ -42,14 +42,14 @@ class WebGLGraphicsData{
 
 
 //    this.lastIndex = graphics.graphicsData.length;
-    this.glPoints = new Float32List(this.points);
+    this.glPoints = new Float32List.fromList(this.points);
 
 
     gl.bindBuffer(ARRAY_BUFFER, this.buffer);
     gl.bufferData(ARRAY_BUFFER, this.glPoints, STATIC_DRAW);
 
 
-    this.glIndicies = new Uint16List(this.indices);
+    this.glIndicies = new Uint16List.fromList(this.indices);
 
 
     gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this.indexBuffer);
@@ -69,7 +69,10 @@ class WebGLData {
   Buffer buffer;
   Buffer indexBuffer;
 
-  List<GraphicsData> data;
+  num alpha;
+  List<num> color;
+
+  List<WebGLGraphicsData> data;
   RenderingContext gl;
 
   Float32List glPoints;
@@ -77,8 +80,8 @@ class WebGLData {
 }
 
 class WebGLGraphics {
-  List<GraphicsData>  graphicsDataPool = [];
-  int last;
+  static List<WebGLGraphicsData> graphicsDataPool = [];
+  static int last;
   WebGLGraphics() {
   }
 
@@ -135,7 +138,7 @@ class WebGLGraphics {
 
         renderSession.stencilManager.popStencil(graphics, webGLData, renderSession);
 
-        this.last = webGLData.mode;
+        last = webGLData.mode;
       }
       else {
         webGLData = webGL.data[i];
@@ -296,7 +299,7 @@ class WebGLGraphics {
 //    gl.bufferData(ELEMENT_ARRAY_BUFFER, webGL.glIndicies, STATIC_DRAW);
   }
 
-  switchMode(WebGLData webGL, int type) {
+  static WebGLGraphicsData switchMode(WebGLData webGL, int type) {
     WebGLGraphicsData webGLData;
 
 
@@ -407,7 +410,7 @@ class WebGLGraphics {
      * @param  {number}   toY   Destination point y
      * @return {number[]}
      */
-    quadraticBezierCurve(num fromX, num fromY, num cpX, num cpY, num toX, num toY) {
+    List<num> quadraticBezierCurve(num fromX, num fromY, num cpX, num cpY, num toX, num toY) {
       num xa,
       ya,
       xb,
@@ -457,10 +460,10 @@ class WebGLGraphics {
 
     List recPoints = [];
     recPoints.addAll([x, y + radius]);
-    recPoints = recPoints.addAll(quadraticBezierCurve(x, y + height - radius, x, y + height, x + radius, y + height));
-    recPoints = recPoints.addAll(quadraticBezierCurve(x + width - radius, y + height, x + width, y + height, x + width, y + height - radius));
-    recPoints = recPoints.addAll(quadraticBezierCurve(x + width, y + radius, x + width, y, x + width - radius, y));
-    recPoints = recPoints.addAll(quadraticBezierCurve(x + radius, y, x, y, x, y + radius));
+    recPoints.addAll(quadraticBezierCurve(x, y + height - radius, x, y + height, x + radius, y + height));
+    recPoints.addAll(quadraticBezierCurve(x + width - radius, y + height, x + width, y + height, x + width, y + height - radius));
+    recPoints.addAll(quadraticBezierCurve(x + width, y + radius, x + width, y, x + width - radius, y));
+    recPoints.addAll(quadraticBezierCurve(x + radius, y, x, y, x, y + radius));
 
 
     if (graphicsData.fill) {
@@ -772,7 +775,7 @@ class WebGLGraphics {
     indices.add(indexStart - 1);
   }
 
-  static buildComplexPoly (GraphicsData graphicsData, webGLData webGLData)
+  static buildComplexPoly (GraphicsData graphicsData, WebGLData webGLData)
   {
 
 
@@ -828,7 +831,7 @@ class WebGLGraphics {
     // push a quad onto the end..
 
     //TODO - this aint needed!
-    int length = points.length / 2;
+    int length = points.length ~/ 2;
     for (int i = 0; i < length; i++)
     {
       indices.add( i );

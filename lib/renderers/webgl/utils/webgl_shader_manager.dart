@@ -8,7 +8,7 @@ class WebGLShaderManager {
   };
   Map<int, bool> tempAttribState = {
   };
-  Map shaderMap = [];
+  Map shaderMap = {};
 
   PrimitiveShader primitiveShader;
   PixiShader defaultShader;

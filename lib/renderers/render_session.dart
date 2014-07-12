@@ -12,12 +12,14 @@ class RenderSession {
   WebGLFilterManager filterManager;
   WebGLSpriteBatch spriteBatch;
   WebGLBlendModeManager blendModeManager;
-  //WebGLBlendModeManager blendModeManager;
+  WebGLStencilManager stencilManager;
 
   Renderer renderer;
 
   blendModes currentBlendMode;
   scaleModes scaleMode;
+
+  String smoothProperty;
   //String smoothProperty;
 
   CanvasRenderingContext2D context;

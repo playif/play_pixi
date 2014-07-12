@@ -324,7 +324,7 @@ class WebGLSpriteBatch {
 
     //var gl = this.gl;
 
-    setShader(this.renderSession.shaderManager.defaultShader);
+    this.renderSession.shaderManager.setShader(this.renderSession.shaderManager.defaultShader);
 
     //TODO - im usre this can be done better - will look to tweak this for 1.7..
     if (this.dirty) {

@@ -135,7 +135,7 @@ class Graphics extends DisplayObjectContainer {
     num fromY = points[points.length - 1];
 
 
-    int j = 0;
+    num j = 0;
     for (int i = 1; i <= n; i++) {
       j = i / n;
 
@@ -168,7 +168,7 @@ class Graphics extends DisplayObjectContainer {
     num fromX = points[points.length - 2];
     num fromY = points[points.length - 1];
 
-    int j = 0;
+    num j = 0;
 
 
     for (int i = 1; i < n; i++) {
@@ -258,7 +258,7 @@ class Graphics extends DisplayObjectContainer {
  * Arc init! TODO add docs
  */
 
-  Graphics arc(num cx, num cy, num radius, num startAngle, num endAngle, num anticlockwise) {
+  Graphics arc(num cx, num cy, num radius, num startAngle, num endAngle, [bool anticlockwise =false]) {
     num startX = cx + cos(startAngle) * radius;
     num startY = cy + sin(startAngle) * radius;
 
@@ -357,7 +357,7 @@ class Graphics extends DisplayObjectContainer {
     this.graphicsData.add(this.currentPath);
 
 
-    this.currentPath.points = this.currentPath.points.addAll(path);
+    this.currentPath.points.addAll(path);
     this.dirty = true;
 
 
@@ -532,9 +532,9 @@ class Graphics extends DisplayObjectContainer {
       if (this._filters != null)renderSession.filterManager.pushFilter(this._filterBlock);
 
       // check blend mode
-      if (this.blendMode != renderSession.spriteBatch.currentBlendMode) {
-        renderSession.spriteBatch.currentBlendMode = this.blendMode;
-        var blendModeWebGL = blendModesWebGL[renderSession.spriteBatch.currentBlendMode];
+      if (this.blendMode != renderSession.blendModeManager.currentBlendMode) {
+        renderSession.blendModeManager.currentBlendMode = this.blendMode;
+        var blendModeWebGL = blendModesWebGL[renderSession.blendModeManager.currentBlendMode];
         renderSession.spriteBatch.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
       }
 
@@ -554,7 +554,7 @@ class Graphics extends DisplayObjectContainer {
 
       if (this._filters != null)renderSession.filterManager.popFilter();
       //if (this._mask != null)renderSession.maskManager.popMask(renderSession);
-      if (this._mask)renderSession.maskManager.popMask(this.mask, renderSession);
+      if (this._mask != null) renderSession.maskManager.popMask(this.mask, renderSession);
 
       renderSession.drawCount++;
 

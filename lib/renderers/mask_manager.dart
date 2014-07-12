@@ -6,7 +6,7 @@ abstract class MaskManager {
 
   pushMask(maskData, [context]);
 
-  popMask(maskData);
+  popMask(maskData, [RenderSession  renderSession]);
 
   setContext(RenderingContext gl);
 

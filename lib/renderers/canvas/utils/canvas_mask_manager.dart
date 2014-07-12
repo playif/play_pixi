@@ -20,7 +20,7 @@ class CanvasMaskManager extends MaskManager {
   }
 
 
-  popMask(context) {
+  popMask(context, [RenderSession renderSession]) {
     context.restore();
   }
 
@@ -28,7 +28,7 @@ class CanvasMaskManager extends MaskManager {
 
   }
 
-  setContext(RenderingContext a){
+  setContext(RenderingContext a) {
 
   }
 }

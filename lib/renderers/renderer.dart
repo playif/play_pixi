@@ -22,6 +22,9 @@ abstract class Renderer {
   WebGLSpriteBatch spriteBatch;
   MaskManager maskManager;
   WebGLFilterManager filterManager;
+  WebGLStencilManager stencilManager;
+  WebGLBlendModeManager blendModeManager;
+ // PrimitiveShader primitiveBatch;
 
   RenderSession renderSession;
   Stage __stage;

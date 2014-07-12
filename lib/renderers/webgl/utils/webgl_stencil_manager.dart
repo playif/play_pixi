@@ -153,7 +153,7 @@ class WebGLStencilManager {
       gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
 
 
-      gl.uniform3fv(shader.tintColor, new Float32List.fromList(graphics.tint));
+      gl.uniform3fv(shader.tintColor, new Float32List.fromList(hex2rgb(graphics.tint)));
       gl.uniform3fv(shader.color, webGLData.color);
 
 

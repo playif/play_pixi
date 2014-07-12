@@ -46,7 +46,7 @@ class WebGLMaskManager extends MaskManager {
   }
 
 
-  popMask(maskData, RenderSession renderSession) {
+  popMask(maskData, [RenderSession renderSession]) {
     var gl = this.gl;
 
 //    var maskData = this.maskStack.removeLast();

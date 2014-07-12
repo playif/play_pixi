@@ -241,7 +241,7 @@ class WebGLRenderer extends Renderer {
     // finish the sprite batch
     this.spriteBatch.end();
 
-  //    this.primitiveBatch.end();
+    //    this.primitiveBatch.end();
   }
 
 
@@ -334,7 +334,7 @@ class WebGLRenderer extends Renderer {
     // need to set the context...
     this.shaderManager.setContext(gl);
     this.spriteBatch.setContext(gl);
-    this.primitiveBatch.setContext(gl);
+    //this.primitiveBatch.setContext(gl);
     this.maskManager.setContext(gl);
     this.filterManager.setContext(gl);
 
@@ -379,7 +379,7 @@ class WebGLRenderer extends Renderer {
     // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager.destroy();
     this.spriteBatch.destroy();
-    this.primitiveBatch.destroy();
+    //this.primitiveBatch.destroy();
     this.maskManager.destroy();
     this.filterManager.destroy();
 
@@ -406,7 +406,7 @@ createWebGLTexture(BaseTexture texture, RenderingContext gl) {
 
     //gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
 
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
+    gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha ? 1 : 0);
 
     gl.texImage2D(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, texture.source);
     gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);
@@ -433,7 +433,7 @@ createWebGLTexture(BaseTexture texture, RenderingContext gl) {
 updateWebGLTexture(BaseTexture texture, RenderingContext gl) {
   if (texture._glTextures[gl] != null) {
     gl.bindTexture(TEXTURE_2D, texture._glTextures[gl]);
-    gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
+    gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha ? 1 : 0);
 
     gl.texImage2D(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, texture.source);
     gl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, texture.scaleMode == scaleModes.LINEAR ? LINEAR : NEAREST);

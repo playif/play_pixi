@@ -2,7 +2,7 @@ part of PIXI;
 
 class PrimitiveShader extends Shader {
   PrimitiveShader(this.gl) {
-    this._UID = PIXI._UID++;
+    this._UID = _UID++;
     this.init();
   }
 

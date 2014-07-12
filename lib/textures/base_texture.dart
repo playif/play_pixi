@@ -31,12 +31,13 @@ class BaseTexture extends EventTarget {
   EventFunc onLoaded;
 
   bool premultipliedAlpha;
-  List _dirty;
+  Map _dirty;
 
   BaseTexture([this.source, this.scaleMode=scaleModes.DEFAULT]) {
 
     this.premultipliedAlpha = true;
-    this._dirty = [];
+    this._dirty = {
+    };
 
     if (source == null) return;
 
@@ -71,10 +72,11 @@ class BaseTexture extends EventTarget {
         scope.dispatchEvent(new PixiEvent(type: 'loaded', content: scope));
       });
 
-      this.source.onerror.listen(() {
-        scope.dispatchEvent({
-            'type': 'error', 'content': scope
-        });
+      this.source.onerror.listen((e) {
+        scope.dispatchEvent(new PixiEvent()
+          ..type = 'error'
+          ..content = scope
+        );
       });
 
 

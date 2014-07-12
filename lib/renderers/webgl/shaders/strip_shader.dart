@@ -2,7 +2,7 @@ part of PIXI;
 
 class StripShader extends Shader {
   StripShader(this.gl) {
-    this._UID = PIXI._UID++;
+    this._UID = _UID++;
   }
 
   Program program = null;
