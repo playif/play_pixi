@@ -13,6 +13,8 @@ Change log
 ==========
 0.9.4
  * upgrade to PIXI v1.6.0
+ * strip snake example
+ * complex graphics example
 
 0.9.3
  * Fix touch event in cocoonJS
