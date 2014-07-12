@@ -32,7 +32,7 @@ class Graphics extends DisplayObjectContainer {
 
   GraphicsData currentPath = new GraphicsData();
 
-  Map _webGL = {
+  Map<RenderingContext, WebGLGraphicsData> _webGL = {
   };
 
   bool isMask = false;
@@ -65,7 +65,7 @@ class Graphics extends DisplayObjectContainer {
     this._cacheAsBitmap = value;
   }
 
-  lineStyle([int lineWidth=0, num color=0, num alpha=1]) {
+  Graphics lineStyle([int lineWidth=0, num color=0, num alpha=1]) {
     if (this.currentPath.points.length == 0) {
       if (this.graphicsData.length > 0) {
         this.graphicsData.removeLast();
@@ -91,7 +91,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  moveTo(num x, num y) {
+ Graphics  moveTo(num x, num y) {
     if (this.currentPath.points.length == 0) {
       if (this.graphicsData.length > 0) {
         this.graphicsData.removeLast();
@@ -115,7 +115,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
-  lineTo(x, y) {
+  Graphics lineTo(x, y) {
     this.currentPath.points.addAll([x, y]);
     this.dirty = true;
 
@@ -123,7 +123,7 @@ class Graphics extends DisplayObjectContainer {
   }
 
 
-  quadraticCurveTo(num cpX, num cpY, num toX, num toY) {
+  Graphics quadraticCurveTo(num cpX, num cpY, num toX, num toY) {
     // this.currentPath.points.push(toX, toY)
     //return;
     num xa,

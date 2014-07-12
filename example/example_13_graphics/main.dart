@@ -20,7 +20,7 @@ main() {
   var graphics = new PIXI.Graphics();
 
 // set a fill and line style
-  graphics.beginFill(0xFF3300);
+  graphics.beginFill(0x33FF00);
   graphics.lineStyle(10, 0xffd900, 1);
 
 // draw a shape
@@ -64,9 +64,9 @@ main() {
   graphics.beginFill(0xFFFF0B, 0.5);
   graphics.drawCircle(470, 200, 100);
 
-  graphics.lineStyle(20, 0x33FF00);
-  graphics.moveTo(30, 30);
-  graphics.lineTo(600, 300);
+//  graphics.lineStyle(20, 0x33FF00);
+//  graphics.moveTo(30, 30);
+//  graphics.lineTo(600, 300);
 
   stage.addChild(graphics);
 

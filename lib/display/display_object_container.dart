@@ -251,7 +251,6 @@ class DisplayObjectContainer extends DisplayObject {
       }
 
 
-
       // simple render children!
       for (int i = 0, j = this.children.length; i < j; i++) {
         this.children[i]._renderWebGL(renderSession);
@@ -260,7 +259,7 @@ class DisplayObjectContainer extends DisplayObject {
       renderSession.spriteBatch.stop();
 
 
-      if (this._mask != null)renderSession.maskManager.popMask(renderSession);
+      if (this._mask != null)renderSession.maskManager.popMask(this._mask, renderSession);
       if (this._filters != null)renderSession.filterManager.popFilter();
 
       renderSession.spriteBatch.start();

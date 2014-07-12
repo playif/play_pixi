@@ -65,7 +65,7 @@ class WebGLMaskManager extends MaskManager {
 //    }
 //
 //    if (this.maskStack.length == 0)gl.disable(STENCIL_TEST);
-    renderSession.stencilManager.popStencil(maskData, maskData._webGL[gl.id].data[0], renderSession);
+    renderSession.stencilManager.popStencil(maskData, maskData._webGL[gl].data[0], renderSession);
   }
 
   destroy() {

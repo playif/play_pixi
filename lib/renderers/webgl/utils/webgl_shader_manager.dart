@@ -53,10 +53,10 @@ class WebGLShaderManager {
   setAttribs(List<int> attribs) {
     // reset temp state
 
-    var i;
+    int i;
 
-    for (i = 0; i < this.tempAttribState.length; i++) {
-      this.tempAttribState[i] = false;
+    for (var key in this.tempAttribState.keys) {
+      this.tempAttribState[key] = false;
     }
 
     // set the new attribs
@@ -64,8 +64,6 @@ class WebGLShaderManager {
       var attribId = attribs[i];
       this.tempAttribState[attribId] = true;
     }
-
-    var gl = this.gl;
 
     for (i = 0; i < this.attribState.length; i++) {
 
@@ -84,7 +82,7 @@ class WebGLShaderManager {
 
   setShader(shader) {
     //if(this.currentShader == shader)return;
-    if (this._currentId == shader._UID)return false;
+    if (this._currentId == shader._UID) return false;
     this._currentId = shader._UID;
 
     this.currentShader = shader;

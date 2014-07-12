@@ -14,4 +14,4 @@ transformers:
     suppressHints: false
     terse: false
     verbose: true
-    analyzeAll: true
+    analyzeAll: false
