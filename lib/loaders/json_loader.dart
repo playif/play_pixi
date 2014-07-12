@@ -83,7 +83,7 @@ class JsonLoader extends Loader {
             ..height = rect['h']
           );
 
-          TextureCache[i].crop = new Rectangle(rect.x, rect.y, rect.w, rect.h);
+          TextureCache[i].crop = new Rectangle(rect['x'], rect['y'], rect['w'], rect['h']);
 
           // check to see ifthe sprite ha been trimmed..
           if (frameData[i]['trimmed']) {

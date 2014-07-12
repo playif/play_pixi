@@ -37,12 +37,12 @@ class WebGLMaskManager extends MaskManager {
 //    gl.stencilOp(KEEP, KEEP, INCR);
 //
 //    WebGLGraphics.renderGraphics(maskData, renderSession);
-    if(maskData._webGL[gl.id].data.length ==0)return;
+    if(maskData._webGL[gl].data.length ==0)return;
 
 //    gl.colorMask(true, true, true, true);
 //    gl.stencilFunc(NOTEQUAL, 0, this.maskStack.length);
 //    gl.stencilOp(KEEP, KEEP, KEEP);
-    renderSession.stencilManager.pushStencil(maskData, maskData._webGL[gl.id].data[0], renderSession);
+    renderSession.stencilManager.pushStencil(maskData, maskData._webGL[gl].data[0], renderSession);
   }
 
 

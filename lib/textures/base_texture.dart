@@ -72,7 +72,7 @@ class BaseTexture extends EventTarget {
         scope.dispatchEvent(new PixiEvent(type: 'loaded', content: scope));
       });
 
-      this.source.onerror.listen((e) {
+      this.source.onError.listen((e) {
         scope.dispatchEvent(new PixiEvent()
           ..type = 'error'
           ..content = scope

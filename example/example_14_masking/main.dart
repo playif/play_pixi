@@ -15,7 +15,6 @@ main() {
   bg.anchor.y = 0.5;
 
 
-
   stage.addChild(bg);
 
   var container = new PIXI.DisplayObjectContainer();
@@ -47,7 +46,7 @@ main() {
 
   // create a renderer instance
   var renderer = PIXI.autoDetectRenderer(800,600);
-
+  //var renderer = new PIXI.CanvasRenderer(800, 600);
 //  renderer.view.style.position = "absolute";
 //  renderer.view.style.marginLeft = "-310px";
 //  renderer.view.style.marginTop = "-190px";
@@ -80,6 +79,7 @@ main() {
   // add render view to DOM
   document.body.append(renderer.view);
   renderer.view.className = "rendererView";
+
   resize([e]) {
     renderer.resize(window.innerWidth, window.innerHeight);
 
@@ -97,9 +97,6 @@ main() {
 //  renderer.view.style.display = "block";
 //  renderer.view.style.width="${window.innerWidth}px";
 //  renderer.view.style.height="${window.innerHeight}px";
-
-
-
 
 
   /*

@@ -42,14 +42,14 @@ class WebGLGraphicsData{
 
 
 //    this.lastIndex = graphics.graphicsData.length;
-    this.glPoints = new Float32List.fromList(this.points);
+    this.glPoints = new Float32List.fromList(this.points.map((s)=>s.toDouble()));
 
 
     gl.bindBuffer(ARRAY_BUFFER, this.buffer);
     gl.bufferData(ARRAY_BUFFER, this.glPoints, STATIC_DRAW);
 
 
-    this.glIndicies = new Uint16List.fromList(this.indices);
+    this.glIndicies = new Uint16List.fromList(this.indices.map((num s)=>s.toInt()));
 
 
     gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this.indexBuffer);

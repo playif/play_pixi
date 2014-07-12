@@ -259,8 +259,8 @@ class Sprite extends DisplayObjectContainer {
         renderSession.context.imageSmoothingEnabled = (renderSession.scaleMode == scaleModes.LINEAR);
       }
 
-      num dx = (this.texture.trim == null) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
-      num dy = (this.texture.trim == null) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
+      num dx = (this.texture.trim != null) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
+      num dy = (this.texture.trim != null) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
 
 
       if (this.tint != 0xFFFFFF) {
