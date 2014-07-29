@@ -39,8 +39,8 @@ class Text extends Sprite {
     this.setText(text);
     this.setStyle(style);
 
-    this.updateText();
-    this.dirty = false;
+    //this.updateText();
+    //this.dirty = false;
   }
 
   setStyle(TextStyle style) {
@@ -52,6 +52,58 @@ class Text extends Sprite {
     this.text = text.toString();
     this.dirty = true;
   }
+
+  /**
+   * The width of the sprite, setting this will actually modify the scale to achieve the value set
+   *
+   * @property width
+   * @type Number
+   */
+  //Object.defineProperty(PIXI.Text.prototype, 'width', {
+
+  num get width {
+
+    if (this.dirty) {
+      this.updateText();
+      this.dirty = false;
+    }
+
+
+    return this.scale.x * this.texture.frame.width;
+  }
+
+  set width(num value) {
+    this.scale.x = value / this.texture.frame.width;
+    this._width = value;
+  }
+
+  //});
+
+  /**
+   * The height of the Text, setting this will actually modify the scale to achieve the value set
+   *
+   * @property height
+   * @type Number
+   */
+  //Object.defineProperty(PIXI.Text.prototype, 'height', {
+
+  num get height {
+
+    if (this.dirty) {
+      this.updateText();
+      this.dirty = false;
+    }
+
+
+    return this.scale.y * this.texture.frame.height;
+  }
+
+  set height(num value) {
+    this.scale.y = value / this.texture.frame.height;
+    this._height = value;
+  }
+
+  //});
 
   updateText() {
     this.context.font = this.style.font;

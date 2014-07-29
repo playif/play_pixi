@@ -396,57 +396,60 @@ class WebGLGraphics {
     }
   }
 
-  static buildRoundedRectangle(GraphicsData graphicsData, WebGLGraphicsData webGLData) {
-    /**
-     * Calcul the points for a quadratic bezier curve.
-     * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
-     *
-     * @param  {number}   fromX Origin point x
-     * @param  {number}   fromY Origin point x
-     * @param  {number}   cpX   Control point x
-     * @param  {number}   cpY   Control point y
-     * @param  {number}   toX   Destination point x
-     * @param  {number}   toY   Destination point y
-     * @return {number[]}
-     */
-    List<num> quadraticBezierCurve(num fromX, num fromY, num cpX, num cpY, num toX, num toY) {
-      num xa,
-      ya,
-      xb,
-      yb,
-      x,
-      y,
-      n = 20;
-      List<num> points = [];
+
+  /**
+   * Calcul the points for a quadratic bezier curve.
+   * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
+   *
+   * @param  {number}   fromX Origin point x
+   * @param  {number}   fromY Origin point x
+   * @param  {number}   cpX   Control point x
+   * @param  {number}   cpY   Control point y
+   * @param  {number}   toX   Destination point x
+   * @param  {number}   toY   Destination point y
+   * @return {number[]}
+   */
+  static List<num> quadraticBezierCurve(num fromX, num fromY, num cpX, num cpY, num toX, num toY) {
+    num xa,
+    ya,
+    xb,
+    yb,
+    x,
+    y,
+    n = 20;
+    List<num> points = [];
 
 
-      num getPt(num n1, num n2, num perc) {
-        num diff = n2 - n1;
-        return n1 + ( diff * perc );
-      }
-
-
-      num j = 0;
-      for (int i = 0; i <= n; i++) {
-        j = i / n;
-
-
-        // The Green Line
-        xa = getPt(fromX, cpX, j);
-        ya = getPt(fromY, cpY, j);
-        xb = getPt(cpX, toX, j);
-        yb = getPt(cpY, toY, j);
-
-
-        // The Black Dot
-        x = getPt(xa, xb, j);
-        y = getPt(ya, yb, j);
-
-
-        points.addAll([x, y]);
-      }
-      return points;
+    num getPt(num n1, num n2, num perc) {
+      num diff = n2 - n1;
+      return n1 + ( diff * perc );
     }
+
+
+    num j = 0;
+    for (int i = 0; i <= n; i++) {
+      j = i / n;
+
+
+      // The Green Line
+      xa = getPt(fromX, cpX, j);
+      ya = getPt(fromY, cpY, j);
+      xb = getPt(cpX, toX, j);
+      yb = getPt(cpY, toY, j);
+
+
+      // The Black Dot
+      x = getPt(xa, xb, j);
+      y = getPt(ya, yb, j);
+
+
+      points.addAll([x, y]);
+    }
+    return points;
+  }
+
+  static buildRoundedRectangle(GraphicsData graphicsData, WebGLGraphicsData webGLData) {
+
 
 
     List<num> points = graphicsData.points;

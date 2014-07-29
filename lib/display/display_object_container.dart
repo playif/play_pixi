@@ -14,7 +14,15 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
   set width(num value) {
-    this.scale.x = value / (this.getLocalBounds().width / this.scale.x);
+    //this.scale.x = value / (this.getLocalBounds().width / this.scale.x);
+
+    num width = this.getLocalBounds().width;
+    if (width != 0) {
+      this.scale.x = value / ( width / this.scale.x );
+    }
+    else {
+      this.scale.x = 1;
+    }
     this._width = value;
   }
 
@@ -25,7 +33,15 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
   set height(num value) {
-    this.scale.y = value / (this.getLocalBounds().height / this.scale.y);
+    //this.scale.y = value / (this.getLocalBounds().height / this.scale.y);
+
+    num height = this.getLocalBounds().height;
+    if (height != 0) {
+      this.scale.y = value / ( height / this.scale.y );
+    }
+    else {
+      this.scale.y = 1;
+    }
     this._height = value;
   }
 

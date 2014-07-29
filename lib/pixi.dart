@@ -109,32 +109,32 @@ part "interaction_manager.dart";
 
 typedef void EventFunc(PixiEvent e);
 
-class blendModes {
-  static const NORMAL = const blendModes._(0);
-  static const ADD = const blendModes._(1);
-  static const MULTIPLY = const blendModes._(2);
-  static const SCREEN = const blendModes._(3);
-  static const OVERLAY = const blendModes._(4);
-  static const DARKEN = const blendModes._(5);
-  static const LIGHTEN = const blendModes._(6);
-  static const COLOR_DODGE = const blendModes._(7);
-  static const COLOR_BURN = const blendModes._(8);
-  static const HARD_LIGHT = const blendModes._(9);
-  static const SOFT_LIGHT = const blendModes._(10);
-  static const DIFFERENCE = const blendModes._(11);
-  static const EXCLUSION = const blendModes._(12);
-  static const HUE = const blendModes._(13);
-  static const SATURATION = const blendModes._(14);
-  static const COLOR = const blendModes._(15);
-  static const LUMINOSITY = const blendModes._(16);
+class BlendModes {
+  static const NORMAL = const BlendModes._(0);
+  static const ADD = const BlendModes._(1);
+  static const MULTIPLY = const BlendModes._(2);
+  static const SCREEN = const BlendModes._(3);
+  static const OVERLAY = const BlendModes._(4);
+  static const DARKEN = const BlendModes._(5);
+  static const LIGHTEN = const BlendModes._(6);
+  static const COLOR_DODGE = const BlendModes._(7);
+  static const COLOR_BURN = const BlendModes._(8);
+  static const HARD_LIGHT = const BlendModes._(9);
+  static const SOFT_LIGHT = const BlendModes._(10);
+  static const DIFFERENCE = const BlendModes._(11);
+  static const EXCLUSION = const BlendModes._(12);
+  static const HUE = const BlendModes._(13);
+  static const SATURATION = const BlendModes._(14);
+  static const COLOR = const BlendModes._(15);
+  static const LUMINOSITY = const BlendModes._(16);
 
-  static const NONE = const blendModes._(99999);
+  static const NONE = const BlendModes._(99999);
 
 //  static get values => [NORMAL, ADD];
 
   final int value;
 
-  const blendModes._(this.value);
+  const BlendModes._(this.value);
 }
 
 class scaleModes {
@@ -154,7 +154,7 @@ Map blendModesWebGL = null;
 Map blendModesCanvas = null;
 const int WEBGL_RENDERER = 0;
 const int CANVAS_RENDERER = 1;
-const String VERSION = "v1.6.0";
+const String VERSION = "v1.6.１";
 
 const int INTERACTION_FREQUENCY = 30;
 const bool AUTO_PREVENT_DEFAULT = true;

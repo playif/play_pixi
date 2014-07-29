@@ -16,7 +16,7 @@ class RenderSession {
 
   Renderer renderer;
 
-  blendModes currentBlendMode;
+  BlendModes currentBlendMode;
   scaleModes scaleMode;
 
   String smoothProperty;

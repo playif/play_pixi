@@ -70,23 +70,23 @@ class WebGLRenderer extends Renderer {
       blendModesWebGL = {
       };
 
-      blendModesWebGL[blendModes.NORMAL] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.ADD] = [SRC_ALPHA, DST_ALPHA];
-      blendModesWebGL[blendModes.MULTIPLY] = [DST_COLOR, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.SCREEN] = [SRC_ALPHA, ONE];
-      blendModesWebGL[blendModes.OVERLAY] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.DARKEN] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.LIGHTEN] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.COLOR_DODGE] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.COLOR_BURN] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.HARD_LIGHT] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.SOFT_LIGHT] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.DIFFERENCE] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.EXCLUSION] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.HUE] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.SATURATION] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.COLOR] = [ONE, ONE_MINUS_SRC_ALPHA];
-      blendModesWebGL[blendModes.LUMINOSITY] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.NORMAL] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.ADD] = [SRC_ALPHA, DST_ALPHA];
+      blendModesWebGL[BlendModes.MULTIPLY] = [DST_COLOR, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.SCREEN] = [SRC_ALPHA, ONE];
+      blendModesWebGL[BlendModes.OVERLAY] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.DARKEN] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.LIGHTEN] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.COLOR_DODGE] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.COLOR_BURN] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.HARD_LIGHT] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.SOFT_LIGHT] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.DIFFERENCE] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.EXCLUSION] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.HUE] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.SATURATION] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.COLOR] = [ONE, ONE_MINUS_SRC_ALPHA];
+      blendModesWebGL[BlendModes.LUMINOSITY] = [ONE, ONE_MINUS_SRC_ALPHA];
     }
 
 
@@ -218,10 +218,10 @@ class WebGLRenderer extends Renderer {
 
 
   renderDisplayObject(DisplayObject displayObject, [Point projection, buffer]) {
-    this.renderSession.blendModeManager.setBlendMode(blendModes.NORMAL);
+    this.renderSession.blendModeManager.setBlendMode(BlendModes.NORMAL);
     // reset the render session data..
     this.renderSession.drawCount = 0;
-    this.renderSession.currentBlendMode = blendModes.NONE;
+    this.renderSession.currentBlendMode = BlendModes.NONE;
 
     this.renderSession.projection = projection;
     this.renderSession.offset = this.offset;

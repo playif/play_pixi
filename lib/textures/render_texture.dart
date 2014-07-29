@@ -111,8 +111,8 @@ class RenderTexture extends Texture {
     Matrix originalWorldTransform = displayObject.worldTransform;
     displayObject.worldTransform = RenderTexture.tempMatrix;
     // modify to flip...
-    displayObject.worldTransform.d = -1;
-    displayObject.worldTransform.ty = this.projection.y * -2;
+    displayObject.worldTransform.d = -1.0;
+    displayObject.worldTransform.ty = this.projection.y * -2.0;
 
     if (position != null) {
       displayObject.worldTransform.tx = position.x;
@@ -147,8 +147,8 @@ class RenderTexture extends Texture {
       displayObject.worldTransform.ty = position.y;
     }
     else {
-      displayObject.worldTransform.tx = 0;
-      displayObject.worldTransform.ty = 0;
+      displayObject.worldTransform.tx = 0.0;
+      displayObject.worldTransform.ty = 0.0;
     }
 
 

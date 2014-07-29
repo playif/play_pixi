@@ -64,7 +64,7 @@ main() {
     // time to add the dude to the pond container!
     stage.addChild(dude);
 
-    dude.blendMode = PIXI.blendModes.SCREEN;
+    dude.blendMode = PIXI.BlendModes.SCREEN;
 
     // create some extra properties that will control movement
     // create a random direction in radians. This is a number between 0 and PI*2 which is the equivalent of 0 - 360 degrees

@@ -2,13 +2,13 @@ part of PIXI;
 
 class WebGLBlendModeManager {
   RenderingContext gl;
-  blendModes currentBlendMode;
+  BlendModes currentBlendMode;
 
   WebGLBlendModeManager(this.gl) {
-    this.currentBlendMode = blendModes.NONE;
+    this.currentBlendMode = BlendModes.NONE;
   }
 
-  bool setBlendMode(blendModes blendMode) {
+  bool setBlendMode(BlendModes blendMode) {
     if (this.currentBlendMode == blendMode)return false;
     //   console.log("SWAP!")
     this.currentBlendMode = blendMode;

@@ -6,8 +6,8 @@ main() {
 
 
   // holder to store aliens
-  List aliens = [];
-  var alienFrames = ["eggHead.png", "flowerTop.png", "helmlok.png", "skully.png"];
+//  List aliens = [];
+//  var alienFrames = ["eggHead.png", "flowerTop.png", "helmlok.png", "skully.png"];
 
   var count = 0;
 
@@ -57,29 +57,29 @@ main() {
   label.x = 10;
   label.y = 10;
 
-  for (var i = 0; i < 100; i++) {
-    var frameName = alienFrames[i % 4];
+//  for (var i = 0; i < 100; i++) {
+//    var frameName = alienFrames[i % 4];
+//
+//    // create an alien using the frame name..
+//    PIXI.Sprite alien = PIXI.Sprite.fromImage(frameName);
+//    alien.tint = random.nextInt(0xFFFFFF) ;
+//
+//    /*
+//			 * fun fact for the day :)
+//			 * another way of doing the above would be
+//			 * var texture = PIXI.Texture.fromFrame(frameName);
+//			 * var alien = new PIXI.Sprite(texture);
+//			 */
+//
+//    alien.position.x = random.nextInt(800) - 400;
+//    alien.position.y = random.nextInt(600) - 300;
+//    alien.anchor.x = 0.5;
+//    alien.anchor.y = 0.5;
+//    aliens.add(alien);
+//    alienContainer.addChild(alien);
+//  }
 
-    // create an alien using the frame name..
-    PIXI.Sprite alien = PIXI.Sprite.fromImage(frameName);
-    alien.tint = random.nextInt(0xFFFFFF) ;
-
-    /*
-			 * fun fact for the day :)
-			 * another way of doing the above would be
-			 * var texture = PIXI.Texture.fromFrame(frameName);
-			 * var alien = new PIXI.Sprite(texture);
-			 */
-
-    alien.position.x = random.nextInt(800) - 400;
-    alien.position.y = random.nextInt(600) - 300;
-    alien.anchor.x = 0.5;
-    alien.anchor.y = 0.5;
-    aliens.add(alien);
-    alienContainer.addChild(alien);
-  }
-
-  stage.mousedown = (data) {
+  stage.mousedown = stage.touchstart = (data) {
     isDown = true;
     path = [];
 
@@ -91,7 +91,7 @@ main() {
 
   };
 
-  stage.mousemove = (data) {
+  stage.mousemove = stage.touchmove = (data) {
     if (!isDown)return;
 
 
@@ -110,7 +110,7 @@ main() {
     //console.log(">>>>")
   };
 
-  stage.mouseup = (e) {
+  stage.mouseup = stage.touchend = (e) {
     isDown = false;
     if (path.length <= 12)return;
     graphics.beginFill(color);

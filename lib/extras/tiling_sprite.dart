@@ -12,8 +12,8 @@ class TilingSprite extends Sprite {
   Point tileScaleOffset = new Point();
 
   TilingSprite(Texture texture, [num width=100, num height=100]):super(texture) {
-    this.width = width;
-    this.height = height;
+    this._width = width;
+    this._height = height;
 
     texture.baseTexture._powerOf2 = true;
     tileScale = new Point(1, 1);
@@ -22,7 +22,7 @@ class TilingSprite extends Sprite {
 
     this.renderable = true;
     this.tint = 0xFFFFFF;
-    this.blendMode = blendModes.NORMAL;
+    this.blendMode = BlendModes.NORMAL;
   }
 
   num get width => this._width;
@@ -65,13 +65,13 @@ class TilingSprite extends Sprite {
 
     int i, j;
 
-    if (this.mask != null) {
+    if (this._mask != null) {
       renderSession.spriteBatch.stop();
       renderSession.maskManager.pushMask(this.mask, renderSession);
       renderSession.spriteBatch.start();
     }
 
-    if (this.filters != null) {
+    if (this._filters != null) {
       renderSession.spriteBatch.flush();
       renderSession.filterManager.pushFilter(this._filterBlock);
     }
@@ -98,8 +98,8 @@ class TilingSprite extends Sprite {
 
     renderSession.spriteBatch.stop();
 
-    if (this.filters != null)renderSession.filterManager.popFilter();
-    if (this.mask != null)renderSession.maskManager.popMask(renderSession);
+    if (this._filters != null)renderSession.filterManager.popFilter();
+    if (this._mask != null)renderSession.maskManager.popMask(renderSession);
 
     renderSession.spriteBatch.start();
   }
@@ -345,4 +345,11 @@ class TilingSprite extends Sprite {
     this.refreshTexture = false;
     this.tilingTexture.baseTexture._powerOf2 = true;
   }
+
+
+  onTextureUpdate ()
+  {
+     // overriding the sprite version of this!
+  }
+
 }

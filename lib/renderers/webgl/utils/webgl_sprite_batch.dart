@@ -31,6 +31,9 @@ class WebGLSpriteBatch {
 
   bool dirty = false;
 
+  List<Texture> textures;
+  List<BlendModes> blendModes;
+
   WebGLSpriteBatch(RenderingContext gl) {
 
     size = maxSize;
@@ -49,6 +52,9 @@ class WebGLSpriteBatch {
     }
 
     this.setContext(gl);
+
+    this.textures = [];
+    this.blendModes = [];
 
     this.dirty = true;
   }
@@ -85,9 +91,9 @@ class WebGLSpriteBatch {
 
   render(Sprite sprite) {
     Texture texture = sprite.texture;
-    var blendChange = this.renderSession.blendModeManager.currentBlendMode != sprite.blendMode;
+    //var blendChange = this.renderSession.blendModeManager.currentBlendMode != sprite.blendMode;
     // check texture..
-    if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size || blendChange) {
+    if (this.currentBatchSize >= this.size) {
       this.flush();
       this.currentBaseTexture = texture.baseTexture;
 //    }
@@ -97,7 +103,7 @@ class WebGLSpriteBatch {
 //    if (sprite.blendMode != this.renderSession.blendModeManager.currentBlendMode) {
 //      //this.setBlendMode(sprite.blendMode);
 //      this.flush();
-      this.renderSession.blendModeManager.setBlendMode(sprite.blendMode);
+      //this.renderSession.blendModeManager.setBlendMode(sprite.blendMode);
 
     }
 
@@ -199,7 +205,14 @@ class WebGLSpriteBatch {
     verticies[index++] = tint;
 
     // increment the batchsize
+
+
+    this.textures[this.currentBatchSize] = sprite.texture.baseTexture;
+    this.blendModes[this.currentBatchSize] = sprite.blendMode;
+
     this.currentBatchSize++;
+
+
     //print(this.currentBatchSize);
 
   }
@@ -207,13 +220,13 @@ class WebGLSpriteBatch {
   renderTilingSprite(TilingSprite tilingSprite) {
     Texture texture = tilingSprite.tilingTexture;
 
-    bool blendChange = this.renderSession.blendModeManager.currentBlendMode != tilingSprite.blendMode;
+    //bool blendChange = this.renderSession.blendModeManager.currentBlendMode != tilingSprite.blendMode;
 
     // check texture..
-    if (texture.baseTexture != this.currentBaseTexture || this.currentBatchSize >= this.size || blendChange) {
+    if (this.currentBatchSize >= this.size) {
       this.flush();
       this.currentBaseTexture = texture.baseTexture;
-      this.renderSession.blendModeManager.setBlendMode(tilingSprite.blendMode);
+      //this.renderSession.blendModeManager.setBlendMode(tilingSprite.blendMode);
     }
 
     // set the textures uvs temporarily
@@ -284,7 +297,7 @@ class WebGLSpriteBatch {
     verticies[index++] = tint;
 
     // xy
-    verticies[index++] = a * w0 + c * h1 + tx;
+    verticies[index++] = (a * w0 + c * h1 + tx);
     verticies[index++] = d * h1 + b * w0 + ty;
     // uv
     verticies[index++] = uvs.x1;
@@ -314,6 +327,10 @@ class WebGLSpriteBatch {
     verticies[index++] = tint;
 
     // increment the batchs
+
+    this.textures[this.currentBatchSize] = texture.baseTexture;
+    this.blendModes[this.currentBatchSize] = tilingSprite.blendMode;
+
     this.currentBatchSize++;
   }
 
@@ -359,12 +376,12 @@ class WebGLSpriteBatch {
     }
 
     //print(texture);
-    gl.bindTexture(TEXTURE_2D, texture);
-
-    // check if a texture is dirty..
-    if (this.currentBaseTexture._dirty[gl]) {
-      updateWebGLTexture(this.currentBaseTexture, gl);
-    }
+//    gl.bindTexture(TEXTURE_2D, texture);
+//
+//    // check if a texture is dirty..
+//    if (this.currentBaseTexture._dirty[gl]) {
+//      updateWebGLTexture(this.currentBaseTexture, gl);
+//    }
 
     // upload the verts to the buffer
 
@@ -388,13 +405,59 @@ class WebGLSpriteBatch {
     //print("here");
 
     //gl.drawArrays(TRIANGLES, 0,this.currentBatchSize * 6);
-    gl.drawElements(TRIANGLES, this.currentBatchSize * 6, UNSIGNED_SHORT, 0);
+    //gl.drawElements(TRIANGLES, this.currentBatchSize * 6, UNSIGNED_SHORT, 0);
 
 
     //print(gl.getError());
 
+    var nextTexture, nextBlendMode;
+    var batchSize = 0;
+    var start = 0;
+
+    var currentBaseTexture = null;
+    var currentBlendMode = this.renderSession.blendModeManager.currentBlendMode;
+
+    for (var i = 0, j = this.currentBatchSize; i < j; i++) {
+
+      nextTexture = this.textures[i];
+      nextBlendMode = this.blendModes[i];
+
+      if (currentBaseTexture != nextTexture || currentBlendMode != nextBlendMode) {
+        this.renderBatch(currentBaseTexture, batchSize, start);
+
+        start = i;
+        batchSize = 0;
+        currentBaseTexture = nextTexture;
+        currentBlendMode = nextBlendMode;
+
+        this.renderSession.blendModeManager.setBlendMode(currentBlendMode);
+      }
+
+      batchSize++;
+    }
+
+    this.renderBatch(currentBaseTexture, batchSize, start);
+
     // then reset the batch!
     this.currentBatchSize = 0;
+
+  }
+
+  renderBatch(BaseTexture texture, int size, int startIndex) {
+    if (size == 0) return;
+
+    //var gl = this.gl;
+    // bind the current texture
+    gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl] || createWebGLTexture(texture, gl));
+
+    // check if a texture is dirty..
+    if (texture._dirty[gl]) {
+      updateWebGLTexture(this.currentBaseTexture, gl);
+    }
+
+    // now draw those suckas!
+    gl.drawElements(TRIANGLES, size * 6, UNSIGNED_SHORT, startIndex * 6 * 2);
+
 
     // increment the draw count
     this.renderSession.drawCount++;

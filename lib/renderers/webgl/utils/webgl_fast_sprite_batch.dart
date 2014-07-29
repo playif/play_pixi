@@ -20,7 +20,7 @@ class WebGLFastSpriteBatch {
   int currentBatchSize = 0;
   BaseTexture currentBaseTexture = null;
 
-  blendModes currentBlendMode = blendModes.NORMAL;
+  BlendModes currentBlendMode = BlendModes.NORMAL;
   RenderSession renderSession = null;
 
   Shader shader = null;
@@ -63,7 +63,7 @@ class WebGLFastSpriteBatch {
     gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
     gl.bufferData(ARRAY_BUFFER, this.vertices, DYNAMIC_DRAW);
 
-    this.currentBlendMode = blendModes.NONE;
+    this.currentBlendMode = BlendModes.NONE;
   }
 
   begin(SpriteBatch spriteBatch, RenderSession renderSession) {
@@ -245,8 +245,8 @@ class WebGLFastSpriteBatch {
 
     if (this.currentBaseTexture._glTextures[gl] == null)createWebGLTexture(this.currentBaseTexture, gl);
 
-    gl.bindTexture(TEXTURE_2D, this.currentBaseTexture._glTextures[gl]);// || PIXI.createWebGLTexture(this.currentBaseTexture, gl));
-
+    //gl.bindTexture(TEXTURE_2D, this.currentBaseTexture._glTextures[gl]);// || PIXI.createWebGLTexture(this.currentBaseTexture, gl));
+    gl.bindTexture(TEXTURE_2D, this.currentBaseTexture._glTextures[gl]);
     // upload the verts to the buffer
 
 
@@ -303,12 +303,12 @@ class WebGLFastSpriteBatch {
     gl.vertexAttribPointer(this.shader.colorAttribute, 1, FLOAT, false, stride, 9 * 4);
 
     // set the blend mode..
-    if (this.currentBlendMode != blendModes.NORMAL) {
-      this.setBlendMode(blendModes.NORMAL);
+    if (this.currentBlendMode != BlendModes.NORMAL) {
+      this.setBlendMode(BlendModes.NORMAL);
     }
   }
 
-  setBlendMode(blendModes blendMode) {
+  setBlendMode(BlendModes blendMode) {
     this.flush();
 
     this.currentBlendMode = blendMode;

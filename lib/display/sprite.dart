@@ -30,7 +30,7 @@ class Sprite extends DisplayObjectContainer {
 
 //  bool renderable = true;
 
-  blendModes blendMode = blendModes.NORMAL;
+  BlendModes blendMode = BlendModes.NORMAL;
 
 
   Sprite._(){
@@ -52,14 +52,14 @@ class Sprite extends DisplayObjectContainer {
 
   void setTexture(Texture texture) {
     // stop current texture;
-    if (this.texture.baseTexture != texture.baseTexture) {
-      this.textureChange = true;
-      this.texture = texture;
-    }
-    else {
-      this.texture = texture;
-    }
-
+//    if (this.texture.baseTexture != texture.baseTexture) {
+//      this.textureChange = true;
+//      this.texture = texture;
+//    }
+//    else {
+//      this.texture = texture;
+//    }
+    this.texture = texture;
     this.cachedTint = 0xFFFFFF;
     //this.updateFrame = true;
   }

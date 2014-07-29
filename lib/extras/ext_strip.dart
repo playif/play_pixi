@@ -3,7 +3,7 @@ part of PIXI;
 class Strip extends DisplayObjectContainer {
   Texture texture;
 
-  blendModes blendMode = blendModes.NORMAL;
+  BlendModes blendMode = BlendModes.NORMAL;
   Float32List uvs;
   Float32List verticies;
   Float32List colors;

@@ -33,43 +33,43 @@ class CanvasRenderer extends Renderer {
       };
 
       if (canUseNewCanvasBlendModes()) {
-        blendModesCanvas[blendModes.NORMAL] = "source-over";
-        blendModesCanvas[blendModes.ADD] = "lighter"; //IS THIS OK???
-        blendModesCanvas[blendModes.MULTIPLY] = "multiply";
-        blendModesCanvas[blendModes.SCREEN] = "screen";
-        blendModesCanvas[blendModes.OVERLAY] = "overlay";
-        blendModesCanvas[blendModes.DARKEN] = "darken";
-        blendModesCanvas[blendModes.LIGHTEN] = "lighten";
-        blendModesCanvas[blendModes.COLOR_DODGE] = "color-dodge";
-        blendModesCanvas[blendModes.COLOR_BURN] = "color-burn";
-        blendModesCanvas[blendModes.HARD_LIGHT] = "hard-light";
-        blendModesCanvas[blendModes.SOFT_LIGHT] = "soft-light";
-        blendModesCanvas[blendModes.DIFFERENCE] = "difference";
-        blendModesCanvas[blendModes.EXCLUSION] = "exclusion";
-        blendModesCanvas[blendModes.HUE] = "hue";
-        blendModesCanvas[blendModes.SATURATION] = "saturation";
-        blendModesCanvas[blendModes.COLOR] = "color";
-        blendModesCanvas[blendModes.LUMINOSITY] = "luminosity";
+        blendModesCanvas[BlendModes.NORMAL] = "source-over";
+        blendModesCanvas[BlendModes.ADD] = "lighter"; //IS THIS OK???
+        blendModesCanvas[BlendModes.MULTIPLY] = "multiply";
+        blendModesCanvas[BlendModes.SCREEN] = "screen";
+        blendModesCanvas[BlendModes.OVERLAY] = "overlay";
+        blendModesCanvas[BlendModes.DARKEN] = "darken";
+        blendModesCanvas[BlendModes.LIGHTEN] = "lighten";
+        blendModesCanvas[BlendModes.COLOR_DODGE] = "color-dodge";
+        blendModesCanvas[BlendModes.COLOR_BURN] = "color-burn";
+        blendModesCanvas[BlendModes.HARD_LIGHT] = "hard-light";
+        blendModesCanvas[BlendModes.SOFT_LIGHT] = "soft-light";
+        blendModesCanvas[BlendModes.DIFFERENCE] = "difference";
+        blendModesCanvas[BlendModes.EXCLUSION] = "exclusion";
+        blendModesCanvas[BlendModes.HUE] = "hue";
+        blendModesCanvas[BlendModes.SATURATION] = "saturation";
+        blendModesCanvas[BlendModes.COLOR] = "color";
+        blendModesCanvas[BlendModes.LUMINOSITY] = "luminosity";
       }
       else {
         // this means that the browser does not support the cool new blend modes in canvas "cough" ie "cough"
-        blendModesCanvas[blendModes.NORMAL] = "source-over";
-        blendModesCanvas[blendModes.ADD] = "lighter"; //IS THIS OK???
-        blendModesCanvas[blendModes.MULTIPLY] = "source-over";
-        blendModesCanvas[blendModes.SCREEN] = "source-over";
-        blendModesCanvas[blendModes.OVERLAY] = "source-over";
-        blendModesCanvas[blendModes.DARKEN] = "source-over";
-        blendModesCanvas[blendModes.LIGHTEN] = "source-over";
-        blendModesCanvas[blendModes.COLOR_DODGE] = "source-over";
-        blendModesCanvas[blendModes.COLOR_BURN] = "source-over";
-        blendModesCanvas[blendModes.HARD_LIGHT] = "source-over";
-        blendModesCanvas[blendModes.SOFT_LIGHT] = "source-over";
-        blendModesCanvas[blendModes.DIFFERENCE] = "source-over";
-        blendModesCanvas[blendModes.EXCLUSION] = "source-over";
-        blendModesCanvas[blendModes.HUE] = "source-over";
-        blendModesCanvas[blendModes.SATURATION] = "source-over";
-        blendModesCanvas[blendModes.COLOR] = "source-over";
-        blendModesCanvas[blendModes.LUMINOSITY] = "source-over";
+        blendModesCanvas[BlendModes.NORMAL] = "source-over";
+        blendModesCanvas[BlendModes.ADD] = "lighter"; //IS THIS OK???
+        blendModesCanvas[BlendModes.MULTIPLY] = "source-over";
+        blendModesCanvas[BlendModes.SCREEN] = "source-over";
+        blendModesCanvas[BlendModes.OVERLAY] = "source-over";
+        blendModesCanvas[BlendModes.DARKEN] = "source-over";
+        blendModesCanvas[BlendModes.LIGHTEN] = "source-over";
+        blendModesCanvas[BlendModes.COLOR_DODGE] = "source-over";
+        blendModesCanvas[BlendModes.COLOR_BURN] = "source-over";
+        blendModesCanvas[BlendModes.HARD_LIGHT] = "source-over";
+        blendModesCanvas[BlendModes.SOFT_LIGHT] = "source-over";
+        blendModesCanvas[BlendModes.DIFFERENCE] = "source-over";
+        blendModesCanvas[BlendModes.EXCLUSION] = "source-over";
+        blendModesCanvas[BlendModes.HUE] = "source-over";
+        blendModesCanvas[BlendModes.SATURATION] = "source-over";
+        blendModesCanvas[BlendModes.COLOR] = "source-over";
+        blendModesCanvas[BlendModes.LUMINOSITY] = "source-over";
       }
     }
 

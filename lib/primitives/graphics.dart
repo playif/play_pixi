@@ -28,7 +28,7 @@ class Graphics extends DisplayObjectContainer {
   List<GraphicsData> graphicsData = [];
 
   int tint = 0xFFFFFF;
-  blendModes blendMode;
+  BlendModes blendMode;
 
   GraphicsData currentPath = new GraphicsData();
 
@@ -47,7 +47,7 @@ class Graphics extends DisplayObjectContainer {
 
   Graphics() {
     renderable = true;
-    blendMode = blendModes.NORMAL;
+    blendMode = BlendModes.NORMAL;
     dirty = true;
   }
 
@@ -91,7 +91,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
- Graphics  moveTo(num x, num y) {
+  Graphics moveTo(num x, num y) {
     if (this.currentPath.points.length == 0) {
       if (this.graphicsData.length > 0) {
         this.graphicsData.removeLast();
@@ -124,12 +124,14 @@ class Graphics extends DisplayObjectContainer {
 
 
   Graphics quadraticCurveTo(num cpX, num cpY, num toX, num toY) {
-    // this.currentPath.points.push(toX, toY)
-    //return;
+    if (this.currentPath.points.length == 0) {
+      this.moveTo(0, 0);
+    }
     num xa,
     ya,
     n = 20;
     List<num> points = this.currentPath.points;
+    if (points.length == 0)this.moveTo(0, 0);
 
     num fromX = points[points.length - 2];
     num fromY = points[points.length - 1];
@@ -156,6 +158,7 @@ class Graphics extends DisplayObjectContainer {
   }
 
   Graphics bezierCurveTo(num cpX, num cpY, num cpX2, num cpY2, num toX, num toY) {
+    if (this.currentPath.points.length == 0)this.moveTo(0, 0);
     num n = 20,
     dt,
     dt2,
@@ -205,6 +208,9 @@ class Graphics extends DisplayObjectContainer {
     // check that path contains subpaths
     //if (path.commands.length == 0)
 //        moveTo(x1, y1);
+
+    if (this.currentPath.points.length == 0)this.moveTo(x1, y1);
+
     List<num> points = this.currentPath.points;
 
 
@@ -263,18 +269,17 @@ class Graphics extends DisplayObjectContainer {
     num startY = cy + sin(startAngle) * radius;
 
 
-    // check that path contains subpaths
-    // if (path.commands.length == 0)
-    //   this.moveTo(startX, startY);
-    // else
     List<num> points = this.currentPath.points;
 
-    num fromX = points[points.length - 2];
-    num fromY = points[points.length - 1];
+    //num fromX = points[points.length - 2];
+    //num fromY = points[points.length - 1];
 
 
-    if (fromX != startX || fromY != startY) points.addAll([startX, startY]);
-
+    //if (fromX != startX || fromY != startY) points.addAll([startX, startY]);
+    if (points.length != 0 && points[points.length - 2] != startX || points[points.length - 1] != startY) {
+      this.moveTo(startX, startY);
+      points = this.currentPath.points;
+    }
 
     if (startAngle == endAngle)return this;
 
@@ -301,10 +306,10 @@ class Graphics extends DisplayObjectContainer {
     num cTheta = cos(theta);
     num sTheta = sin(theta);
 
-    num remainder = ( segs % 1 ) / segs;
-
-
-    for (int i = 0; i <= segs; i++) {
+    //num remainder = ( segs % 1 ) / segs;
+    int segMinus = segs - 1;
+    int remainder = ( segMinus % 1 ) / segMinus;
+    for(int i=0; i<=segMinus; i++){
       num real = i + remainder * i;
 
 
