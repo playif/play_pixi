@@ -308,7 +308,7 @@ class Graphics extends DisplayObjectContainer {
 
     //num remainder = ( segs % 1 ) / segs;
     int segMinus = segs - 1;
-    int remainder = ( segMinus % 1 ) / segMinus;
+    num remainder = ( segMinus % 1 ) / segMinus;
     for(int i=0; i<=segMinus; i++){
       num real = i + remainder * i;
 

@@ -347,7 +347,7 @@ class TilingSprite extends Sprite {
   }
 
 
-  onTextureUpdate ()
+  onTextureUpdate (PixiEvent e)
   {
      // overriding the sprite version of this!
   }

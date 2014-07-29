@@ -31,7 +31,7 @@ class WebGLSpriteBatch {
 
   bool dirty = false;
 
-  List<Texture> textures;
+  List<BaseTexture> textures;
   List<BlendModes> blendModes;
 
   WebGLSpriteBatch(RenderingContext gl) {
@@ -206,9 +206,20 @@ class WebGLSpriteBatch {
 
     // increment the batchsize
 
+    if (this.textures.length <= this.currentBatchSize) {
+      this.textures.add(sprite.texture.baseTexture);
+    }
+    else {
+      this.textures[this.currentBatchSize] = sprite.texture.baseTexture;
+    }
 
-    this.textures[this.currentBatchSize] = sprite.texture.baseTexture;
-    this.blendModes[this.currentBatchSize] = sprite.blendMode;
+    if (this.blendModes.length <= this.currentBatchSize) {
+      this.blendModes.add(sprite.blendMode);
+    }
+    else {
+      this.blendModes[this.currentBatchSize] = sprite.blendMode;
+    }
+
 
     this.currentBatchSize++;
 
@@ -328,8 +339,22 @@ class WebGLSpriteBatch {
 
     // increment the batchs
 
-    this.textures[this.currentBatchSize] = texture.baseTexture;
-    this.blendModes[this.currentBatchSize] = tilingSprite.blendMode;
+//    this.textures[this.currentBatchSize] = texture.baseTexture;
+//    this.blendModes[this.currentBatchSize] = tilingSprite.blendMode;
+
+    if (this.textures.length <= this.currentBatchSize) {
+      this.textures.add(texture.baseTexture);
+    }
+    else {
+      this.textures[this.currentBatchSize] = texture.baseTexture;
+    }
+
+    if (this.blendModes.length <= this.currentBatchSize) {
+      this.blendModes.add(tilingSprite.blendMode);
+    }
+    else {
+      this.blendModes[this.currentBatchSize] = tilingSprite.blendMode;
+    }
 
     this.currentBatchSize++;
   }
@@ -367,13 +392,13 @@ class WebGLSpriteBatch {
 
 
     // bind the current texture
-    var texture = this.currentBaseTexture._glTextures[gl];
-
-    if (texture == null) {
-
-      texture = createWebGLTexture(this.currentBaseTexture, gl);
-      //gl.bindTexture(TEXTURE_2D, texture);
-    }
+//    var texture = this.currentBaseTexture._glTextures[gl];
+//
+//    if (texture == null) {
+//
+//      texture = createWebGLTexture(this.currentBaseTexture, gl);
+//      //gl.bindTexture(TEXTURE_2D, texture);
+//    }
 
     //print(texture);
 //    gl.bindTexture(TEXTURE_2D, texture);
@@ -410,14 +435,15 @@ class WebGLSpriteBatch {
 
     //print(gl.getError());
 
-    var nextTexture, nextBlendMode;
-    var batchSize = 0;
-    var start = 0;
+    BaseTexture nextTexture;
+    BlendModes nextBlendMode;
+    int batchSize = 0;
+    int start = 0;
 
-    var currentBaseTexture = null;
-    var currentBlendMode = this.renderSession.blendModeManager.currentBlendMode;
+    BaseTexture currentBaseTexture = null;
+    BlendModes currentBlendMode = this.renderSession.blendModeManager.currentBlendMode;
 
-    for (var i = 0, j = this.currentBatchSize; i < j; i++) {
+    for (int i = 0, j = this.currentBatchSize; i < j; i++) {
 
       nextTexture = this.textures[i];
       nextBlendMode = this.blendModes[i];
@@ -448,10 +474,16 @@ class WebGLSpriteBatch {
 
     //var gl = this.gl;
     // bind the current texture
-    gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl] || createWebGLTexture(texture, gl));
+    if (texture._glTextures[gl] != null) {
+      gl.bindTexture(TEXTURE_2D, texture._glTextures[gl]);
+    }
+    else {
+      gl.bindTexture(TEXTURE_2D, createWebGLTexture(texture, gl));
+    }
+
 
     // check if a texture is dirty..
-    if (texture._dirty[gl]) {
+    if (texture._dirty[gl] == true) {
       updateWebGLTexture(this.currentBaseTexture, gl);
     }
 
