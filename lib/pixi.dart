@@ -130,10 +130,7 @@ class BlendModes {
 
   static const NONE = const BlendModes._(99999);
 
-//  static get values => [NORMAL, ADD];
-
   final int value;
-
   const BlendModes._(this.value);
 }
 
@@ -142,10 +139,7 @@ class scaleModes {
   static const LINEAR = const scaleModes._(1);
   static const NEAREST = const scaleModes._(2);
 
-//  static get values => [NORMAL, ADD];
-
   final int value;
-
   const scaleModes._(this.value);
 }
 

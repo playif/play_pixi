@@ -5,7 +5,7 @@ class Stage extends DisplayObjectContainer {
   bool _interactiveEventsAdded = false;
 
   Rectangle hitArea = new Rectangle(0, 0, 100000, 100000);
-  int backgroundColor;
+  int backgroundColor = 0;
   List<num> backgroundColorSplit = [];
   String backgroundColorString;
 
@@ -13,9 +13,12 @@ class Stage extends DisplayObjectContainer {
 
   InteractionManager interactionManager;
 
-  Stage([this.backgroundColor=0, bool interactive=true]) {
+  Stage([int backgroundColor=0, bool interactive=true]) {
     dirty = true;
     this.stage = this;
+    if(backgroundColor != null){
+      this.backgroundColor=backgroundColor;
+    }
     this.interactive = interactive;
     interactionManager = new InteractionManager(this);
     setBackgroundColor(backgroundColor);
