@@ -13,6 +13,11 @@ class TextStyle {
   num dropShadowDistance = 4;
   String dropShadowColor = 'black';
 
+  num shadowOffsetX=0;
+  num shadowOffsetY=0;
+  String shadowColor='rgba(0,0,0,0)';
+  num shadowBlur=0;
+
   num tint = 0xFFFFFF;
 
 }
