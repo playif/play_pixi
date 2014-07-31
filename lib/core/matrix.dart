@@ -24,6 +24,10 @@ class Matrix {
 
   Float32List array =null;
 
+  double operator[] (int i){
+    return array[i];
+  }
+
   Matrix() {
   }
 
