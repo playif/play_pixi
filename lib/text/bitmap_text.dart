@@ -37,7 +37,12 @@ class BitmapText extends DisplayObjectContainer {
   num textWidth;
   num textHeight;
 
-  BitmapText(this.text, this.style) {
+  BitmapText(this.text, [TextStyle style]) {
+
+    if(style=null){
+      style=new TextStyle();
+    }
+    this.style=style;
 
     this._pool = [];
 
