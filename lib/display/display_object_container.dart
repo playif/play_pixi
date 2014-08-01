@@ -1,8 +1,9 @@
 part of PIXI;
 
 
+
 class DisplayObjectContainer extends DisplayObject {
-  List<DisplayObject> children = [];
+  List<DisplayInterface> children = [];
 
 //  Stage stage = null;
 //  bool visible = true;
@@ -73,9 +74,9 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
 
-  void swapChildren(DisplayObject child, DisplayObject child2) {
+  bool swapChildren(DisplayObject child, DisplayObject child2) {
     if (child == child2) {
-      return;
+      return false;
     }
 
     int index1 = children.indexOf(child);
@@ -87,7 +88,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     children[index1] = child2;
     children[index2] = child;
-
+    return true;
   }
 
   DisplayObject getChildAt(int index) {

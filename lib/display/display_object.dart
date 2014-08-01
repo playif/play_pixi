@@ -1,6 +1,13 @@
 part of PIXI;
 
-class DisplayObject {
+abstract class DisplayInterface{
+  updateTransform();
+  _renderWebGL(RenderSession renderSession);
+  _renderCanvas(RenderSession renderSession);
+  getBounds(Matrix matrix);
+}
+
+class DisplayObject implements DisplayInterface {
 
   Point position = new Point();
   Point scale = new Point(1, 1);
