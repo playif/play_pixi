@@ -50,21 +50,21 @@ class DisplayObjectContainer extends DisplayObject {
   DisplayObjectContainer() {
   }
 
-  DisplayObject addChild(DisplayObject child) {
+  DisplayInterface addChild(DisplayInterface child) {
     return addChildAt(child, children.length);
   }
 
-  DisplayObject addChildAt(DisplayObject child, int index) {
+  DisplayInterface addChildAt(DisplayInterface child, int index) {
     if (index >= 0 && index <= children.length) {
       if (child.parent != null) {
-        child.parent.removeChild(child);
+        (child.parent as DisplayObjectContainer).removeChild(child);
       }
 
       child.parent = this;
 
       children.insert(index, child);
 
-      if (stage != null)child.setStageReference(stage);
+      if (stage != null) child.setStageReference(stage);
 
       return child;
     }
@@ -74,7 +74,7 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
 
-  bool swapChildren(DisplayObject child, DisplayObject child2) {
+  bool swapChildren(DisplayInterface child, DisplayInterface child2) {
     if (child == child2) {
       return false;
     }
@@ -91,7 +91,7 @@ class DisplayObjectContainer extends DisplayObject {
     return true;
   }
 
-  DisplayObject getChildAt(int index) {
+  DisplayInterface getChildAt(int index) {
     if (index >= 0 && index < children.length) {
       return children[index];
     }
@@ -100,11 +100,11 @@ class DisplayObjectContainer extends DisplayObject {
     }
   }
 
-  DisplayObject removeChild(DisplayObject child) {
+  DisplayInterface removeChild(DisplayInterface child) {
     return removeChildAt(children.indexOf(child));
   }
 
-  DisplayObject removeChildAt(int index) {
+  DisplayInterface removeChildAt(int index) {
     var child = getChildAt(index);
     if (stage != null)
       child.removeStageReference();
@@ -115,14 +115,14 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
 
-  List<DisplayObject> removeChildren([int begin=0, int end]) {
+  List<DisplayInterface> removeChildren([int begin=0, int end]) {
     end = end == null ? children.length : end;
     int range = end - begin;
 
     if (range > 0 && range <= end) {
       var removed = children.getRange(begin, range);
       children.removeRange(begin, range);
-      for (DisplayObject child in removed) {
+      for (DisplayInterface child in removed) {
         child.stage = null;
         //if (stage != null)
         //  child.removeStageReference();
@@ -173,7 +173,7 @@ class DisplayObjectContainer extends DisplayObject {
     bool childVisible = false;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
-      DisplayObject child = this.children[i];
+      DisplayInterface child = this.children[i];
 
       if (!child.visible)continue;
 
@@ -228,7 +228,7 @@ class DisplayObjectContainer extends DisplayObject {
     if (this._interactive)this.stage.dirty = true;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
-      DisplayObject child = this.children[i];
+      DisplayInterface child = this.children[i];
       child.setStageReference(stage);
     }
   }

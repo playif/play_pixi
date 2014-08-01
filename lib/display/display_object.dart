@@ -5,6 +5,14 @@ abstract class DisplayInterface{
   _renderWebGL(RenderSession renderSession);
   _renderCanvas(RenderSession renderSession);
   getBounds(Matrix matrix);
+  Matrix get worldTransform;
+  num worldAlpha;
+  //removeChild(DisplayInterface child);
+  DisplayInterface parent;
+  setStageReference(Stage stage);
+  bool visible;
+  Stage stage;
+  bool interactiveChildren;
 }
 
 class DisplayObject implements DisplayInterface {
@@ -18,8 +26,8 @@ class DisplayObject implements DisplayInterface {
   Rectangle hitArea = null;
 
   bool renderable = false;
-  DisplayObjectContainer parent = null;
-  DisplayObjectContainer __iParent = null;
+  DisplayInterface parent = null;
+  DisplayInterface __iParent = null;
   bool interactiveChildren = false;
   bool __hit = false;
   bool __isOver = false;

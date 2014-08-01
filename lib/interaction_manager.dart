@@ -12,7 +12,7 @@ class InteractionManager {
   bool mouseoverEnabled = true;
 
   final List<InteractionData> pool = [];
-  List<DisplayObject> interactiveItems = [];
+  List<DisplayInterface> interactiveItems = [];
   CanvasElement interactionDOMElement;
 
   Renderer target = null;
