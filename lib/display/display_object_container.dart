@@ -2,7 +2,7 @@ part of PIXI;
 
 
 class DisplayObjectContainer extends DisplayObject {
-  final List<DisplayObject> children = [];
+  List<DisplayObject> children = [];
 
 //  Stage stage = null;
 //  bool visible = true;
