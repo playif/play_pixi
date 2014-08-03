@@ -25,6 +25,7 @@ class Matrix {
   Float32List array =null;
 
   double operator[] (int i){
+    if(this.array == null) this.array = new Float32List(9);
     return array[i];
   }
 
