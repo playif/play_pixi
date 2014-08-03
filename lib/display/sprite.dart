@@ -37,7 +37,8 @@ class Sprite extends DisplayObjectContainer {
     renderable = true;
   }
 
-  Sprite(this.texture) {
+  Sprite(Texture texture) {
+    this.texture=texture;
     _setupTexture();
   }
 
@@ -87,30 +88,30 @@ class Sprite extends DisplayObjectContainer {
 
     Matrix worldTransform = (matrix == null) ? this.worldTransform : matrix ;
 
-    var a = worldTransform.a;
-    var b = worldTransform.c;
-    var c = worldTransform.b;
-    var d = worldTransform.d;
-    var tx = worldTransform.tx;
-    var ty = worldTransform.ty;
+    double a = worldTransform.a;
+    double b = worldTransform.c;
+    double c = worldTransform.b;
+    double d = worldTransform.d;
+    double tx = worldTransform.tx;
+    double ty = worldTransform.ty;
 
-    var x1 = a * w1 + c * h1 + tx;
-    var y1 = d * h1 + b * w1 + ty;
+    double x1 = a * w1 + c * h1 + tx;
+    double y1 = d * h1 + b * w1 + ty;
 
-    var x2 = a * w0 + c * h1 + tx;
-    var y2 = d * h1 + b * w0 + ty;
+    double x2 = a * w0 + c * h1 + tx;
+    double y2 = d * h1 + b * w0 + ty;
 
-    var x3 = a * w0 + c * h0 + tx;
-    var y3 = d * h0 + b * w0 + ty;
+    double x3 = a * w0 + c * h0 + tx;
+    double y3 = d * h0 + b * w0 + ty;
 
-    var x4 = a * w1 + c * h0 + tx;
-    var y4 = d * h0 + b * w1 + ty;
+    double x4 = a * w1 + c * h0 + tx;
+    double y4 = d * h0 + b * w1 + ty;
 
-    var maxX = double.NEGATIVE_INFINITY;
-    var maxY = double.NEGATIVE_INFINITY;
+    double maxX = double.NEGATIVE_INFINITY;
+    double maxY = double.NEGATIVE_INFINITY;
 
-    var minX = double.INFINITY;
-    var minY = double.INFINITY;
+    double minX = double.INFINITY;
+    double minY = double.INFINITY;
 
     minX = x1 < minX ? x1 : minX;
     minX = x2 < minX ? x2 : minX;
@@ -132,7 +133,7 @@ class Sprite extends DisplayObjectContainer {
     maxY = y3 > maxY ? y3 : maxY;
     maxY = y4 > maxY ? y4 : maxY;
 
-    var bounds = this._bounds;
+    Rectangle bounds = this._bounds;
 
     bounds.x = minX;
     bounds.width = maxX - minX;

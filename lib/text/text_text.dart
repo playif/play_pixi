@@ -33,7 +33,10 @@ class Text extends Sprite {
   bool dirty;
   bool requiresUpdate;
 
-  Text(this.text, this.style) :super._() {
+  Text(String text, TextStyle style) :super._() {
+    this.text=text;
+    this.style=style;
+
     this.canvas = document.createElement('canvas');
 
     this.context = this.canvas.getContext('2d');

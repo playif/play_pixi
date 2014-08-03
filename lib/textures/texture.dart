@@ -21,6 +21,9 @@ class Texture extends BaseTexture {
 
   num width=0;
   num height=0;
+  
+  num sourceWidth=0;
+  num sourceHeight=0;
 
   Map tintCache;
 

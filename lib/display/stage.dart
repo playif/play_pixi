@@ -13,6 +13,9 @@ class Stage extends DisplayObjectContainer {
 
   InteractionManager interactionManager;
 
+
+
+
   Stage([int backgroundColor=0, bool interactive=true]) {
     dirty = true;
     this.stage = this;
@@ -57,4 +60,8 @@ class Stage extends DisplayObjectContainer {
   Point getMousePosition() {
     return this.interactionManager.mouse.global;
   }
+
+
+
+
 }
