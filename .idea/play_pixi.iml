@@ -33,8 +33,6 @@
       <excludeFolder url="file://$MODULE_DIR$/example/example_18_batch/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_19_cache_as_bitmap/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_19_cache_as_bitmap/tp/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/example_20_rope/data/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/example_20_rope/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_20_strip/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_21_complex_graphics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/packages" />

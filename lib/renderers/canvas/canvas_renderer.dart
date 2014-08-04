@@ -24,8 +24,8 @@ class CanvasRenderer extends Renderer {
     //print(view);
 
     this.view = view;
-    this.view.width = this.width;
-    this.view.height = this.height;
+    this.view.width = this.width.toInt();
+    this.view.height = this.height.toInt();
 
     if (blendModesCanvas == null) {
       //TODO improve the performance

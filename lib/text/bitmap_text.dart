@@ -20,7 +20,7 @@ class Char {
   Map kernings = {
   };
 }
-
+ 
 class BitmapText extends DisplayObjectContainer {
   static Map fonts = {
   };
@@ -37,9 +37,13 @@ class BitmapText extends DisplayObjectContainer {
   num textWidth;
   num textHeight;
 
-  BitmapText(this.text, [TextStyle style]) {
 
-    if(style=null){
+
+  BitmapText(String text, [TextStyle style]) {
+
+    this.text=text;
+
+    if(style == null){
       style=new TextStyle();
     }
     this.style=style;
@@ -60,6 +64,7 @@ class BitmapText extends DisplayObjectContainer {
   setStyle(TextStyle style) {
     //style = style || {};
     //style.align = style.align || 'left';
+
     this.style = style;
 
     var font = style.font.split(' ');
@@ -72,17 +77,18 @@ class BitmapText extends DisplayObjectContainer {
   }
 
   updateText() {
+    //if(this.fontName == null) return;
     ChartData data = fonts[this.fontName];
     var pos = new Point();
-    var prevCharCode = null;
+    int prevCharCode = null;
     List<Char> chars = [];
     int maxLineWidth = 0;
     List lineWidths = [];
-    var line = 0;
-    var scale = this.fontSize / data.size;
+    int line = 0;
+    num scale = this.fontSize / data.size;
 
 
-    for (var i = 0; i < this.text.length; i++) {
+    for (int i = 0; i < this.text.length; i++) {
       int charCode = this.text.codeUnitAt(i);
       if (text[i] == '\n' || text[i] == '\r' || text[i] == '\r\n') {
         lineWidths.add(pos.x);
@@ -95,11 +101,11 @@ class BitmapText extends DisplayObjectContainer {
         continue;
       }
 
-      var charData = data.chars[charCode];
+      Char charData = data.chars[charCode];
       if (charData == null) continue;
 
-      if (prevCharCode && charData[prevCharCode]) {
-        pos.x += charData.kerning[prevCharCode];
+      if (prevCharCode != null && charData.kernings.containsKey(prevCharCode)) {
+        pos.x += charData.kernings[prevCharCode];
       }
       chars.add(new Char()
         ..texture = charData.texture
