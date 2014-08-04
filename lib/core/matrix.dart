@@ -8,13 +8,7 @@ Type determineMatrixArrayType() {
     return Float32List;
 }
 
-/**
-    88   + * The Matrix2 class will choose the best type of array to use between
-    89   + * a regular javascript Array and a Float32Array if the latter is available
-    90   + *
-    91   + * @class Matrix2
-    92   + * @constructor
-    93   + */
+
 Type Matrix2 = determineMatrixArrayType();
 
 
@@ -22,10 +16,10 @@ Type Matrix2 = determineMatrixArrayType();
 class Matrix {
   double a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0;
 
-  Float32List array =null;
+  Float32List array =new Float32List(9);
 
   double operator[] (int i){
-    if(this.array == null) this.array = new Float32List(9);
+    //if(this.array == null) this.array = 
     return array[i];
   }
 
@@ -42,7 +36,7 @@ class Matrix {
   }
 
   Float32List toArray(bool transpose) {
-    if(this.array == null) this.array = new Float32List(9);
+    //if(this.array == null) this.array = new Float32List(9);
     Float32List array =this.array;
 
     if (transpose) {
