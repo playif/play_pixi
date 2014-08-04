@@ -27,6 +27,9 @@ abstract class DisplayInterface{
   Function touchend;
   Function tap;
   Function touchendoutside;
+  
+  Rectangle hitArea = null;
+  bool get worldVisible;
 }
 
 class DisplayObject implements DisplayInterface {
