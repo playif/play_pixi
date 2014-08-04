@@ -307,7 +307,7 @@ class Graphics extends DisplayObjectContainer {
     num sTheta = sin(theta);
 
     //num remainder = ( segs % 1 ) / segs;
-    int segMinus = segs - 1;
+    num segMinus = segs - 1;
     num remainder = ( segMinus % 1 ) / segMinus;
     for(int i=0; i<=segMinus; i++){
       num real = i + remainder * i;

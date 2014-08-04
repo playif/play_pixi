@@ -13,6 +13,20 @@ abstract class DisplayInterface{
   bool visible;
   Stage stage;
   bool interactiveChildren;
+  
+  Function click;
+  Function mousemove;
+  Function mousedown;
+  Function mouseout;
+  Function mouseover;
+  Function mouseup;
+  Function mouseupoutside;
+
+  Function touchmove;
+  Function touchstart;
+  Function touchend;
+  Function tap;
+  Function touchendoutside;
 }
 
 class DisplayObject implements DisplayInterface {

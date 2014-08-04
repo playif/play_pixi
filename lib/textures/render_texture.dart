@@ -135,7 +135,7 @@ class RenderTexture extends Texture {
     this.renderer.spriteBatch.dirty = true;
   }
 
-  void renderCanvas(DisplayObjectContainer displayObject, Point position, bool clear) {
+  void renderCanvas(DisplayObjectContainer displayObject, Point position, [bool clear=false]) {
     var children = displayObject.children;
 
     var originalWorldTransform = displayObject.worldTransform;

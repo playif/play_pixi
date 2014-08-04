@@ -1,5 +1,5 @@
 import "dart:html";
-import "dart:math";
+
 import "../../lib/pixi.dart" as PIXI;
 
 main(){

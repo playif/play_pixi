@@ -1,12 +1,14 @@
 part of PIXI;
 
 class SpriteSheetLoader extends Loader {
+  var json = null;
+
   SpriteSheetLoader(String url, bool crossorigin)
-  :super(url, crossorigin) {
+      : super(url, crossorigin) {
 
   }
 
-  load  () {
+  load() {
     var scope = this;
     var jsonLoader = new JsonLoader(this.url, this.crossorigin);
     jsonLoader.addEventListener('loaded', (PixiEvent event) {
@@ -16,10 +18,10 @@ class SpriteSheetLoader extends Loader {
     jsonLoader.load();
   }
 
-  onLoaded () {
+  onLoaded() {
     this.dispatchEvent(new PixiEvent()
-      ..type = 'loaded'
-      ..content = this);
+        ..type = 'loaded'
+        ..content = this);
   }
 
 

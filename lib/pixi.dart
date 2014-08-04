@@ -2,7 +2,7 @@ library PIXI;
 
 import "dart:html";
 import "dart:math";
-import "dart:async";
+
 import "dart:convert";
 import "dart:js";
 import "dart:web_gl";

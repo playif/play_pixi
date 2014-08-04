@@ -359,7 +359,7 @@ class PixiShader extends Shader {
           else if (uniform['type'] == 'sampler2D') {
               if (uniform['_init'] != null) {
                 gl.activeTexture(TEXTURE0 + this.textureCount);
-                Texture texture = uniform['value'].baseTexture._glTextures[gl];
+                var texture = uniform['value'].baseTexture._glTextures[gl];
                 if (texture == null) {
                   texture = createWebGLTexture(uniform['value'].baseTexture, gl);
                 }

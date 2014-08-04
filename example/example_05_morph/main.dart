@@ -27,7 +27,7 @@ main() {
   var tpoint1 = new List<num>(n);
   var tpoint2 = new List<num>(n);
   var tpoint3 = new List<num>(n);
-  var balls = new List<num>(n);
+  var balls = new List<PIXI.Sprite>(n);
   var renderer;
   var stage;
 

@@ -47,7 +47,7 @@ class AtlasLoader extends Loader {
 
         // parser without rotation support yet!
         for (i = 0; i < result.length; i++) {
-          result[i] = result[i].replace(Loader.resultSplit, '');
+          result[i] = result[i].replaceAll(Loader.resultSplit, '');
           if (result[i] == '') {
             nameInNextLine = i + 1;
           }
@@ -74,22 +74,22 @@ class AtlasLoader extends Loader {
                 var text = result[i].split(' ');
                 if (lineCount % 7 == 3) {
                   // position
-                  currentFrame.frame.x = int.parse(text[1].replace(',', ''));
+                  currentFrame.frame.x = int.parse(text[1].replaceAll(',', ''));
                   currentFrame.frame.y = int.parse(text[2]);
                 } else if (lineCount % 7 == 4) {
                   // size
-                  currentFrame.frame.w = int.parse(text[1].replace(',', ''));
+                  currentFrame.frame.w = int.parse(text[1].replaceAll(',', ''));
                   currentFrame.frame.h = int.parse(text[2]);
                 } else if (lineCount % 7 == 5) {
                   // real size
                   var realSize = {
                       'x' : 0,
                       'y' : 0,
-                      'w' : int.parse(text[1].replace(',', '')),
+                      'w' : int.parse(text[1].replaceAll(',', '')),
                       'h' : int.parse(text[2])
                   };
 
-                  if (realSize.w > currentFrame.frame.w || realSize.h > currentFrame.frame.h) {
+                  if (realSize['w'] > currentFrame.frame.w || realSize['h'] > currentFrame.frame.h) {
                     currentFrame.trimmed = true;
                     currentFrame.realSize = realSize;
                   } else {

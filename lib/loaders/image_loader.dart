@@ -2,7 +2,7 @@ part of PIXI;
 
 class ImageLoader extends Loader {
   Texture texture = null;
-  List<Rectangle> frames = [];
+  List<Texture> frames = [];
 
   ImageLoader(String url, bool crossorigin)
   :super(url, crossorigin) {
@@ -34,7 +34,7 @@ class ImageLoader extends Loader {
     var i = 0;
     for (var y = 0; y < rows; y++) {
       for (var x = 0; x < cols; x++, i++) {
-        var texture = new Texture(this.texture, new Rectangle()
+        Texture texture = new Texture(this.texture, new Rectangle()
           ..x = x * frameWidth
           ..y = y * frameHeight
           ..width = frameWidth

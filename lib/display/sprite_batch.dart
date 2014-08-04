@@ -89,7 +89,7 @@ class SpriteBatch extends DisplayObjectContainer {
         // allow for trimming
 
         if (renderSession.roundPixels) {
-          context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx | 0, childTransform.ty | 0);
+          context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx.floor(), childTransform.ty.floor());
         }
         else {
           context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx, childTransform.ty);

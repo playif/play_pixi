@@ -29,7 +29,7 @@ class CanvasTinter {
     if (texture.tintCache[stringColor] != null) return texture.tintCache[stringColor];
 
     // clone texture..
-    var canvas = CanvasTinter.canvas != null ? CanvasTinter.canvas : document.createElement("canvas");
+    CanvasElement canvas = CanvasTinter.canvas != null ? CanvasTinter.canvas : new CanvasElement();
 
     //PIXI.CanvasTinter.tintWithPerPixel(texture, stringColor, canvas);
 
@@ -39,7 +39,7 @@ class CanvasTinter {
     if (CanvasTinter.convertTintToImage) {
       // is this better?
       var tintImage = new ImageElement();
-      tintImage.src = canvas.toDataURL();
+      tintImage.src = canvas.toDataUrl();
 
       texture.tintCache[stringColor] = tintImage;
     }
