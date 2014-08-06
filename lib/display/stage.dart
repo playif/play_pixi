@@ -12,9 +12,7 @@ class Stage extends DisplayObjectContainer {
   Matrix worldTransform = new Matrix();
 
   InteractionManager interactionManager;
-
-
-
+   
 
   Stage([int backgroundColor=0, bool interactive=true]) {
     dirty = true;

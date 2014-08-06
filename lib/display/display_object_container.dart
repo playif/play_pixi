@@ -8,7 +8,7 @@ class DisplayObjectContainer extends DisplayObject {
 //  Stage stage = null;
 //  bool visible = true;
 
-  num _width;
+  num _width; 
 
   num get width {
     return this.scale.x * this.getLocalBounds().width;
@@ -105,8 +105,8 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
   DisplayInterface removeChildAt(int index) {
-    var child = getChildAt(index);
-    if (stage != null)
+    DisplayInterface child = getChildAt(index);
+    if (stage != null && child is DisplayObjectContainer)
       child.removeStageReference();
 
     child.parent = null;
