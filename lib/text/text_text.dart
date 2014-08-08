@@ -26,15 +26,20 @@ class Text extends Sprite {
   static RegExp splitReg = new RegExp("(?:\r\n|\r|\n)");
   static Map<String, int> heightCache = {
   };
-  String text;
+  String _text;
   TextStyle style;
   CanvasElement canvas;
   CanvasRenderingContext2D context;
   bool dirty;
   bool requiresUpdate;
 
+  String get text=>_text;
+  set text(String value){
+    setText(value);
+  }
+
   Text(String text, TextStyle style) :super._() {
-    this.text=text;
+    this._text=text;
     this.style=style;
 
     this.canvas = document.createElement('canvas');
@@ -57,7 +62,7 @@ class Text extends Sprite {
   }
 
   setText(Object text) {
-    this.text = text.toString();
+    this._text = text.toString();
     this.dirty = true;
   }
 
