@@ -1,9 +1,7 @@
 part of PIXI;
 
-Map TextureCache = {
-};
-Map FrameCache = {
-};
+Map TextureCache = {};
+Map FrameCache = {};
 
 int TextureCacheIdGenerator = 0;
 
@@ -19,15 +17,15 @@ class Texture extends BaseTexture {
 
   BaseTexture baseTexture;
 
-  num width=0;
-  num height=0;
-  
-  num sourceWidth=0;
-  num sourceHeight=0;
+  num width = 0;
+  num height = 0;
+
+  num sourceWidth = 0;
+  num sourceHeight = 0;
 
   Map tintCache;
 
-  bool needsUpdate =true;
+  bool needsUpdate = true;
 
   bool isTiling;
 
@@ -35,7 +33,7 @@ class Texture extends BaseTexture {
 
   Rectangle crop;
 
-  Texture._(){
+  Texture._() {
     scope = this;
   }
 
@@ -50,19 +48,17 @@ class Texture extends BaseTexture {
 
 
 
-    if (baseTexture is Texture)
-      baseTexture = (baseTexture as Texture).baseTexture;
+    if (baseTexture is Texture) baseTexture = (baseTexture as Texture).baseTexture;
     this.baseTexture = baseTexture;
 
     this.crop = new Rectangle(0, 0, 1, 1);
 
     if (baseTexture.hasLoaded) {
 
-      if (this.noFrame)frame = new Rectangle(0, 0, baseTexture.width, baseTexture.height);
+      if (this.noFrame) frame = new Rectangle(0, 0, baseTexture.width, baseTexture.height);
 
       this.setFrame(frame);
-    }
-    else {
+    } else {
       var scope = this;
       baseTexture.addEventListener('loaded', (e) {
         scope.onBaseTextureLoaded();
@@ -76,23 +72,23 @@ class Texture extends BaseTexture {
     var baseTexture = this.baseTexture;
     baseTexture.removeEventListener('loaded', this.onBaseTextureLoaded);
 
-    if (this.noFrame)this.frame = new Rectangle(0, 0, baseTexture.width, baseTexture.height);
+    if (this.noFrame) this.frame = new Rectangle(0, 0, baseTexture.width, baseTexture.height);
 
     this.setFrame(this.frame);
 
-    this.scope.dispatchEvent(new PixiEvent(type:'update', content: this));
+    this.scope.dispatchEvent(new PixiEvent(type: 'update', content: this));
   }
 
-  destroy([bool destroyBase=false]) {
+  destroy([bool destroyBase = false]) {
     if (destroyBase) this.baseTexture.destroy();
     this.valid = false;
   }
 
   setFrame(Rectangle frame) {
-//    window.console.log(frame.x);
-//    window.console.log(frame.width);
-//    window.console.log(frame.height);
-//    window.console.log(frame.y);
+    //    window.console.log(frame.x);
+    //    window.console.log(frame.width);
+    //    window.console.log(frame.height);
+    //    window.console.log(frame.y);
 
     this.noFrame = false;
 
@@ -101,26 +97,20 @@ class Texture extends BaseTexture {
     this.height = frame.height;
 
     this.crop.x = frame.x;
-       this.crop.y = frame.y;
-      this.crop.width = frame.width;
+    this.crop.y = frame.y;
+    this.crop.width = frame.width;
     this.crop.height = frame.height;
 
 
     //print("$width ${frame.x} ${this.baseTexture.width } $height  ${frame.y} ${this.baseTexture.height}");
 
-    if (this.trim == null && (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height)){
+    if (this.trim == null && (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height)) {
       throw new Exception('Texture Error: frame does not fit inside the base Texture dimensions');
     }
 
     //this.updateFrame = true;
 
-    this.valid = frame !=null
-    && frame.width !=null
-    && frame.width !=0
-    && frame.height !=null
-    && frame.height !=0
-    && this.baseTexture.source !=null
-    && this.baseTexture.hasLoaded;
+    this.valid = frame != null && frame.width != null && frame.width != 0 && frame.height != null && frame.height != 0 && this.baseTexture.source != null && this.baseTexture.hasLoaded;
 
     Texture.frameUpdates.add(this);
 
@@ -128,7 +118,7 @@ class Texture extends BaseTexture {
 
   void _updateWebGLuvs() {
 
-    if (this._uvs ==null)this._uvs = new TextureUvs();
+    if (this._uvs == null) this._uvs = new TextureUvs();
 
     Rectangle frame = this.crop;
     num tw = this.baseTexture.width;
@@ -161,11 +151,11 @@ class Texture extends BaseTexture {
   static Texture fromFrame(String frameId) {
     //window.console.log(TextureCache);
     var texture = TextureCache[frameId];
-    if (texture ==null) throw new Exception('The frameId "$frameId" does not exist in the texture cache');
+    if (texture == null) throw new Exception('The frameId "$frameId" does not exist in the texture cache');
     return texture;
   }
 
-  static Texture fromCanvas(CanvasElement canvas, [ scaleModes scaleMode]) {
+  static Texture fromCanvas(CanvasElement canvas, [scaleModes scaleMode]) {
     var baseTexture = BaseTexture.fromCanvas(canvas, scaleMode);
 
     return new Texture(baseTexture);
@@ -184,14 +174,21 @@ class Texture extends BaseTexture {
   }
 
 
-//  resize(num width, num height) {
-//    throw new Exception();
-//  }
+  //  resize(num width, num height) {
+  //    throw new Exception();
+  //  }
 
 
 
 }
 
 class TextureUvs {
-  num x0 = 0.0, y0 = 0.0, x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0, x3 = 0.0, y3 = 0.0;
+  num x0 = 0.0,
+      y0 = 0.0,
+      x1 = 0.0,
+      y1 = 0.0,
+      x2 = 0.0,
+      y2 = 0.0,
+      x3 = 0.0,
+      y3 = 0.0;
 }

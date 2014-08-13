@@ -9,6 +9,30 @@ A Dart port of pixi.js
 
 The final goal of this package is to build Phaser game engine naming [play_phaser][1] in Dart lang.
 
+Example
+==========
+* [example_01_basics][2]
+* [example_02_sprite_sheet][3]
+* [example_03_movie_clip][4]
+* [example_04_balls][5]
+* [example_05_morph][6]
+* [example_06_interactive][7]
+* [example_07_transparent_background][8]
+* [example_08_dragging][9]
+* [example_09_tiling_texture][10]
+* [example_10_text][11]
+* [example_11_render_texture][12]
+* [example_12_spine][13]
+* [example_13_graphics][14]
+* [example_14_masking][15]
+* [example_15_filters][16]
+* [example_16_blend_modes][17]
+* [example_17_tinting][18]
+* [example_18_batch][19]
+* [example_19_cache_as_bitmap][20]
+* [example_20_strip][21]
+* [example_21_complex_graphics][22]
+
 Change log
 ==========
 0.9.4+
@@ -29,3 +53,25 @@ Change log
  * Add Spine implementation and examples
 
 [1]: https://github.com/playif/play_phaser
+[2]: http://playif.github.io/pixi_example/example_01_basics/index.html
+[3]: http://playif.github.io/pixi_example/example_02_sprite_sheet/index.html
+[4]: http://playif.github.io/pixi_example/example_03_movie_clip/index.html
+[5]: http://playif.github.io/pixi_example/example_04_balls/index.html
+[6]: http://playif.github.io/pixi_example/example_05_morph/index.html
+[7]: http://playif.github.io/pixi_example/example_06_interactive/index.html
+[8]: http://playif.github.io/pixi_example/example_07_transparent_background/index.html
+[9]: http://playif.github.io/pixi_example/example_08_dragging/index.html
+[10]: http://playif.github.io/pixi_example/example_09_tiling_texture/index.html
+[11]: http://playif.github.io/pixi_example/example_10_text/index.html
+[12]: http://playif.github.io/pixi_example/example_11_render_texture/index.html
+[13]: http://playif.github.io/pixi_example/example_12_spine/index.html
+[14]: http://playif.github.io/pixi_example/example_13_graphics/index.html
+[15]: http://playif.github.io/pixi_example/example_14_masking/index.html
+[16]: http://playif.github.io/pixi_example/example_15_filters/index.html
+[17]: http://playif.github.io/pixi_example/example_16_blend_modes/index.html
+[18]: http://playif.github.io/pixi_example/example_17_tinting/index.html
+[19]: http://playif.github.io/pixi_example/example_18_batch/index.html
+[20]: http://playif.github.io/pixi_example/example_19_cache_as_bitmap/index.html
+[21]: http://playif.github.io/pixi_example/example_20_strip/index.html
+[21]: http://playif.github.io/pixi_example/example_21_complex_graphics/index.html
+
