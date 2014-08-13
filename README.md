@@ -6,10 +6,9 @@ A Dart port of pixi.js
 * Full examples that were only minimally modified from original examples.
 * Tested in CocoonJS.
 
+Want to build a game? Please check the Dart port of Phaser game engine naming [play_phaser][1].
 
-The final goal of this package is to build Phaser game engine naming [play_phaser][1] in Dart lang.
-
-Example
+Demo and Examples
 ==========
 * [example_01_basics][2]
 * [example_02_sprite_sheet][3]
@@ -35,6 +34,9 @@ Example
 
 Change log
 ==========
+0.9.4+4
+ * Demo and Examples
+
 0.9.4+
  * upgrade to PIXI v1.6.1
 
