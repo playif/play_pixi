@@ -73,5 +73,5 @@ Change log
 [19]: http://playif.github.io/pixi_example/example_18_batch/index.html
 [20]: http://playif.github.io/pixi_example/example_19_cache_as_bitmap/index.html
 [21]: http://playif.github.io/pixi_example/example_20_strip/index.html
-[21]: http://playif.github.io/pixi_example/example_21_complex_graphics/index.html
+[22]: http://playif.github.io/pixi_example/example_21_complex_graphics/index.html
 
