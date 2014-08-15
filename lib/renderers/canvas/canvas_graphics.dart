@@ -5,7 +5,7 @@ class CanvasGraphics {
   }
 
   static renderGraphics(Graphics graphics, CanvasRenderingContext2D context) {
-    num worldAlpha = graphics.worldAlpha;
+    num worldAlpha = graphics._worldAlpha;
     String color = '';
 
     for (var i = 0; i < graphics.graphicsData.length; i++) {

@@ -9,14 +9,14 @@ class Stage extends DisplayObjectContainer {
   List<num> backgroundColorSplit = [];
   String backgroundColorString;
 
-  Matrix worldTransform = new Matrix();
+  Matrix _worldTransform = new Matrix();
 
   InteractionManager interactionManager;
    
 
   Stage([int backgroundColor=0, bool interactive=true]) {
     dirty = true;
-    this.stage = this;
+    this._stage = this;
     if(backgroundColor != null){
       this.backgroundColor=backgroundColor;
     }
@@ -30,7 +30,7 @@ class Stage extends DisplayObjectContainer {
   }
 
   void updateTransform() {
-    this.worldAlpha = 1.0;
+    this._worldAlpha = 1.0;
 
     for (var i = 0, j = this.children.length; i < j; i++) {
       this.children[i].updateTransform();

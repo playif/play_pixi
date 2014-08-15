@@ -113,10 +113,10 @@ class TilingSprite extends Sprite {
       renderSession.maskManager.pushMask(this._mask, context);
     }
 
-    context.globalAlpha = this.worldAlpha;
+    context.globalAlpha = this._worldAlpha;
 
 
-    var transform = this.worldTransform;
+    var transform = this._worldTransform;
 
     // allow for trimming
 //(this.anchor.x) * -frame.width,
@@ -201,7 +201,7 @@ class TilingSprite extends Sprite {
     var h0 = height * (1 - this.anchor.y);
     var h1 = height * -this.anchor.y;
 
-    var worldTransform = this.worldTransform;
+    var worldTransform = this._worldTransform;
 
     var a = worldTransform[0];
     var b = worldTransform[3];

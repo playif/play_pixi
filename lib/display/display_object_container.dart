@@ -56,15 +56,15 @@ class DisplayObjectContainer extends DisplayObject {
 
   DisplayInterface addChildAt(DisplayInterface child, int index) {
     if (index >= 0 && index <= children.length) {
-      if (child.parent != null) {
-        (child.parent as DisplayObjectContainer).removeChild(child);
+      if (child._parent != null) {
+        (child._parent as DisplayObjectContainer).removeChild(child);
       }
 
-      child.parent = this;
+      child._parent = this;
 
       children.insert(index, child);
 
-      if (stage != null) child.setStageReference(stage);
+      if (_stage != null) child.setStageReference(_stage);
 
       return child;
     }
@@ -106,10 +106,10 @@ class DisplayObjectContainer extends DisplayObject {
 
   DisplayInterface removeChildAt(int index) {
     DisplayInterface child = getChildAt(index);
-    if (stage != null && child is DisplayObjectContainer)
+    if (_stage != null && child is DisplayObjectContainer)
       child.removeStageReference();
 
-    child.parent = null;
+    child._parent = null;
     children.removeAt(index);
     return child;
   }
@@ -123,10 +123,10 @@ class DisplayObjectContainer extends DisplayObject {
       var removed = children.getRange(begin, range);
       children.removeRange(begin, range);
       for (DisplayInterface child in removed) {
-        child.stage = null;
+        child._stage = null;
         //if (stage != null)
         //  child.removeStageReference();
-        child.parent = null;
+        child._parent = null;
       }
       return removed;
     }
@@ -154,10 +154,10 @@ class DisplayObjectContainer extends DisplayObject {
 
     // TODO the bounds have already been calculated this render session so return what we have
     if (matrix != null) {
-      Matrix matrixCache = this.worldTransform;
-      this.worldTransform = matrix;
+      Matrix matrixCache = this._worldTransform;
+      this._worldTransform = matrix;
       this.updateTransform();
-      this.worldTransform = matrixCache;
+      this._worldTransform = matrixCache;
     }
 
     num minX = double.INFINITY;
@@ -208,9 +208,9 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
   Rectangle getLocalBounds() {
-    Matrix matrixCache = this.worldTransform;
+    Matrix matrixCache = this._worldTransform;
 
-    this.worldTransform = IdentityMatrix;
+    this._worldTransform = IdentityMatrix;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
       this.children[i].updateTransform();
@@ -218,14 +218,14 @@ class DisplayObjectContainer extends DisplayObject {
 
     Rectangle bounds = this.getBounds();
 
-    this.worldTransform = matrixCache;
+    this._worldTransform = matrixCache;
 
     return bounds;
   }
 
   void setStageReference(Stage stage) {
-    this.stage = stage;
-    if (this._interactive)this.stage.dirty = true;
+    this._stage = stage;
+    if (this._interactive)this._stage.dirty = true;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
       DisplayInterface child = this.children[i];
@@ -240,9 +240,9 @@ class DisplayObjectContainer extends DisplayObject {
       child.removeStageReference();
     }
 
-    if (this._interactive) this.stage.dirty = true;
+    if (this._interactive) this._stage.dirty = true;
 
-    this.stage = null;
+    this._stage = null;
   }
 
   void _renderWebGL(RenderSession renderSession) {

@@ -86,7 +86,7 @@ class Sprite extends DisplayObjectContainer {
     num h0 = height * (1 - this.anchor.y);
     num h1 = height * -this.anchor.y;
 
-    Matrix worldTransform = (matrix == null) ? this.worldTransform : matrix ;
+    Matrix worldTransform = (matrix == null) ? this._worldTransform : matrix ;
 
     double a = worldTransform.a;
     double b = worldTransform.c;
@@ -227,7 +227,7 @@ class Sprite extends DisplayObjectContainer {
     //ignore null sources
 //    if (frame != null && frame.width != 0 && frame.height != 0 && texture.baseTexture.source != null) {
     if (this.texture.valid) {
-      renderSession.context.globalAlpha = this.worldAlpha;
+      renderSession.context.globalAlpha = this._worldAlpha;
 
       //Matrix transform = this.worldTransform;
 
@@ -235,22 +235,22 @@ class Sprite extends DisplayObjectContainer {
       if (renderSession.roundPixels != null) {
         //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());
         renderSession.context.setTransform(
-            this.worldTransform.a,
-            this.worldTransform.c,
-            this.worldTransform.b,
-            this.worldTransform.d,
-            this.worldTransform.tx.floor(),
-            this.worldTransform.ty.floor());
+            this._worldTransform.a,
+            this._worldTransform.c,
+            this._worldTransform.b,
+            this._worldTransform.d,
+            this._worldTransform.tx.floor(),
+            this._worldTransform.ty.floor());
       }
       else {
         //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
         renderSession.context.setTransform(
-            this.worldTransform.a,
-            this.worldTransform.c,
-            this.worldTransform.b,
-            this.worldTransform.d,
-            this.worldTransform.tx == null ? 0 : this.worldTransform.tx,
-            this.worldTransform.ty == null ? 0 : this.worldTransform.ty);
+            this._worldTransform.a,
+            this._worldTransform.c,
+            this._worldTransform.b,
+            this._worldTransform.d,
+            this._worldTransform.tx == null ? 0 : this._worldTransform.tx,
+            this._worldTransform.ty == null ? 0 : this._worldTransform.ty);
       }
 
 

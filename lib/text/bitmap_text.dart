@@ -152,7 +152,7 @@ class BitmapText extends DisplayObjectContainer {
       c.position.y = chars[i].position.y * scale;
       c.scale.x = c.scale.y = scale;
       c.tint = tint;
-      if (c.parent == null) this.addChild(c);
+      if (c._parent == null) this.addChild(c);
     }
 
 // remove unnecessary children.

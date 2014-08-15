@@ -9,7 +9,7 @@ class InteractionData {
 
 
   Point getLocalPosition(DisplayObject displayObject) {
-    Matrix worldTransform = displayObject.worldTransform;
+    Matrix worldTransform = displayObject._worldTransform;
 
     // do a cheeky transform to get the mouse coords;
     num a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,

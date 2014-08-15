@@ -108,15 +108,15 @@ class RenderTexture extends Texture {
     List<DisplayObject> children = displayObject.children;
 
     //TODO -? create a new one??? dont think so!
-    Matrix originalWorldTransform = displayObject.worldTransform;
-    displayObject.worldTransform = RenderTexture.tempMatrix;
+    Matrix originalWorldTransform = displayObject._worldTransform;
+    displayObject._worldTransform = RenderTexture.tempMatrix;
     // modify to flip...
-    displayObject.worldTransform.d = -1.0;
-    displayObject.worldTransform.ty = this.projection.y * -2.0;
+    displayObject._worldTransform.d = -1.0;
+    displayObject._worldTransform.ty = this.projection.y * -2.0;
 
     if (position != null) {
-      displayObject.worldTransform.tx = position.x;
-      displayObject.worldTransform.ty -= position.y;
+      displayObject._worldTransform.tx = position.x;
+      displayObject._worldTransform.ty -= position.y;
     }
 
     for (int i = 0, j = children.length; i < j; i++) {
@@ -130,7 +130,7 @@ class RenderTexture extends Texture {
     //
     this.renderer.renderDisplayObject(displayObject, this.projection, this.textureBuffer.frameBuffer);
 
-    displayObject.worldTransform = originalWorldTransform;
+    displayObject._worldTransform = originalWorldTransform;
 
     this.renderer.spriteBatch.dirty = true;
   }
@@ -138,17 +138,17 @@ class RenderTexture extends Texture {
   void renderCanvas(DisplayObjectContainer displayObject, Point position, [bool clear=false]) {
     var children = displayObject.children;
 
-    var originalWorldTransform = displayObject.worldTransform;
+    var originalWorldTransform = displayObject._worldTransform;
 
-    displayObject.worldTransform = RenderTexture.tempMatrix;
+    displayObject._worldTransform = RenderTexture.tempMatrix;
 
     if (position != null) {
-      displayObject.worldTransform.tx = position.x;
-      displayObject.worldTransform.ty = position.y;
+      displayObject._worldTransform.tx = position.x;
+      displayObject._worldTransform.ty = position.y;
     }
     else {
-      displayObject.worldTransform.tx = 0.0;
-      displayObject.worldTransform.ty = 0.0;
+      displayObject._worldTransform.tx = 0.0;
+      displayObject._worldTransform.ty = 0.0;
     }
 
 
@@ -164,7 +164,7 @@ class RenderTexture extends Texture {
 
     context.setTransform(1, 0, 0, 1, 0, 0);
 
-    displayObject.worldTransform = originalWorldTransform;
+    displayObject._worldTransform = originalWorldTransform;
   }
 
 }

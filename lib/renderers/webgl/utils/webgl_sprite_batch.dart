@@ -114,7 +114,7 @@ class WebGLSpriteBatch {
     if (uvs == null) return;
 
     // get the sprites current alpha
-    num alpha = sprite.worldAlpha;
+    num alpha = sprite._worldAlpha;
     num tint = sprite.tint.toDouble();
 
     Float32List verticies = this.vertices;
@@ -149,7 +149,7 @@ class WebGLSpriteBatch {
 
     int index = this.currentBatchSize * 4 * this.vertSize;
 
-    Matrix worldTransform = sprite.worldTransform;//.toArray();
+    Matrix worldTransform = sprite._worldTransform;//.toArray();
 
     num a = worldTransform.a;//[0];
     num b = worldTransform.c;//[3];
@@ -269,7 +269,7 @@ class WebGLSpriteBatch {
     uvs.y3 = (1 * scaleY) - offsetY;
 
     // get the tilingSprites current alpha
-    num alpha = tilingSprite.worldAlpha;
+    num alpha = tilingSprite._worldAlpha;
     num tint = tilingSprite.tint.toDouble();
 
     Float32List verticies = this.vertices;
@@ -288,7 +288,7 @@ class WebGLSpriteBatch {
 
     int index = this.currentBatchSize * 4 * this.vertSize;
 
-    Matrix worldTransform = tilingSprite.worldTransform;
+    Matrix worldTransform = tilingSprite._worldTransform;
 
     num a = worldTransform.a;//[0];
     num b = worldTransform.c;//[3];

@@ -573,7 +573,7 @@ class Graphics extends DisplayObjectContainer {
     if (this.visible == false || this.alpha == 0 || this.isMask == true)return;
 
     var context = renderSession.context;
-    var transform = this.worldTransform;
+    var transform = this._worldTransform;
 
     if (this.blendMode != renderSession.currentBlendMode) {
       renderSession.currentBlendMode = this.blendMode;
@@ -602,7 +602,7 @@ class Graphics extends DisplayObjectContainer {
 
   Rectangle getBounds([Matrix matrix]) {
     if (matrix == null) {
-      matrix = this.worldTransform;
+      matrix = this._worldTransform;
     }
 
     if (this.bounds == null)this.updateBounds();
@@ -737,7 +737,7 @@ class Graphics extends DisplayObjectContainer {
       this._cachedSprite = new Sprite(texture);
       this._cachedSprite.buffer = canvasBuffer;
 
-      this._cachedSprite.worldTransform = this.worldTransform;
+      this._cachedSprite._worldTransform = this._worldTransform;
     }
     else {
       this._cachedSprite.buffer.resize(bounds.width, bounds.height);

@@ -1,19 +1,19 @@
 part of PIXI;
 
-abstract class DisplayInterface{
+abstract class DisplayInterface {
   updateTransform();
   _renderWebGL(RenderSession renderSession);
   _renderCanvas(RenderSession renderSession);
   getBounds(Matrix matrix);
-  Matrix get worldTransform;
-  num worldAlpha;
+  Matrix get _worldTransform;
+  num _worldAlpha;
   //removeChild(DisplayInterface child);
-  DisplayInterface parent;
+  DisplayInterface _parent;
   setStageReference(Stage stage);
   bool visible;
-  Stage stage;
+  Stage _stage;
   bool interactiveChildren;
-  
+
   Function click;
   Function mousemove;
   Function mousedown;
@@ -27,31 +27,70 @@ abstract class DisplayInterface{
   Function touchend;
   Function tap;
   Function touchendoutside;
-  
+
   Rectangle hitArea = null;
   bool get worldVisible;
 }
 
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * The base class for all objects that are rendered on the screen. 
+ * This is an abstract class and should not be used on its own rather it should be extended.
+ *
+ */
 class DisplayObject implements DisplayInterface {
-
+  /// The coordinate of the object relative to the local coordinates of the parent.
   Point position = new Point();
-  Point scale = new Point(1, 1);
-  Point pivot = new Point(0, 0);
-  num rotation = 0;
-  num alpha = 1;
-  bool visible = true;
-  Rectangle hitArea = null;
 
+  /// The scale factor of the object, default is (1, 1).
+  Point scale = new Point(1, 1);
+
+  /// The pivot point of the [DisplayObject] that it rotates around
+  Point pivot = new Point(0, 0);
+
+  /// The rotation of the object in radians.
+  num rotation = 0;
+
+  /// The opacity of the object.
+  num alpha = 1;
+
+  /// The visibility of the object.
+  bool visible = true;
+
+  /**
+   * This is the defined area that will pick up mouse / touch events. It is null by default.
+   * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
+   *
+   * @The instance of [hitArea] is one of [Rectangle]|[Circle]|[Ellipse]|[Polygon]
+   */
+  Shape hitArea = null;
+
+  /// This is used to indicate if the displayObject should display a mouse hand cursor on rollover
+  bool buttonMode = false;
+
+  /// Can this object be rendered
   bool renderable = false;
-  DisplayInterface parent = null;
+
+
+  DisplayInterface _parent = null;
+
+  /// [read-only] The display object container that contains this display object.
+  DisplayInterface get parent => _parent;
+
   DisplayInterface __iParent = null;
+
+
   bool interactiveChildren = false;
   bool __hit = false;
   bool __isOver = false;
   bool __mouseIsDown = false;
   bool __isDown = false;
 
-  bool dirty=false;
+  bool dirty = false;
 
   Function click;
   Function mousemove;
@@ -67,73 +106,90 @@ class DisplayObject implements DisplayInterface {
   Function tap;
   Function touchendoutside;
 
-  Map<int, InteractionData> __touchData={};
+  Map<int, InteractionData> __touchData = {};
   //bool buttonMode = false;
   //DisplayObjectContainer get parent => _parent;
 
-  Stage stage = null;
-  bool buttonMode = false;
 
-  //Stage get stage => _stage;
+  Stage _stage = null;
+  /// [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
+  Stage get stage => _stage;
 
-  num worldAlpha = 1.0;
+  num _worldAlpha = 1.0;
 
-  //num get worldAlpha => _worldAlpha;
+  /// [read-only] The multiplied alpha of the displayObject
+  num get worldAlpha => _worldAlpha;
+
 
   bool _interactive = false;
 
-  bool get interactive => _interactive ;
+  /// Indicates if the sprite will have touch and mouse interactivity. It is false by default
+  bool get interactive => _interactive;
 
   set interactive(value) {
     _interactive = value;
-    if (this.stage != null) this.stage.dirty = true;
+    if (this._stage != null) this._stage.dirty = true;
   }
 
   String defaultCursor = 'pointer';
 
-  Matrix worldTransform = new Matrix();
+  Matrix _worldTransform = new Matrix();
 
-//  Matrix get worldTransform => _worldTransform ;
+  /// [read-only] Current transform of the object based on world (parent) factors
+  Matrix get worldTransform => _worldTransform;
 
-  List color = [];
+  /// TODO
+  //List color = [];
+  //bool dynamic = true;
 
-  bool dynamic = true;
 
   num _sr = 0;
   num _cr = 1;
 
+  /**
+   * The area the filter is applied to like the hitArea this is used as more of an optimisation
+   * rather than figuring out the dimensions of the displayObject each frame you can set this rectangle
+   */
   Rectangle filterArea = null;
 
+  /// The original, cached bounds of the object
   Rectangle _bounds = new Rectangle(0, 0, 1, 1);
 
+  /// The most up-to-date bounds of the object
   Rectangle _currentBounds = null;
 
-  DisplayObject _mask = null;
+  Graphics _mask = null;
 
+  /**
+   * Sets a mask for the displayObject. A mask is an object that limits the visibility of an object to the shape of the mask applied to it.
+   * In PIXI a regular mask must be a [Graphics] object. This allows for much faster masking in canvas as it utilises shape clipping.
+   * To remove a mask, set this property to null.
+   */
   Graphics get mask => _mask;
 
-  set mask(DisplayObject value) {
-    if (this._mask != null)this._mask.isMask = false;
+  set mask(Graphics value) {
+    if (this._mask != null) this._mask.isMask = false;
     this._mask = value;
-    if (this._mask != null)this._mask.isMask = true;
+    if (this._mask != null) this._mask.isMask = true;
   }
-
-  bool isMask = false;
 
   bool _cacheAsBitmap = false;
 
+  /**
+   * Set weather or not a the display objects is cached as a bitmap.
+   * This basically takes a snap shot of the display object as it is at that moment. It can provide a performance benefit for complex static displayObjects
+   */
   bool get cacheAsBitmap => _cacheAsBitmap;
 
   Sprite _cachedSprite;
 
   set cacheAsBitmap(bool value) {
-    if (this._cacheAsBitmap == value)return;
+    if (this._cacheAsBitmap == value) return;
 
     if (value) {
       //this._cacheIsDirty = true;
       this._generateCachedSprite();
-    }
-    else {
+    } else {
       this._destroyCachedSprite();
     }
 
@@ -143,14 +199,14 @@ class DisplayObject implements DisplayInterface {
 
   bool _cacheIsDirty = false;
 
+  /// [read-only] Indicates if the sprite is globaly visible.
   bool get worldVisible {
     DisplayObject item = this;
 
     do {
       if (!item.visible) return false;
-      item = item.parent;
-    }
-    while (item != null);
+      item = item._parent;
+    } while (item != null);
 
     return true;
   }
@@ -159,6 +215,13 @@ class DisplayObject implements DisplayInterface {
 
   List<AbstractFilter> _filters = null;
 
+  /**
+   * Sets the filters for the displayObject.
+   * * IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
+   * To remove filters simply set this property to 'null'
+   * @property filters
+   * @type Array An array of filters
+   */
   List<AbstractFilter> get filters => _filters;
 
   set filters(List<AbstractFilter> value) {
@@ -175,39 +238,42 @@ class DisplayObject implements DisplayInterface {
       // TODO change this as it is legacy
       this._filterBlock.target = this;
       this._filterBlock.filterPasses = passes;
-//          'target':this, 'filterPasses':passes
-//      };
+      //          'target':this, 'filterPasses':passes
+      //      };
     }
 
     this._filters = value;
   }
 
-  num rotationCache = 0;
+  num _rotationCache = 0;
 
+  /// Updates the object transform for rendering
   void updateTransform() {
     // TODO OPTIMIZE THIS!! with dirty
-    if (this.rotation != this.rotationCache) {
+    if (this.rotation != this._rotationCache) {
 
-      this.rotationCache = this.rotation;
+      this._rotationCache = this.rotation;
       this._sr = sin(this.rotation);
       this._cr = cos(this.rotation);
     }
     //print("updated");
 
-    Matrix parentTransform = this.parent.worldTransform;
-    Matrix worldTransform = this.worldTransform;
+    Matrix parentTransform = this._parent._worldTransform;
+    Matrix worldTransform = this._worldTransform;
 
     num px = this.pivot.x;
     num py = this.pivot.y;
 
     num a00 = this._cr * this.scale.x,
-    a01 = -this._sr * this.scale.y,
-    a10 = this._sr * this.scale.x,
-    a11 = this._cr * this.scale.y,
-    a02 = this.position.x - a00 * px - py * a01,
-    a12 = this.position.y - a11 * py - px * a10,
-    b00 = parentTransform.a, b01 = parentTransform.b,
-    b10 = parentTransform.c, b11 = parentTransform.d;
+        a01 = -this._sr * this.scale.y,
+        a10 = this._sr * this.scale.x,
+        a11 = this._cr * this.scale.y,
+        a02 = this.position.x - a00 * px - py * a01,
+        a12 = this.position.y - a11 * py - px * a10,
+        b00 = parentTransform.a,
+        b01 = parentTransform.b,
+        b10 = parentTransform.c,
+        b11 = parentTransform.d;
 
     worldTransform.a = b00 * a00 + b01 * a10;
     worldTransform.b = b00 * a01 + b01 * a11;
@@ -217,21 +283,24 @@ class DisplayObject implements DisplayInterface {
     worldTransform.d = b10 * a01 + b11 * a11;
     worldTransform.ty = b10 * a02 + b11 * a12 + parentTransform.ty;
 
-    this.worldAlpha = this.alpha * this.parent.worldAlpha;
+    this._worldAlpha = this.alpha * this._parent._worldAlpha;
   }
 
+  /// Retrieves the bounds of the displayObject as a rectangle object
   Rectangle getBounds([Matrix matrix]) {
     matrix = matrix;//just to get passed js hinting (and preserve inheritance)
     return EmptyRectangle;
   }
 
+  /// Retrieves the local bounds of the displayObject as a rectangle object
   Rectangle getLocalBounds() {
     return this.getBounds(IdentityMatrix);
   }
 
+  /// Sets the object's [stage] reference, the stage this object is connected to
   setStageReference(Stage stage) {
-    this.stage = stage;
-    if (this._interactive)this.stage.dirty = true;
+    this._stage = stage;
+    if (this._interactive) this._stage.dirty = true;
   }
 
   RenderTexture generateTexture(Renderer renderer) {
@@ -243,18 +312,18 @@ class DisplayObject implements DisplayInterface {
     return renderTexture;
   }
 
+  
   updateCache() {
     this._generateCachedSprite();
   }
 
   _renderCachedSprite(RenderSession renderSession) {
-    this._cachedSprite.worldAlpha = this.worldAlpha;
+    this._cachedSprite._worldAlpha = this._worldAlpha;
 
     if (renderSession.gl != null) {
       this._cachedSprite._renderWebGL(renderSession);
       //PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
-    }
-    else {
+    } else {
       this._cachedSprite._renderCanvas(renderSession);
       //PIXI.Sprite.prototype._renderCanvas.call(this._cachedSprite, renderSession);
     }
@@ -269,9 +338,8 @@ class DisplayObject implements DisplayInterface {
       var renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor());//, renderSession.renderer);
 
       this._cachedSprite = new Sprite(renderTexture);
-      this._cachedSprite.worldTransform = this.worldTransform;
-    }
-    else {
+      this._cachedSprite._worldTransform = this._worldTransform;
+    } else {
       RenderTexture texture = _cachedSprite.texture as RenderTexture;
       texture.resize(bounds.width.floor(), bounds.height.floor());
     }
@@ -285,8 +353,8 @@ class DisplayObject implements DisplayInterface {
     RenderTexture texture = _cachedSprite.texture as RenderTexture;
     texture.render(this, new Point(-bounds.x, -bounds.y), false);
 
-    this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
-    this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
+    this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
+    this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
 
     this._filters = tempFilters;
 
@@ -294,7 +362,7 @@ class DisplayObject implements DisplayInterface {
   }
 
   void _destroyCachedSprite() {
-    if (this._cachedSprite == null)return;
+    if (this._cachedSprite == null) return;
 
     this._cachedSprite.texture.destroy(true);
     //  console.log("DESTROY")
@@ -303,6 +371,7 @@ class DisplayObject implements DisplayInterface {
     this._cachedSprite = null;
   }
 
+  /// Renders the object using the [WebGLRenderer]
   void _renderWebGL(RenderSession renderSession) {
 
     // OVERWRITE;
@@ -310,18 +379,21 @@ class DisplayObject implements DisplayInterface {
     renderSession = renderSession;
   }
 
+  /// Renders the object using the [CanvasRenderer]
   void _renderCanvas(renderSession) {
     // OVERWRITE;
     // this line is just here to pass jshinting :)
     renderSession = renderSession;
   }
 
+  /// The position of the displayObject on the x axis relative to the local coordinates of the parent.
   num get x => position.x;
 
   void set x(num value) {
     position.x = value;
   }
 
+  /// The position of the displayObject on the y axis relative to the local coordinates of the parent.
   num get y => position.y;
 
   void set y(num value) {

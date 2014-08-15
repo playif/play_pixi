@@ -109,7 +109,7 @@ class Strip extends DisplayObjectContainer {
     // gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mat4Real);
     gl.blendFunc(ONE, ONE_MINUS_SRC_ALPHA);
     // set uniforms
-    gl.uniformMatrix3fv(shader.translationMatrix, false, this.worldTransform.toArray(true));
+    gl.uniformMatrix3fv(shader.translationMatrix, false, this._worldTransform.toArray(true));
     gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
     gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
     gl.uniform1f(shader.alpha, 1.0);
@@ -168,7 +168,7 @@ class Strip extends DisplayObjectContainer {
   _renderCanvas(RenderSession renderSession) {
     var context = renderSession.context;
 
-    var transform = this.worldTransform;
+    var transform = this._worldTransform;
 
     if (renderSession.roundPixels) {
       context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());

@@ -8,7 +8,7 @@ class CanvasMaskManager extends MaskManager {
     context.save();
 
     var cacheAlpha = maskData.alpha;
-    var transform = maskData.worldTransform;
+    var transform = maskData._worldTransform;
 
     context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
 
@@ -16,7 +16,7 @@ class CanvasMaskManager extends MaskManager {
 
     context.clip();
 
-    maskData.worldAlpha = cacheAlpha;
+    maskData._worldAlpha = cacheAlpha;
   }
 
 

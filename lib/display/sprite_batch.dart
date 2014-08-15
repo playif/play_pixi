@@ -42,11 +42,11 @@ class SpriteBatch extends DisplayObjectContainer {
 
   void _renderCanvas(renderSession) {
     CanvasRenderingContext2D context = renderSession.context;
-    context.globalAlpha = this.worldAlpha;
+    context.globalAlpha = this._worldAlpha;
 
     super.updateTransform();
 
-    Matrix transform = this.worldTransform;
+    Matrix transform = this._worldTransform;
     // alow for trimming
 
     bool isRotated = true;
@@ -60,7 +60,7 @@ class SpriteBatch extends DisplayObjectContainer {
       Texture texture = child.texture;
       Rectangle frame = texture.frame;
 
-      context.globalAlpha = this.worldAlpha * child.alpha;
+      context.globalAlpha = this._worldAlpha * child.alpha;
 
       if (child.rotation % (PI * 2) == 0) {
         if (isRotated) {
@@ -84,7 +84,7 @@ class SpriteBatch extends DisplayObjectContainer {
 
         child.updateTransform();
 
-        var childTransform = child.worldTransform;
+        var childTransform = child._worldTransform;
 
         // allow for trimming
 

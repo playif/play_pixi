@@ -14,7 +14,9 @@ part "core/circle.dart";
 part "core/ellipse.dart";
 part "core/matrix.dart";
 part "core/point.dart";
+part "core/polygon.dart";
 part "core/rectangle.dart";
+part "core/shape.dart";
 
 
 part "display/display_object.dart";

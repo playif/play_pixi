@@ -154,7 +154,7 @@ class WebGLGraphics {
         //gl.uniform3fv(shader.tintColor, tintColor);
         renderSession.shaderManager.setShader(shader);//activatePrimitiveShader();
         shader = renderSession.shaderManager.primitiveShader;
-        gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
+        gl.uniformMatrix3fv(shader.translationMatrix, false, graphics._worldTransform.toArray(true));
 
 
         //gl.uniform1f(shader.alpha, graphics.worldAlpha);
@@ -169,7 +169,7 @@ class WebGLGraphics {
 
         // set the index buffer!
         //gl.bindBuffer(ELEMENT_ARRAY_BUFFER, webGL.indexBuffer);
-        gl.uniform1f(shader.alpha, graphics.worldAlpha);
+        gl.uniform1f(shader.alpha, graphics._worldAlpha);
 
         //gl.drawElements(TRIANGLE_STRIP, webGL.indices.length, UNSIGNED_SHORT, 0);
         gl.bindBuffer(ARRAY_BUFFER, webGLData.buffer);

@@ -70,7 +70,7 @@ class WebGLFastSpriteBatch {
     this.renderSession = renderSession;
     this.shader = this.renderSession.shaderManager.fastShader;
 
-    this.matrix = spriteBatch.worldTransform.toArray(true);
+    this.matrix = spriteBatch._worldTransform.toArray(true);
 
     this.start();
   }

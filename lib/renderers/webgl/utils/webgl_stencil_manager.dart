@@ -146,7 +146,7 @@ class WebGLStencilManager {
       renderSession.shaderManager.setShader( shader );
 
 
-      gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
+      gl.uniformMatrix3fv(shader.translationMatrix, false, graphics._worldTransform.toArray(true));
 
 
       gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
@@ -157,7 +157,7 @@ class WebGLStencilManager {
       gl.uniform3fv(shader.color, new Float32List.fromList(webGLData.color));
 
 
-      gl.uniform1f(shader.alpha, graphics.worldAlpha * webGLData.alpha);
+      gl.uniform1f(shader.alpha, graphics._worldAlpha * webGLData.alpha);
 
 
       gl.bindBuffer(ARRAY_BUFFER, webGLData.buffer);
@@ -179,7 +179,7 @@ class WebGLStencilManager {
       renderSession.shaderManager.setShader( shader );
 
 
-      gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
+      gl.uniformMatrix3fv(shader.translationMatrix, false, graphics._worldTransform.toArray(true));
 
 
       gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
@@ -189,7 +189,7 @@ class WebGLStencilManager {
       gl.uniform3fv(shader.tintColor, new Float32List.fromList(hex2rgb(graphics.tint)));
 
 
-      gl.uniform1f(shader.alpha, graphics.worldAlpha);
+      gl.uniform1f(shader.alpha, graphics._worldAlpha);
 
       gl.bindBuffer(ARRAY_BUFFER, webGLData.buffer);
 

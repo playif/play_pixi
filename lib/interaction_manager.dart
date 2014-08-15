@@ -351,7 +351,7 @@ class InteractionManager {
     // temp fix for if the element is in a non visible
 
     bool isSprite = (item is Sprite);
-    Matrix worldTransform = item.worldTransform;
+    Matrix worldTransform = item._worldTransform;
     num a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
     a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
     id = 1 / (a00 * a11 + a01 * -a10),
