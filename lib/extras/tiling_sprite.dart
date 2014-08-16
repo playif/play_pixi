@@ -104,10 +104,10 @@ class TilingSprite extends Sprite {
     renderSession.spriteBatch.start();
   }
 
-  _renderCanvas(renderSession) {
+  _renderCanvas(RenderSession renderSession) {
     if (this.visible == false || this.alpha == 0)return;
 
-    CanvasRenderingContext2D context = renderSession._context;
+    CanvasRenderingContext2D context = renderSession.context;
 
     if (this._mask != null) {
       renderSession.maskManager.pushMask(this._mask, context);
@@ -180,7 +180,7 @@ class TilingSprite extends Sprite {
     context.closePath();
 
     if (this._mask != null) {
-      renderSession.maskManager.popMask(renderSession._context);
+      renderSession.maskManager.popMask(renderSession.context);
     }
 
     for (int i = 0, j = this.children.length; i < j; i++) {
