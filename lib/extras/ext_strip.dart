@@ -26,7 +26,7 @@ class Strip extends DisplayObjectContainer {
     this.verticies = new Float32List.fromList([0.0, 0.0, 100.0, 0.0, 100.0, 100.0, 0.0, 100.0]);
     this.colors = new Float32List.fromList([1.0, 1.0, 1.0, 1.0]);
     this.indices = new Uint16List.fromList([0, 1, 2, 3]);
-    this.dirty = true;
+    this._dirty = true;
 //    // load the texture!
 //    if (texture.baseTexture.hasLoaded) {
 //      this.width = this.texture.frame.width;
@@ -114,7 +114,7 @@ class Strip extends DisplayObjectContainer {
     gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
     gl.uniform1f(shader.alpha, 1.0);
 
-    if (!this.dirty) {
+    if (!this._dirty) {
       gl.bindBuffer(ARRAY_BUFFER, this._vertexBuffer);
       gl.bufferSubData(ARRAY_BUFFER, 0, this.verticies);
       gl.vertexAttribPointer(shader.aVertexPosition, 2, FLOAT, false, 0, 0);
@@ -135,7 +135,7 @@ class Strip extends DisplayObjectContainer {
 
     }
     else {
-      this.dirty = false;
+      this._dirty = false;
       gl.bindBuffer(ARRAY_BUFFER, this._vertexBuffer);
       gl.bufferData(ARRAY_BUFFER, this.verticies, STATIC_DRAW);
       gl.vertexAttribPointer(shader.aVertexPosition, 2, FLOAT, false, 0, 0);

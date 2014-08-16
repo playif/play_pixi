@@ -1,35 +1,38 @@
 part of PIXI;
 
+typedef void InteractionHandler(InteractionData data);
+
 abstract class DisplayInterface {
-  updateTransform();
+  _updateTransform();
   _renderWebGL(RenderSession renderSession);
   _renderCanvas(RenderSession renderSession);
-  getBounds(Matrix matrix);
-  Matrix get _worldTransform;
-  num _worldAlpha;
+  //getBounds(Matrix matrix);
+  //Matrix get _worldTransform;
+  //num _worldAlpha;
   //removeChild(DisplayInterface child);
-  DisplayInterface _parent;
-  setStageReference(Stage stage);
-  bool visible;
-  Stage _stage;
-  bool interactiveChildren;
+  //DisplayInterface _parent;
+  //setStageReference(Stage stage);
+  //bool visible;
+  //Stage _stage;
+  //bool interactiveChildren;
+  //bool _dirty;
 
-  Function click;
-  Function mousemove;
-  Function mousedown;
-  Function mouseout;
-  Function mouseover;
-  Function mouseup;
-  Function mouseupoutside;
+//  InteractionHandler click;
+//  InteractionHandler mousemove;
+//  InteractionHandler mousedown;
+//  InteractionHandler mouseout;
+//  InteractionHandler mouseover;
+//  InteractionHandler mouseup;
+//  InteractionHandler mouseupoutside;
+//
+//  InteractionHandler touchmove;
+//  InteractionHandler touchstart;
+//  InteractionHandler touchend;
+//  InteractionHandler tap;
+//  InteractionHandler touchendoutside;
 
-  Function touchmove;
-  Function touchstart;
-  Function touchend;
-  Function tap;
-  Function touchendoutside;
-
-  Rectangle hitArea = null;
-  bool get worldVisible;
+  Shape hitArea = null;
+  //bool get worldVisible;
 }
 
 
@@ -81,30 +84,30 @@ class DisplayObject implements DisplayInterface {
   /// [read-only] The display object container that contains this display object.
   DisplayInterface get parent => _parent;
 
-  DisplayInterface __iParent = null;
+  //DisplayInterface __iParent = null;
 
 
-  bool interactiveChildren = false;
+  //bool interactiveChildren = false;
   bool __hit = false;
   bool __isOver = false;
   bool __mouseIsDown = false;
   bool __isDown = false;
 
-  bool dirty = false;
+  bool _dirty = false;
 
-  Function click;
-  Function mousemove;
-  Function mousedown;
-  Function mouseout;
-  Function mouseover;
-  Function mouseup;
-  Function mouseupoutside;
+  InteractionHandler click;
+  InteractionHandler mousemove;
+  InteractionHandler mousedown;
+  InteractionHandler mouseout;
+  InteractionHandler mouseover;
+  InteractionHandler mouseup;
+  InteractionHandler mouseupoutside;
 
-  Function touchmove;
-  Function touchstart;
-  Function touchend;
-  Function tap;
-  Function touchendoutside;
+  InteractionHandler touchmove;
+  InteractionHandler touchstart;
+  InteractionHandler touchend;
+  InteractionHandler tap;
+  InteractionHandler touchendoutside;
 
   Map<int, InteractionData> __touchData = {};
   //bool buttonMode = false;
@@ -128,7 +131,7 @@ class DisplayObject implements DisplayInterface {
 
   set interactive(value) {
     _interactive = value;
-    if (this._stage != null) this._stage.dirty = true;
+    if (this._stage != null) this._stage._dirty = true;
   }
 
   String defaultCursor = 'pointer';
@@ -168,9 +171,9 @@ class DisplayObject implements DisplayInterface {
   Graphics get mask => _mask;
 
   set mask(Graphics value) {
-    if (this._mask != null) this._mask.isMask = false;
+    if (this._mask != null) this._mask._isMask = false;
     this._mask = value;
-    if (this._mask != null) this._mask.isMask = true;
+    if (this._mask != null) this._mask._isMask = true;
   }
 
   bool _cacheAsBitmap = false;
@@ -248,7 +251,7 @@ class DisplayObject implements DisplayInterface {
   num _rotationCache = 0;
 
   /// Updates the object transform for rendering
-  void updateTransform() {
+  void _updateTransform() {
     // TODO OPTIMIZE THIS!! with dirty
     if (this.rotation != this._rotationCache) {
 
@@ -258,7 +261,9 @@ class DisplayObject implements DisplayInterface {
     }
     //print("updated");
 
-    Matrix parentTransform = this._parent._worldTransform;
+    DisplayObject parent = this._parent;
+
+    Matrix parentTransform = parent._worldTransform;
     Matrix worldTransform = this._worldTransform;
 
     num px = this.pivot.x;
@@ -283,7 +288,7 @@ class DisplayObject implements DisplayInterface {
     worldTransform.d = b10 * a01 + b11 * a11;
     worldTransform.ty = b10 * a02 + b11 * a12 + parentTransform.ty;
 
-    this._worldAlpha = this.alpha * this._parent._worldAlpha;
+    this._worldAlpha = this.alpha * parent._worldAlpha;
   }
 
   /// Retrieves the bounds of the displayObject as a rectangle object
@@ -293,18 +298,18 @@ class DisplayObject implements DisplayInterface {
   }
 
   /// Retrieves the local bounds of the displayObject as a rectangle object
-  Rectangle getLocalBounds() {
+  Rectangle _getLocalBounds() {
     return this.getBounds(IdentityMatrix);
   }
 
   /// Sets the object's [stage] reference, the stage this object is connected to
-  setStageReference(Stage stage) {
+  _setStageReference(Stage stage) {
     this._stage = stage;
-    if (this._interactive) this._stage.dirty = true;
+    if (this._interactive) this._stage._dirty = true;
   }
 
   RenderTexture generateTexture(Renderer renderer) {
-    Rectangle bounds = this.getLocalBounds();
+    Rectangle bounds = this._getLocalBounds();
 
     RenderTexture renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor(), renderer);
     renderTexture.render(this, new Point(-bounds.x, -bounds.y));
@@ -312,7 +317,7 @@ class DisplayObject implements DisplayInterface {
     return renderTexture;
   }
 
-  
+
   updateCache() {
     this._generateCachedSprite();
   }
@@ -332,7 +337,7 @@ class DisplayObject implements DisplayInterface {
 
   void _generateCachedSprite() {
     this._cacheAsBitmap = false;
-    var bounds = this.getLocalBounds();
+    var bounds = this._getLocalBounds();
 
     if (this._cachedSprite == null) {
       var renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor());//, renderSession.renderer);

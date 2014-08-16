@@ -4,8 +4,7 @@ class ChartData {
   String font;
   num size;
   num lineHeight;
-  Map chars = {
-  };
+  Map chars = {};
 }
 
 class Char {
@@ -17,65 +16,83 @@ class Char {
   int xOffset;
   int yOffset;
   int xAdvance;
-  Map kernings = {
-  };
+  Map kernings = {};
 }
- 
+
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * A Text Object will create a line(s) of text using bitmap font. To split a line you can use '\n', '\r' or '\r\n'
+ * You can generate the fnt files using
+ * http://www.angelcode.com/products/bmfont/ for windows or
+ * http://www.bmglyph.com/ for mac.
+*/
 class BitmapText extends DisplayObjectContainer {
-  static Map fonts = {
-  };
+  static Map fonts = {};
+  static RegExp _charCodeReg = new RegExp("(?:\r\n|\r|\n)");
+  static RegExp _numReg = new RegExp("[a-zA-Z]");
+  
   String text;
-  TextStyle style;
-  static RegExp charCodeReg = new RegExp("(?:\r\n|\r|\n)");
-  static RegExp numReg = new RegExp("[a-zA-Z]");
+  TextStyle _style;
+  TextStyle get style => _style;
+
   List _pool;
-  bool dirty;
+  bool _dirty;
   int tint = 0xFFFFFF;
   String fontName;
   num fontSize;
 
-  num textWidth;
-  num textHeight;
 
+  num _textWidth;
+  num get textWidth => _textWidth;
+
+  num _textHeight;
+  num get textHeight => _textHeight;
 
 
   BitmapText(String text, [TextStyle style]) {
 
-    this.text=text;
+    this.text = text;
 
-    if(style == null){
-      style=new TextStyle();
+    if (style == null) {
+      style = new TextStyle();
     }
-    this.style=style;
+    this._style = style;
 
     this._pool = [];
 
     this.setText(text);
     this.setStyle(style);
     this.updateText();
-    this.dirty = false;
+    this._dirty = false;
   }
 
+  /// Set the copy for the text object
   setText(text) {
     this.text = text;
-    this.dirty = true;
+    this._dirty = true;
   }
 
+  /// Set the [style] of the text
   setStyle(TextStyle style) {
     //style = style || {};
     //style.align = style.align || 'left';
 
-    this.style = style;
+    this._style = style;
 
     var font = style.font.split(' ');
     this.fontName = font[font.length - 1];
-    this.fontSize = font.length >= 2 ? int.parse(font[font.length - 2].replaceAll(numReg, "")) : BitmapText.fonts[this.fontName].size;
+    this.fontSize = font.length >= 2 ? int.parse(font[font.length - 2].replaceAll(_numReg, "")) : BitmapText.fonts[this.fontName].size;
 
-    this.dirty = true;
+    this._dirty = true;
 
     this.tint = style.tint;
   }
 
+  /// Renders text and updates it when needed
   updateText() {
     //if(this.fontName == null) return;
     ChartData data = fonts[this.fontName];
@@ -108,11 +125,10 @@ class BitmapText extends DisplayObjectContainer {
         pos.x += charData.kernings[prevCharCode];
       }
       chars.add(new Char()
-        ..texture = charData.texture
-        ..line = line
-        ..charCode = charCode
-        ..position = new Point(pos.x + charData.xOffset, pos.y + charData.yOffset)
-      );
+          ..texture = charData.texture
+          ..line = line
+          ..charCode = charCode
+          ..position = new Point(pos.x + charData.xOffset, pos.y + charData.yOffset));
       pos.x += charData.xAdvance;
 
       prevCharCode = charCode;
@@ -124,10 +140,9 @@ class BitmapText extends DisplayObjectContainer {
     List lineAlignOffsets = [];
     for (int i = 0; i <= line; i++) {
       var alignOffset = 0;
-      if (this.style.align == 'right') {
+      if (this._style.align == 'right') {
         alignOffset = maxLineWidth - lineWidths[i];
-      }
-      else if (this.style.align == 'center') {
+      } else if (this._style.align == 'center') {
         alignOffset = (maxLineWidth - lineWidths[i]) / 2;
       }
       lineAlignOffsets.add(alignOffset);
@@ -155,8 +170,8 @@ class BitmapText extends DisplayObjectContainer {
       if (c._parent == null) this.addChild(c);
     }
 
-// remove unnecessary children.
-// and put their into the pool.
+    // remove unnecessary children.
+    // and put their into the pool.
     while (this.children.length > lenChars) {
       var child = this.getChildAt(this.children.length - 1);
       this._pool.add(child);
@@ -171,7 +186,7 @@ class BitmapText extends DisplayObjectContainer {
      * @property textWidth
      * @type Number
      */
-    this.textWidth = maxLineWidth * scale;
+    this._textWidth = maxLineWidth * scale;
 
     /**
      * [read-only] The height of the overall text, different from fontSize,
@@ -180,14 +195,15 @@ class BitmapText extends DisplayObjectContainer {
      * @property textHeight
      * @type Number
      */
-    this.textHeight = (pos.y + data.lineHeight) * scale;
+    this._textHeight = (pos.y + data.lineHeight) * scale;
   }
 
-  updateTransform() {
-    if (this.dirty) {
+  /// Updates the transform of this object
+  _updateTransform() {
+    if (this._dirty) {
       this.updateText();
-      this.dirty = false;
+      this._dirty = false;
     }
-    super.updateTransform();
+    super._updateTransform();
   }
 }

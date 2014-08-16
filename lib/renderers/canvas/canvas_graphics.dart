@@ -8,8 +8,8 @@ class CanvasGraphics {
     num worldAlpha = graphics._worldAlpha;
     String color = '';
 
-    for (var i = 0; i < graphics.graphicsData.length; i++) {
-      var data = graphics.graphicsData[i];
+    for (var i = 0; i < graphics._graphicsData.length; i++) {
+      var data = graphics._graphicsData[i];
       var points = data.points;
 
       context.strokeStyle = color = '#' + "${data.lineColor.floor().toRadixString(16)}".padLeft(6, '0');
@@ -151,7 +151,7 @@ class CanvasGraphics {
 
 
   static renderGraphicsMask(Graphics graphics, CanvasRenderingContext2D context) {
-    var len = graphics.graphicsData.length;
+    var len = graphics._graphicsData.length;
 
     if (len == 0) return;
 
@@ -161,7 +161,7 @@ class CanvasGraphics {
     }
 
     for (var i = 0; i < 1; i++) {
-      var data = graphics.graphicsData[i];
+      var data = graphics._graphicsData[i];
       var points = data.points;
 
       if (data.type == Graphics.POLY) {

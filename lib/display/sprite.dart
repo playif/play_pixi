@@ -1,16 +1,45 @@
 part of PIXI;
 
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * The Sprite object is the base for all textured objects that are rendered to the screen
+ *
+ *     A sprite can be created directly from an image like this : 
+ *     var sprite = new PIXI.Sprite.fromImage('assets/image.png');
+ *     yourStage.addChild(sprite);
+ *     then obviously don't forget to add it to the stage you have already created
+ */
 class Sprite extends DisplayObjectContainer {
+  /**
+   * The anchor sets the origin point of the texture.
+   *     The default is 0,0 this means the texture's origin is the top left
+   *     Setting than anchor to 0.5,0.5 means the textures origin is centred
+   *     Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
+   */
   Point anchor = new Point();
+
+  /// The texture that the sprite is using
   Texture texture;
+
+  /// The width of the sprite (this is initially set by the texture)
   bool updateFrame = false;
-  bool textureChange = false;
-  num _width = 0, _height = 0;
+
+
+  /// The width of the sprite (this is initially set by the texture)
+  num _width = 0;
+
+  /// The height of the sprite (this is initially set by the texture)
+  num _height = 0;
+
+
   TextureUvs _uvs = null;
   CanvasImageSource tintedTexture;
   CanvasBuffer buffer = null;
 
-
+  /// The width of the sprite, setting this will actually modify the scale to achieve the value set
   num get width => scale.x * texture.frame.width;
 
   set width(num value) {
@@ -18,6 +47,7 @@ class Sprite extends DisplayObjectContainer {
     this._width = value;
   }
 
+  /// The height of the sprite, setting this will actually modify the scale to achieve the value set
   num get height => scale.y * texture.frame.height;
 
   set height(num value) {
@@ -25,47 +55,52 @@ class Sprite extends DisplayObjectContainer {
     this._height = value;
   }
 
+  /// The tint applied to the sprite. This is a hex value
   int tint = 0xFFFFFF;
+
+
   int cachedTint;
 
-//  bool renderable = true;
+  //  bool renderable = true;
 
+  /// The blend mode to be applied to the sprite
   BlendModes blendMode = BlendModes.NORMAL;
 
 
-  Sprite._(){
+  Sprite._() {
     renderable = true;
   }
 
   Sprite(Texture texture) {
-    this.texture=texture;
+    this.texture = texture;
     _setupTexture();
   }
 
   void _setupTexture() {
     if (texture.baseTexture.hasLoaded) {
-      this.onTextureUpdate(null);
-    }
-    else {
-      this.texture.addEventListener('update', this.onTextureUpdate);
+      this._onTextureUpdate(null);
+    } else {
+      this.texture.addEventListener('update', this._onTextureUpdate);
     }
   }
 
+  /// Sets the texture of the sprite
   void setTexture(Texture texture) {
     // stop current texture;
-//    if (this.texture.baseTexture != texture.baseTexture) {
-//      this.textureChange = true;
-//      this.texture = texture;
-//    }
-//    else {
-//      this.texture = texture;
-//    }
+    //    if (this.texture.baseTexture != texture.baseTexture) {
+    //      this.textureChange = true;
+    //      this.texture = texture;
+    //    }
+    //    else {
+    //      this.texture = texture;
+    //    }
     this.texture = texture;
     this.cachedTint = 0xFFFFFF;
     //this.updateFrame = true;
   }
 
-  onTextureUpdate(PixiEvent e) {
+  /// When the texture is updated, this event will fire to update the scale and frame
+  _onTextureUpdate(PixiEvent e) {
     //print('update');
     // so if _width is 0 then width was not set..
     if (this._width != 0) this.scale.x = this._width / this.texture.frame.width;
@@ -75,6 +110,7 @@ class Sprite extends DisplayObjectContainer {
     //this.updateFrame = true;
   }
 
+  /// Returns the framing rectangle of the sprite as a [Rectangle] object
   Rectangle getBounds([Matrix matrix]) {
 
     num width = this.texture.frame.width;
@@ -86,7 +122,7 @@ class Sprite extends DisplayObjectContainer {
     num h0 = height * (1 - this.anchor.y);
     num h1 = height * -this.anchor.y;
 
-    Matrix worldTransform = (matrix == null) ? this._worldTransform : matrix ;
+    Matrix worldTransform = (matrix == null) ? this._worldTransform : matrix;
 
     double a = worldTransform.a;
     double b = worldTransform.c;
@@ -148,10 +184,11 @@ class Sprite extends DisplayObjectContainer {
   }
 
 
+  /// Renders the object using the WebGL renderer
   void _renderWebGL(RenderSession renderSession) {
 
     // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (!this.visible || this.alpha <= 0)return;
+    if (!this.visible || this.alpha <= 0) return;
 
     int i, j;
 
@@ -176,7 +213,8 @@ class Sprite extends DisplayObjectContainer {
       spriteBatch.render(this);
 
       // now loop through the children and make sure they get rendered
-      for (int i = 0, j = this.children.length; i < j; i++) {
+      for (int i = 0,
+          j = this.children.length; i < j; i++) {
         this.children[i]._renderWebGL(renderSession);
       }
 
@@ -184,17 +222,17 @@ class Sprite extends DisplayObjectContainer {
       spriteBatch.stop();
 
 
-      if (this._mask != null)renderSession.maskManager.popMask(renderSession);
-      if (this._filters != null)renderSession.filterManager.popFilter();
+      if (this._mask != null) renderSession.maskManager.popMask(renderSession);
+      if (this._filters != null) renderSession.filterManager.popFilter();
 
       spriteBatch.start();
-    }
-    else {
+    } else {
 
       renderSession.spriteBatch.render(this);
 
       // simple render children!
-      for (int i = 0, j = this.children.length; i < j; i++) {
+      for (int i = 0,
+          j = this.children.length; i < j; i++) {
         this.children[i]._renderWebGL(renderSession);
       }
     }
@@ -204,14 +242,15 @@ class Sprite extends DisplayObjectContainer {
   }
 
 
+  /// Renders the object using the Canvas renderer
   void _renderCanvas(RenderSession renderSession) {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible == false || this.alpha == 0)return;
+    if (this.visible == false || this.alpha == 0) return;
 
 
-//    Rectangle frame = this.texture.frame;
-//    CanvasRenderingContext2D context = renderSession.context;
-//    Texture texture = this.texture;
+    //    Rectangle frame = this.texture.frame;
+    //    CanvasRenderingContext2D context = renderSession.context;
+    //    Texture texture = this.texture;
 
     if (this.blendMode != renderSession.currentBlendMode) {
       renderSession.currentBlendMode = this.blendMode;
@@ -225,7 +264,7 @@ class Sprite extends DisplayObjectContainer {
 
 
     //ignore null sources
-//    if (frame != null && frame.width != 0 && frame.height != 0 && texture.baseTexture.source != null) {
+    //    if (frame != null && frame.width != 0 && frame.height != 0 && texture.baseTexture.source != null) {
     if (this.texture.valid) {
       renderSession.context.globalAlpha = this._worldAlpha;
 
@@ -234,23 +273,10 @@ class Sprite extends DisplayObjectContainer {
       // allow for trimming
       if (renderSession.roundPixels != null) {
         //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());
-        renderSession.context.setTransform(
-            this._worldTransform.a,
-            this._worldTransform.c,
-            this._worldTransform.b,
-            this._worldTransform.d,
-            this._worldTransform.tx.floor(),
-            this._worldTransform.ty.floor());
-      }
-      else {
+        renderSession.context.setTransform(this._worldTransform.a, this._worldTransform.c, this._worldTransform.b, this._worldTransform.d, this._worldTransform.tx.floor(), this._worldTransform.ty.floor());
+      } else {
         //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
-        renderSession.context.setTransform(
-            this._worldTransform.a,
-            this._worldTransform.c,
-            this._worldTransform.b,
-            this._worldTransform.d,
-            this._worldTransform.tx == null ? 0 : this._worldTransform.tx,
-            this._worldTransform.ty == null ? 0 : this._worldTransform.ty);
+        renderSession.context.setTransform(this._worldTransform.a, this._worldTransform.c, this._worldTransform.b, this._worldTransform.d, this._worldTransform.tx == null ? 0 : this._worldTransform.tx, this._worldTransform.ty == null ? 0 : this._worldTransform.ty);
       }
 
 
@@ -274,60 +300,43 @@ class Sprite extends DisplayObjectContainer {
 
         }
 
-        renderSession.context.drawImageScaledFromSource(this.tintedTexture,
-        0,
-        0,
-        this.texture.crop.width,
-        this.texture.crop.height,
-        dx,
-        dy,
-        this.texture.crop.width,
-        this.texture.crop.height);
-      }
-      else {
+        renderSession.context.drawImageScaledFromSource(this.tintedTexture, 0, 0, this.texture.crop.width, this.texture.crop.height, dx, dy, this.texture.crop.width, this.texture.crop.height);
+      } else {
 
 
-//        if (texture.trim != null) {
-//          Rectangle trim = texture.trim;
-//
-//          context.drawImageScaledFromSource(this.texture.baseTexture.source,
-//          frame.x,
-//          frame.y,
-//          frame.width,
-//          frame.height,
-//          trim.x - this.anchor.x * trim.width,
-//          trim.y - this.anchor.y * trim.height,
-//          frame.width,
-//          frame.height);
-//        }
-//        else {
-//          //window.console.log(this.texture.baseTexture.source);
-//          context.drawImageScaledFromSource(this.texture.baseTexture.source,
-//          frame.x,
-//          frame.y,
-//          frame.width,
-//          frame.height,
-//          (this.anchor.x) * -frame.width,
-//          (this.anchor.y) * -frame.height,
-//          frame.width,
-//          frame.height);
-//        }
-        renderSession.context.drawImageScaledFromSource(
-            this.texture.baseTexture.source,
-            this.texture.crop.x,
-            this.texture.crop.y,
-            this.texture.crop.width,
-            this.texture.crop.height,
-            dx,
-            dy,
-            this.texture.crop.width,
-            this.texture.crop.height);
+        //        if (texture.trim != null) {
+        //          Rectangle trim = texture.trim;
+        //
+        //          context.drawImageScaledFromSource(this.texture.baseTexture.source,
+        //          frame.x,
+        //          frame.y,
+        //          frame.width,
+        //          frame.height,
+        //          trim.x - this.anchor.x * trim.width,
+        //          trim.y - this.anchor.y * trim.height,
+        //          frame.width,
+        //          frame.height);
+        //        }
+        //        else {
+        //          //window.console.log(this.texture.baseTexture.source);
+        //          context.drawImageScaledFromSource(this.texture.baseTexture.source,
+        //          frame.x,
+        //          frame.y,
+        //          frame.width,
+        //          frame.height,
+        //          (this.anchor.x) * -frame.width,
+        //          (this.anchor.y) * -frame.height,
+        //          frame.width,
+        //          frame.height);
+        //        }
+        renderSession.context.drawImageScaledFromSource(this.texture.baseTexture.source, this.texture.crop.x, this.texture.crop.y, this.texture.crop.width, this.texture.crop.height, dx, dy, this.texture.crop.width, this.texture.crop.height);
 
       }
     }
 
     // OVERWRITE
-    for (int i = 0, j = this.children.length; i < j; i++) {
+    for (int i = 0,
+        j = this.children.length; i < j; i++) {
       this.children[i]._renderCanvas(renderSession);
     }
 
@@ -336,13 +345,20 @@ class Sprite extends DisplayObjectContainer {
     }
   }
 
-
+  /**
+   * Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
+   * The frame ids are created when a Texture packer file has been loaded
+   */
   static Sprite fromFrame(String frameId) {
     var texture = TextureCache[frameId];
     if (texture == null) throw new Exception('The frameId "$frameId" does not exist in the texture cache.');
     return new Sprite(texture);
   }
 
+  /**
+   * Helper function that creates a sprite that will contain a texture based on an image url
+   * If the image is not in the texture cache it will be loaded
+   */
   static Sprite fromImage(String imageId, [bool crossorigin, scaleModes scaleMode]) {
     Texture texture = Texture.fromImage(imageId, crossorigin, scaleMode);
     return new Sprite(texture);

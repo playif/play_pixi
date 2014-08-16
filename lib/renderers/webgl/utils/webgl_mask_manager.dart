@@ -23,7 +23,7 @@ class WebGLMaskManager extends MaskManager {
   pushMask(maskData, [RenderSession renderSession]) {
     var gl = renderSession.gl;
 
-    if (maskData.dirty) {
+    if (maskData._dirty) {
       //gl.enable(STENCIL_TEST);
       //gl.stencilFunc(ALWAYS, 1, 1);
       WebGLGraphics.updateGraphics(maskData, gl);

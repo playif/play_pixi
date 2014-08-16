@@ -1,30 +1,51 @@
 part of PIXI;
 
+/**
+ * @author Mat Groves http://matgroves.com/
+ */
+
+/**
+ * The [SpriteBatch] class is a really fast version of the [DisplayObjectContainer]
+ * built solely for speed, so use when you need a lot of sprites or particles.
+ *     And it's extremely easy to use : 
+ *
+ *     var container = new PIXI.SpriteBatch();
+ *     stage.addChild(container);
+ *     for(var i  = 0; i < 100; i++)
+ *     {
+ *        var sprite = new PIXI.Sprite.fromImage("myImage.png");
+ *        container.addChild(sprite);
+ *     }
+ *
+ * And here you have a hundred sprites that will be renderer at the speed of light
+ */
 class SpriteBatch extends DisplayObjectContainer {
   RenderTexture textureThing;
-  bool ready = false;
+  bool _ready = false;
   WebGLFastSpriteBatch fastSpriteBatch;
 
   SpriteBatch([this.textureThing]) {
   }
 
-  initWebGL(gl) {
+  /// Initialises the spriteBatch
+  _initWebGL(gl) {
     // TODO only one needed for the whole engine really?
     this.fastSpriteBatch = new WebGLFastSpriteBatch(gl);
-
-    this.ready = true;
+    this._ready = true;
   }
 
-  updateTransform() {
+  /// Updates the object transform for rendering
+  _updateTransform() {
     // TODO dont need to!
-    super.updateTransform();
+    super._updateTransform();
     //  PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
   }
 
+  /// Renders the object using the WebGL renderer
   void _renderWebGL(RenderSession renderSession) {
     if (!this.visible || this.alpha <= 0 || this.children.length == 0)return;
 
-    if (!this.ready) this.initWebGL(renderSession.gl);
+    if (!this._ready) this._initWebGL(renderSession.gl);
 
     renderSession.spriteBatch.stop();
 
@@ -40,11 +61,12 @@ class SpriteBatch extends DisplayObjectContainer {
   }
 
 
+  /// Renders the object using the Canvas renderer
   void _renderCanvas(renderSession) {
-    CanvasRenderingContext2D context = renderSession.context;
+    CanvasRenderingContext2D context = renderSession._context;
     context.globalAlpha = this._worldAlpha;
 
-    super.updateTransform();
+    super._updateTransform();
 
     Matrix transform = this._worldTransform;
     // alow for trimming
@@ -82,7 +104,7 @@ class SpriteBatch extends DisplayObjectContainer {
       else {
         if (!isRotated) isRotated = true;
 
-        child.updateTransform();
+        child._updateTransform();
 
         var childTransform = child._worldTransform;
 

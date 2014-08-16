@@ -1,6 +1,6 @@
 part of PIXI;
 
-typedef void Render(DisplayObject displayObject, Point position, [bool clear]);
+typedef void Render(DisplayInterface displayObject, Point position, [bool clear]);
 
 class RenderTexture extends Texture {
   Renderer renderer;
@@ -46,7 +46,7 @@ class RenderTexture extends Texture {
     else {
       this.render = this.renderCanvas;
       this.textureBuffer = new CanvasBuffer(this.width, this.height);
-      this.baseTexture.source = this.textureBuffer.canvas;
+      this.baseTexture.source = this.textureBuffer._canvas;
     }
 
 
@@ -105,7 +105,7 @@ class RenderTexture extends Texture {
     if (clear) this.textureBuffer.clear();
 
     // THIS WILL MESS WITH HIT TESTING!
-    List<DisplayObject> children = displayObject.children;
+    List<DisplayInterface> children = displayObject.children;
 
     //TODO -? create a new one??? dont think so!
     Matrix originalWorldTransform = displayObject._worldTransform;
@@ -120,7 +120,7 @@ class RenderTexture extends Texture {
     }
 
     for (int i = 0, j = children.length; i < j; i++) {
-      children[i].updateTransform();
+      children[i]._updateTransform();
     }
 
     // update the textures!
@@ -153,12 +153,12 @@ class RenderTexture extends Texture {
 
 
     for (var i = 0, j = children.length; i < j; i++) {
-      children[i].updateTransform();
+      children[i]._updateTransform();
     }
 
     if (clear)this.textureBuffer.clear();
 
-    var context = this.textureBuffer.context;
+    var context = this.textureBuffer._context;
 
     this.renderer.renderDisplayObject(displayObject, context);
 

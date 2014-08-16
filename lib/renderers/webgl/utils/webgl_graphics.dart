@@ -103,7 +103,7 @@ class WebGLGraphics {
     shader = renderSession.shaderManager.primitiveShader,
     webGLData;
 
-    if (graphics.dirty) {
+    if (graphics._dirty) {
 //      graphics.dirty = false;
 //
 //      if (graphics.clearDirty) {
@@ -197,7 +197,7 @@ class WebGLGraphics {
 
 
     // flag the graphics as not dirty as we are about to update it...
-    graphics.dirty = false;
+    graphics._dirty = false;
 
 
     var i;
@@ -225,8 +225,8 @@ class WebGLGraphics {
     WebGLGraphicsData webGLData;
 
 
-    for (int i = webGL.lastIndex; i < graphics.graphicsData.length; i++) {
-      GraphicsData data = graphics.graphicsData[i];
+    for (int i = webGL.lastIndex; i < graphics._graphicsData.length; i++) {
+      GraphicsData data = graphics._graphicsData[i];
 
       if (data.type == Graphics.POLY) {
 

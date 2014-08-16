@@ -86,7 +86,7 @@ class Rope extends Strip {
     }
   }
 
-  updateTransform() {
+  _updateTransform() {
 
     List<Point> points = this.points;
     if (points.length < 1) return;
@@ -143,7 +143,7 @@ class Rope extends Strip {
       lastPoint = point;
     }
 
-    super.updateTransform();
+    super._updateTransform();
   }
 
   setTexture(Texture texture) {

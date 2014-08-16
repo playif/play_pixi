@@ -2,8 +2,8 @@ play_pixi
 =========
 A Dart port of pixi.js
 
-* Full features were implemented.
-* Full examples that were only minimally modified from original examples.
+* All features were implemented.
+* All examples that were only minimally modified from original examples.
 * Tested in CocoonJS.
 
 Want to build a game? Please check the Dart port of Phaser game engine naming [play_phaser][1].
@@ -34,6 +34,9 @@ Demo and Examples
 
 Change log
 ==========
+0.10.0
+ * Refactor the code.
+
 0.9.4+4
  * Demo and Examples
 

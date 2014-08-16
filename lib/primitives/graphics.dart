@@ -12,6 +12,16 @@ class GraphicsData {
   int type = Graphics.POLY;
 }
 
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+
+/**
+ * The Graphics class contains a set of methods that you can use to create primitive shapes and lines.
+ * It is important to know that with the webGL renderer only simple polygons can be filled at this stage
+ * Complex polygons will not be filled. Heres an example of a complex polygon: http://www.goodboydigital.com/wp-content/uploads/2013/06/complexPolygon.png
+ */
 class Graphics extends DisplayObjectContainer {
   static int POLY = 0;
   static int RECT = 1;
@@ -19,26 +29,43 @@ class Graphics extends DisplayObjectContainer {
   static int ELIP = 3;
   static int RREC = 4;
 
+  /// The alpha of the fill of this graphics object
   num fillAlpha = 1;
+
+  /// The width of any lines drawn
+  num lineWidth = 1;
+
+  /// The color of any lines drawn
+  num lineColor = 0x0;
+
   num fillColor = 0x0;
   bool filling = false;
-  num lineWidth = 1;
-  num lineAlpha = 1;
-  num lineColor = 0x0;
-  List<GraphicsData> graphicsData = [];
 
+
+  num lineAlpha = 1;
+
+  /// Graphics data
+  final List<GraphicsData> _graphicsData = [];
+
+  /// The tint applied to the graphic shape. This is a hex value
   int tint = 0xFFFFFF;
+
+  /// The blend mode to be applied to the graphic shape
   BlendModes blendMode;
 
-  GraphicsData currentPath = new GraphicsData();
+  /// Current path
+  GraphicsData _currentPath = new GraphicsData();
 
-  Map<RenderingContext, WebGLGraphicsData> _webGL = {
-  };
+  /// Array containing some WebGL-related properties used by the WebGL renderer
+  Map<RenderingContext, WebGLGraphicsData> _webGL = {};
 
-  bool isMask = false;
+  /// Whether this shape is being used as a mask
+  bool _isMask = false;
 
+  /// The bounds of the graphic shape as rectangle object
   Rectangle bounds = null;
 
+  /// the bounds' padding used for bounds calculation
   int boundsPadding = 10;
 
   //bool dirty = false;
@@ -48,27 +75,32 @@ class Graphics extends DisplayObjectContainer {
   Graphics() {
     renderable = true;
     blendMode = BlendModes.NORMAL;
-    dirty = true;
+    _dirty = true;
   }
 
-
+  /**
+   * If cacheAsBitmap is true the graphics object will then be rendered as if it was a sprite.
+   * This is useful if your graphics element does not change often as it will speed up the rendering of the object
+   * It is also usful as the graphics object will always be antialiased because it will be rendered using canvas
+   * Not recommended if you are constanly redrawing the graphics element.
+   */
   set cacheAsBitmap(bool value) {
-    if (this._cacheAsBitmap == value)return;
+    if (this._cacheAsBitmap == value) return;
 
     if (value) {
       this._generateCachedSprite();
-    }
-    else {
+    } else {
       this._destroyCachedSprite();
     }
 
     this._cacheAsBitmap = value;
   }
 
-  Graphics lineStyle([int lineWidth=0, num color=0, num alpha=1]) {
-    if (this.currentPath.points.length == 0) {
-      if (this.graphicsData.length > 0) {
-        this.graphicsData.removeLast();
+  /// Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
+  Graphics lineStyle([int lineWidth = 0, num color = 0, num alpha = 1]) {
+    if (this._currentPath.points.length == 0) {
+      if (this._graphicsData.length > 0) {
+        this._graphicsData.removeLast();
       }
     }
 
@@ -76,62 +108,70 @@ class Graphics extends DisplayObjectContainer {
     this.lineColor = color;
     this.lineAlpha = alpha;
 
-    this.currentPath = new GraphicsData()
-      ..lineWidth = this.lineWidth
-      ..lineColor = this.lineColor
-      ..lineAlpha = this.lineAlpha
-      ..fillColor = this.fillColor
-      ..fillAlpha = this.fillAlpha
-      ..fill = this.filling
-      ..points = []
-      ..type = POLY;
+    this._currentPath = new GraphicsData()
+        ..lineWidth = this.lineWidth
+        ..lineColor = this.lineColor
+        ..lineAlpha = this.lineAlpha
+        ..fillColor = this.fillColor
+        ..fillAlpha = this.fillAlpha
+        ..fill = this.filling
+        ..points = []
+        ..type = POLY;
 
-    this.graphicsData.add(this.currentPath);
+    this._graphicsData.add(this._currentPath);
 
     return this;
   }
 
+  /// Moves the current drawing position to (x, y).
   Graphics moveTo(num x, num y) {
-    if (this.currentPath.points.length == 0) {
-      if (this.graphicsData.length > 0) {
-        this.graphicsData.removeLast();
+    if (this._currentPath.points.length == 0) {
+      if (this._graphicsData.length > 0) {
+        this._graphicsData.removeLast();
       }
     }
 
-    this.currentPath = new GraphicsData()
-      ..lineWidth = this.lineWidth
-      ..lineColor = this.lineColor
-      ..lineAlpha = this.lineAlpha
-      ..fillColor = this.fillColor
-      ..fillAlpha = this.fillAlpha
-      ..fill = this.filling
-      ..points = []
-      ..type = POLY;
+    this._currentPath = new GraphicsData()
+        ..lineWidth = this.lineWidth
+        ..lineColor = this.lineColor
+        ..lineAlpha = this.lineAlpha
+        ..fillColor = this.fillColor
+        ..fillAlpha = this.fillAlpha
+        ..fill = this.filling
+        ..points = []
+        ..type = POLY;
 
-    this.currentPath.points.addAll([x, y]);
+    this._currentPath.points.addAll([x, y]);
 
-    this.graphicsData.add(this.currentPath);
-
-    return this;
-  }
-
-  Graphics lineTo(x, y) {
-    this.currentPath.points.addAll([x, y]);
-    this.dirty = true;
+    this._graphicsData.add(this._currentPath);
 
     return this;
   }
 
+  /**
+   * Draws a line using the current line style from the current drawing position to (x, y);
+   * the current drawing position is then set to (x, y).
+   */
+  Graphics lineTo(num x, num y) {
+    this._currentPath.points.addAll([x, y]);
+    this._dirty = true;
 
+    return this;
+  }
+
+  /**
+   * Calculate the points for a quadratic bezier curve.
+   * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
+   */
   Graphics quadraticCurveTo(num cpX, num cpY, num toX, num toY) {
-    if (this.currentPath.points.length == 0) {
+    if (this._currentPath.points.length == 0) {
       this.moveTo(0, 0);
     }
     num xa,
-    ya,
-    n = 20;
-    List<num> points = this.currentPath.points;
-    if (points.length == 0)this.moveTo(0, 0);
+        ya,
+        n = 20;
+    List<num> points = this._currentPath.points;
+    if (points.length == 0) this.moveTo(0, 0);
 
     num fromX = points[points.length - 2];
     num fromY = points[points.length - 1];
@@ -142,30 +182,31 @@ class Graphics extends DisplayObjectContainer {
       j = i / n;
 
 
-      xa = fromX + ( (cpX - fromX) * j );
-      ya = fromY + ( (cpY - fromY) * j );
+      xa = fromX + ((cpX - fromX) * j);
+      ya = fromY + ((cpY - fromY) * j);
 
 
-      points.addAll([ xa + ( ((cpX + ( (toX - cpX) * j )) - xa) * j ),
-      ya + ( ((cpY + ( (toY - cpY) * j )) - ya) * j ) ]);
+      points.addAll([xa + (((cpX + ((toX - cpX) * j)) - xa) * j), ya + (((cpY + ((toY - cpY) * j)) - ya) * j)]);
     }
 
 
-    this.dirty = true;
+    this._dirty = true;
 
 
     return this;
   }
 
+
+  /// Calculate the points for a bezier curve.
   Graphics bezierCurveTo(num cpX, num cpY, num cpX2, num cpY2, num toX, num toY) {
-    if (this.currentPath.points.length == 0)this.moveTo(0, 0);
+    if (this._currentPath.points.length == 0) this.moveTo(0, 0);
     num n = 20,
-    dt,
-    dt2,
-    dt3,
-    t2,
-    t3;
-    List<num> points = this.currentPath.points;
+        dt,
+        dt2,
+        dt3,
+        t2,
+        t3;
+    List<num> points = this._currentPath.points;
 
 
     num fromX = points[points.length - 2];
@@ -186,39 +227,37 @@ class Graphics extends DisplayObjectContainer {
       t2 = j * j;
       t3 = t2 * j;
 
-      points.addAll([dt3 * fromX + 3 * dt2 * j * cpX + 3 * dt * t2 * cpX2 + t3 * toX,
-      dt3 * fromY + 3 * dt2 * j * cpY + 3 * dt * t2 * cpY2 + t3 * toY]);
+      points.addAll([dt3 * fromX + 3 * dt2 * j * cpX + 3 * dt * t2 * cpX2 + t3 * toX, dt3 * fromY + 3 * dt2 * j * cpY + 3 * dt * t2 * cpY2 + t3 * toY]);
 
     }
 
-    this.dirty = true;
+    this._dirty = true;
 
 
     return this;
   }
 
 
-/*
+  /*
  * arcTo()
  *
  * "borrowed" from https://code.google.com/p/fxcanvas/ - thanks google!
  */
-
   Graphics arcTo(num x1, num y1, num x2, num y2, num radius) {
     // check that path contains subpaths
     //if (path.commands.length == 0)
-//        moveTo(x1, y1);
+    //        moveTo(x1, y1);
 
-    if (this.currentPath.points.length == 0)this.moveTo(x1, y1);
+    if (this._currentPath.points.length == 0) this.moveTo(x1, y1);
 
-    List<num> points = this.currentPath.points;
+    List<num> points = this._currentPath.points;
 
 
     num fromX = points[points.length - 2];
     num fromY = points[points.length - 1];
 
 
-//    points.push( x1,  y1);
+    //    points.push( x1,  y1);
 
 
     num a1 = fromY - y1;
@@ -230,8 +269,7 @@ class Graphics extends DisplayObjectContainer {
 
     if (mm < 1.0e-8 || radius == 0) {
       points.addAll([x1, y1]);
-    }
-    else {
+    } else {
       num dd = a1 * a1 + b1 * b1;
       num cc = a2 * a2 + b2 * b2;
       num tt = a1 * a2 + b1 * b2;
@@ -253,23 +291,22 @@ class Graphics extends DisplayObjectContainer {
     }
 
 
-    this.dirty = true;
+    this._dirty = true;
 
 
     return this;
   }
 
 
-/*
+  /*
  * Arc init! TODO add docs
  */
-
-  Graphics arc(num cx, num cy, num radius, num startAngle, num endAngle, [bool anticlockwise =false]) {
+  Graphics arc(num cx, num cy, num radius, num startAngle, num endAngle, [bool anticlockwise = false]) {
     num startX = cx + cos(startAngle) * radius;
     num startY = cy + sin(startAngle) * radius;
 
 
-    List<num> points = this.currentPath.points;
+    List<num> points = this._currentPath.points;
 
     //num fromX = points[points.length - 2];
     //num fromY = points[points.length - 1];
@@ -278,22 +315,21 @@ class Graphics extends DisplayObjectContainer {
     //if (fromX != startX || fromY != startY) points.addAll([startX, startY]);
     if (points.length != 0 && points[points.length - 2] != startX || points[points.length - 1] != startY) {
       this.moveTo(startX, startY);
-      points = this.currentPath.points;
+      points = this._currentPath.points;
     }
 
-    if (startAngle == endAngle)return this;
+    if (startAngle == endAngle) return this;
 
 
     if (!anticlockwise && endAngle <= startAngle) {
       endAngle += PI * 2;
-    }
-    else if (anticlockwise && startAngle <= endAngle) {
+    } else if (anticlockwise && startAngle <= endAngle) {
       startAngle += PI * 2;
     }
 
 
     num sweep = anticlockwise ? (startAngle - endAngle) * -1 : (endAngle - startAngle);
-    num segs = ( (sweep).abs() / (PI * 2) ) * 40;
+    num segs = ((sweep).abs() / (PI * 2)) * 40;
 
 
     if (sweep == 0) return this;
@@ -308,8 +344,8 @@ class Graphics extends DisplayObjectContainer {
 
     //num remainder = ( segs % 1 ) / segs;
     num segMinus = segs - 1;
-    num remainder = ( segMinus % 1 ) / segMinus;
-    for(int i=0; i<=segMinus; i++){
+    num remainder = (segMinus % 1) / segMinus;
+    for (int i = 0; i <= segMinus; i++) {
       num real = i + remainder * i;
 
 
@@ -320,12 +356,11 @@ class Graphics extends DisplayObjectContainer {
       num s = -sin(angle);
 
 
-      points.addAll([( (cTheta * c) + (sTheta * s) ) * radius + cx,
-      ( (cTheta * -s) + (sTheta * c) ) * radius + cy]);
+      points.addAll([((cTheta * c) + (sTheta * s)) * radius + cx, ((cTheta * -s) + (sTheta * c)) * radius + cy]);
     }
 
 
-    this.dirty = true;
+    this._dirty = true;
 
 
     return this;
@@ -335,42 +370,40 @@ class Graphics extends DisplayObjectContainer {
   /**
    * Draws a line using the current line style from the current drawing position to (x, y);
    * the current drawing position is then set to (x, y).
-   *
-   * @method lineTo
-   * @param x {Number} the X coordinate to draw to
-   * @param y {Number} the Y coordinate to draw to
    */
-
   Graphics drawPath(List<num> path) {
-    if (this.currentPath.points.length == 0) {
-      if (this.graphicsData.length > 0) {
-        this.graphicsData.removeLast();
+    if (this._currentPath.points.length == 0) {
+      if (this._graphicsData.length > 0) {
+        this._graphicsData.removeLast();
       }
     }
 
-    this.currentPath = new GraphicsData()
-      ..lineWidth = this.lineWidth
-      ..lineColor = this.lineColor
-      ..lineAlpha = this.lineAlpha
-      ..fillColor = this.fillColor
-      ..fillAlpha = this.fillAlpha
-      ..fill = this.filling
-      ..points = []
-      ..type = Graphics.POLY;
+    this._currentPath = new GraphicsData()
+        ..lineWidth = this.lineWidth
+        ..lineColor = this.lineColor
+        ..lineAlpha = this.lineAlpha
+        ..fillColor = this.fillColor
+        ..fillAlpha = this.fillAlpha
+        ..fill = this.filling
+        ..points = []
+        ..type = Graphics.POLY;
 
 
-    this.graphicsData.add(this.currentPath);
+    this._graphicsData.add(this._currentPath);
 
 
-    this.currentPath.points.addAll(path);
-    this.dirty = true;
+    this._currentPath.points.addAll(path);
+    this._dirty = true;
 
 
     return this;
   }
 
-
-  Graphics beginFill([num color, num alpha=1]) {
+  /**
+   * Specifies a simple one-color fill that subsequent calls to other Graphics methods
+   * (such as lineTo() or drawCircle()) use when drawing.
+   */
+  Graphics beginFill([num color, num alpha = 1]) {
 
     this.filling = true;
     this.fillColor = color;
@@ -379,6 +412,7 @@ class Graphics extends DisplayObjectContainer {
     return this;
   }
 
+  /// Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
   Graphics endFill() {
     this.filling = false;
     this.fillColor = null;
@@ -388,49 +422,49 @@ class Graphics extends DisplayObjectContainer {
   }
 
   Graphics drawRect(num x, num y, num width, num height) {
-    if (this.currentPath.points.length == 0) {
-      if (this.graphicsData.length > 0) {
-        this.graphicsData.removeLast();
+    if (this._currentPath.points.length == 0) {
+      if (this._graphicsData.length > 0) {
+        this._graphicsData.removeLast();
       }
     }
 
-    this.currentPath = new GraphicsData()
-      ..lineWidth = this.lineWidth
-      ..lineColor = this.lineColor
-      ..lineAlpha = this.lineAlpha
-      ..fillColor = this.fillColor
-      ..fillAlpha = this.fillAlpha
-      ..fill = this.filling
-      ..points = [x, y, width, height]
-      ..type = Graphics.RECT;
+    this._currentPath = new GraphicsData()
+        ..lineWidth = this.lineWidth
+        ..lineColor = this.lineColor
+        ..lineAlpha = this.lineAlpha
+        ..fillColor = this.fillColor
+        ..fillAlpha = this.fillAlpha
+        ..fill = this.filling
+        ..points = [x, y, width, height]
+        ..type = Graphics.RECT;
 
 
-    this.graphicsData.add(this.currentPath);
-    this.dirty = true;
+    this._graphicsData.add(this._currentPath);
+    this._dirty = true;
 
     return this;
   }
 
   Graphics drawRoundedRect(num x, num y, num width, num height, num radius) {
-    if (this.currentPath.points.length == 0) {
-      if (this.graphicsData.length > 0) {
-        this.graphicsData.removeLast();
+    if (this._currentPath.points.length == 0) {
+      if (this._graphicsData.length > 0) {
+        this._graphicsData.removeLast();
       }
     }
 
-    this.currentPath = new GraphicsData()
-      ..lineWidth = this.lineWidth
-      ..lineColor = this.lineColor
-      ..lineAlpha = this.lineAlpha
-      ..fillColor = this.fillColor
-      ..fillAlpha = this.fillAlpha
-      ..fill = this.filling
-      ..points = [x, y, width, height, radius]
-      ..type = Graphics.RREC;
+    this._currentPath = new GraphicsData()
+        ..lineWidth = this.lineWidth
+        ..lineColor = this.lineColor
+        ..lineAlpha = this.lineAlpha
+        ..fillColor = this.fillColor
+        ..fillAlpha = this.fillAlpha
+        ..fill = this.filling
+        ..points = [x, y, width, height, radius]
+        ..type = Graphics.RREC;
 
 
-    this.graphicsData.add(this.currentPath);
-    this.dirty = true;
+    this._graphicsData.add(this._currentPath);
+    this._dirty = true;
 
 
     return this;
@@ -438,65 +472,70 @@ class Graphics extends DisplayObjectContainer {
 
 
   Graphics drawCircle(num x, num y, num radius) {
-    if (this.currentPath.points.length == 0) {
-      if (this.graphicsData.length > 0) {
-        this.graphicsData.removeLast();
+    if (this._currentPath.points.length == 0) {
+      if (this._graphicsData.length > 0) {
+        this._graphicsData.removeLast();
       }
     }
 
-    this.currentPath = new GraphicsData()
-      ..lineWidth = this.lineWidth
-      ..lineColor = this.lineColor
-      ..lineAlpha = this.lineAlpha
-      ..fillColor = this.fillColor
-      ..fillAlpha = this.fillAlpha
-      ..fill = this.filling
-      ..points = [x, y, radius, radius]
-      ..type = Graphics.CIRC;
+    this._currentPath = new GraphicsData()
+        ..lineWidth = this.lineWidth
+        ..lineColor = this.lineColor
+        ..lineAlpha = this.lineAlpha
+        ..fillColor = this.fillColor
+        ..fillAlpha = this.fillAlpha
+        ..fill = this.filling
+        ..points = [x, y, radius, radius]
+        ..type = Graphics.CIRC;
 
-    this.graphicsData.add(this.currentPath);
-    this.dirty = true;
+    this._graphicsData.add(this._currentPath);
+    this._dirty = true;
 
     return this;
   }
 
   Graphics drawEllipse(x, y, width, height) {
-    if (this.currentPath.points.length == 0) {
-      if (this.graphicsData.length > 0) {
-        this.graphicsData.removeLast();
+    if (this._currentPath.points.length == 0) {
+      if (this._graphicsData.length > 0) {
+        this._graphicsData.removeLast();
       }
     }
 
-    this.currentPath = new GraphicsData()
-      ..lineWidth = this.lineWidth
-      ..lineColor = this.lineColor
-      ..lineAlpha = this.lineAlpha
-      ..fillColor = this.fillColor
-      ..fillAlpha = this.fillAlpha
-      ..fill = this.filling
-      ..points = [x, y, width, height]
-      ..type = Graphics.ELIP;
+    this._currentPath = new GraphicsData()
+        ..lineWidth = this.lineWidth
+        ..lineColor = this.lineColor
+        ..lineAlpha = this.lineAlpha
+        ..fillColor = this.fillColor
+        ..fillAlpha = this.fillAlpha
+        ..fill = this.filling
+        ..points = [x, y, width, height]
+        ..type = Graphics.ELIP;
 
 
-    this.graphicsData.add(this.currentPath);
-    this.dirty = true;
+    this._graphicsData.add(this._currentPath);
+    this._dirty = true;
 
     return this;
   }
 
+  /// Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
   Graphics clear() {
     this.lineWidth = 0;
     this.filling = false;
 
-    this.dirty = true;
+    this._dirty = true;
     this.clearDirty = true;
-    this.graphicsData = [];
+    this._graphicsData.clear();
 
     this.bounds = null; //new PIXI.Rectangle();
 
     return this;
   }
 
+  /**
+   * Useful function that returns a texture of the graphics object that can then be used to create sprites
+   * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
+   */
   RenderTexture generateTexture([Renderer renderer]) {
     Rectangle bounds = this.getBounds();
 
@@ -510,31 +549,31 @@ class Graphics extends DisplayObjectContainer {
     return texture;
   }
 
+  /// Renders the object using the WebGL renderer
   void _renderWebGL(RenderSession renderSession) {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible == false || this.alpha == 0 || this.isMask == true)return;
+    if (this.visible == false || this.alpha == 0 || this._isMask == true) return;
 
     if (this._cacheAsBitmap) {
 
-      if (this.dirty) {
+      if (this._dirty) {
         this._generateCachedSprite();
         // we will also need to update the texture on the gpu too!
         updateWebGLTexture(this._cachedSprite.texture.baseTexture, renderSession.gl);
 
-        this.dirty = false;
+        this._dirty = false;
       }
 
       this._cachedSprite.alpha = this.alpha;
       _cachedSprite._renderWebGL(renderSession);
 
       return;
-    }
-    else {
+    } else {
       renderSession.spriteBatch.stop();
       renderSession.blendModeManager.setBlendMode(this.blendMode);
 
-      if (this._mask != null)renderSession.maskManager.pushMask(this.mask, renderSession);
-      if (this._filters != null)renderSession.filterManager.pushFilter(this._filterBlock);
+      if (this._mask != null) renderSession.maskManager.pushMask(this.mask, renderSession);
+      if (this._filters != null) renderSession.filterManager.pushFilter(this._filterBlock);
 
       // check blend mode
       if (this.blendMode != renderSession.blendModeManager.currentBlendMode) {
@@ -550,14 +589,15 @@ class Graphics extends DisplayObjectContainer {
         renderSession.spriteBatch.start();
 
         // simple render children!
-        for (var i = 0, j = this.children.length; i < j; i++) {
+        for (var i = 0,
+            j = this.children.length; i < j; i++) {
           this.children[i]._renderWebGL(renderSession);
         }
 
         renderSession.spriteBatch.stop();
       }
 
-      if (this._filters != null)renderSession.filterManager.popFilter();
+      if (this._filters != null) renderSession.filterManager.popFilter();
       //if (this._mask != null)renderSession.maskManager.popMask(renderSession);
       if (this._mask != null) renderSession.maskManager.popMask(this.mask, renderSession);
 
@@ -567,10 +607,11 @@ class Graphics extends DisplayObjectContainer {
     }
   }
 
+  /// Renders the object using the Canvas renderer
   void _renderCanvas(RenderSession renderSession) {
     //print("here");
     // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible == false || this.alpha == 0 || this.isMask == true)return;
+    if (this.visible == false || this.alpha == 0 || this._isMask == true) return;
 
     var context = renderSession.context;
     var transform = this._worldTransform;
@@ -589,7 +630,8 @@ class Graphics extends DisplayObjectContainer {
     CanvasGraphics.renderGraphics(this, context);
 
     // simple render children!
-    for (int i = 0, j = this.children.length; i < j; i++) {
+    for (int i = 0,
+        j = this.children.length; i < j; i++) {
       this.children[i]._renderCanvas(renderSession);
     }
 
@@ -599,13 +641,13 @@ class Graphics extends DisplayObjectContainer {
 
   }
 
-
+  /// Retrieves the bounds of the graphic shape as a rectangle object
   Rectangle getBounds([Matrix matrix]) {
     if (matrix == null) {
       matrix = this._worldTransform;
     }
 
-    if (this.bounds == null)this.updateBounds();
+    if (this.bounds == null) this._updateBounds();
 
     var w0 = this.bounds.x;
     var w1 = this.bounds.width + this.bounds.x;
@@ -667,9 +709,10 @@ class Graphics extends DisplayObjectContainer {
     return bounds;
   }
 
-  updateBounds() {
+  /// Update the bounds of the object
+  _updateBounds() {
 
-    var minX = double.INFINITY ;
+    var minX = double.INFINITY;
     var maxX = -double.INFINITY;
 
     var minY = double.INFINITY;
@@ -677,8 +720,8 @@ class Graphics extends DisplayObjectContainer {
 
     var points, x, y, w, h;
 
-    for (var i = 0; i < this.graphicsData.length; i++) {
-      var data = this.graphicsData[i];
+    for (var i = 0; i < this._graphicsData.length; i++) {
+      var data = this._graphicsData[i];
       var type = data.type;
       var lineWidth = data.lineWidth;
 
@@ -695,8 +738,7 @@ class Graphics extends DisplayObjectContainer {
 
         minY = y < minY ? x : minY;
         maxY = y + h > maxY ? y + h : maxY;
-      }
-      else if (type == Graphics.CIRC || type == ELIP) {
+      } else if (type == Graphics.CIRC || type == ELIP) {
         x = points[0];
         y = points[1];
         w = points[2] + lineWidth / 2;
@@ -707,8 +749,7 @@ class Graphics extends DisplayObjectContainer {
 
         minY = y - h < minY ? y - h : minY;
         maxY = y + h > maxY ? y + h : maxY;
-      }
-      else {
+      } else {
         // POLY
         for (var j = 0; j < points.length; j += 2) {
 
@@ -727,8 +768,9 @@ class Graphics extends DisplayObjectContainer {
     this.bounds = new Rectangle(minX - padding, minY - padding, (maxX - minX) + padding * 2, (maxY - minY) + padding * 2);
   }
 
+  /// Generates the cached sprite when the sprite has cacheAsBitmap = true
   _generateCachedSprite() {
-    var bounds = this.getLocalBounds();
+    var bounds = this._getLocalBounds();
 
     if (this._cachedSprite == null) {
       var canvasBuffer = new CanvasBuffer(bounds.width, bounds.height);
@@ -738,14 +780,13 @@ class Graphics extends DisplayObjectContainer {
       this._cachedSprite.buffer = canvasBuffer;
 
       this._cachedSprite._worldTransform = this._worldTransform;
-    }
-    else {
+    } else {
       this._cachedSprite.buffer.resize(bounds.width, bounds.height);
     }
 
     // leverage the anchor to account for the offset of the element
-    this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
-    this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
+    this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
+    this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
 
     // this._cachedSprite.buffer.context.save();
     this._cachedSprite.buffer.context.translate(-bounds.x, -bounds.y);
@@ -756,7 +797,7 @@ class Graphics extends DisplayObjectContainer {
     // this._cachedSprite.buffer.context.restore();
   }
 
-  destroyCachedSprite() {
+  _destroyCachedSprite() {
     this._cachedSprite.texture.destroy(true);
 
     // let the gc collect the unused sprite

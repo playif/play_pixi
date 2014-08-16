@@ -117,7 +117,7 @@ class CanvasRenderer extends Renderer {
     texturesToUpdate.length = 0;
     texturesToDestroy.length = 0;
 
-    stage.updateTransform();
+    stage._updateTransform();
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.globalAlpha = 1;
@@ -162,7 +162,7 @@ class CanvasRenderer extends Renderer {
     this.view.height = height;
   }
 
-  renderDisplayObject(DisplayObject displayObject, [CanvasRenderingContext2D context, buffer]) {
+  renderDisplayObject(DisplayInterface displayObject, [CanvasRenderingContext2D context, buffer]) {
     // no longer recursive!
     //var transform;
     //var context = this.context;

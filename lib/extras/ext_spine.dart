@@ -1643,7 +1643,7 @@ class Spine extends DisplayObjectContainer {
     }
   }
 
-  updateTransform() {
+  _updateTransform() {
     DateTime now= new DateTime.now();
     if (lastTime == null) {
       this.lastTime = now;
@@ -1701,7 +1701,7 @@ class Spine extends DisplayObjectContainer {
       slot.currentSprite.tint = rgb2hex([slot.r, slot.g, slot.b]);
     }
 
-    super.updateTransform();
+    super._updateTransform();
   }
 
   Sprite createSprite(Slot slot, AtlasRegion descriptor) {

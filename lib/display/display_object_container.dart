@@ -1,23 +1,25 @@
 part of PIXI;
 
 
+/**
+ * A DisplayObjectContainer represents a collection of display objects.
+ * It is the base class of all display objects that act as a container for other objects.
+ */
+class DisplayObjectContainer extends DisplayObject  {
+  final List<DisplayInterface> children = [];
 
-class DisplayObjectContainer extends DisplayObject {
-  List<DisplayInterface> children = [];
-
-//  Stage stage = null;
-//  bool visible = true;
+  bool interactiveChildren = false;
 
   num _width; 
-
+  /// The width of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
   num get width {
-    return this.scale.x * this.getLocalBounds().width;
+    return this.scale.x * this._getLocalBounds().width;
   }
 
   set width(num value) {
     //this.scale.x = value / (this.getLocalBounds().width / this.scale.x);
 
-    num width = this.getLocalBounds().width;
+    num width = this._getLocalBounds().width;
     if (width != 0) {
       this.scale.x = value / ( width / this.scale.x );
     }
@@ -28,15 +30,15 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
   num _height;
-
+  /// The height of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
   num get height {
-    return this.scale.y * this.getLocalBounds().height;
+    return this.scale.y * this._getLocalBounds().height;
   }
 
   set height(num value) {
     //this.scale.y = value / (this.getLocalBounds().height / this.scale.y);
 
-    num height = this.getLocalBounds().height;
+    num height = this._getLocalBounds().height;
     if (height != 0) {
       this.scale.y = value / ( height / this.scale.y );
     }
@@ -46,25 +48,24 @@ class DisplayObjectContainer extends DisplayObject {
     this._height = value;
   }
 
-
-  DisplayObjectContainer() {
-  }
-
+  /// Adds a [child] to the container.
   DisplayInterface addChild(DisplayInterface child) {
     return addChildAt(child, children.length);
   }
 
+  /// Adds a [child] to the container at a specified [index]. If the [index] is out of bounds an error will be thrown
   DisplayInterface addChildAt(DisplayInterface child, int index) {
+    DisplayObject _child=child as DisplayObject;
     if (index >= 0 && index <= children.length) {
-      if (child._parent != null) {
-        (child._parent as DisplayObjectContainer).removeChild(child);
+      if (_child._parent != null) {
+        (_child._parent as DisplayObjectContainer).removeChild(child);
       }
 
-      child._parent = this;
+      _child._parent = this;
 
       children.insert(index, child);
 
-      if (_stage != null) child.setStageReference(_stage);
+      if (_stage != null) _child._setStageReference(_stage);
 
       return child;
     }
@@ -74,6 +75,7 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
 
+  /// Swaps the depth of 2 displayObjects
   bool swapChildren(DisplayInterface child, DisplayInterface child2) {
     if (child == child2) {
       return false;
@@ -91,6 +93,7 @@ class DisplayObjectContainer extends DisplayObject {
     return true;
   }
 
+  /// Returns the child at the specified index
   DisplayInterface getChildAt(int index) {
     if (index >= 0 && index < children.length) {
       return children[index];
@@ -100,14 +103,17 @@ class DisplayObjectContainer extends DisplayObject {
     }
   }
 
+  /// Removes a child from the container.
   DisplayInterface removeChild(DisplayInterface child) {
     return removeChildAt(children.indexOf(child));
   }
 
+  
+  /// Removes a child from the specified index position in the child list of the container.
   DisplayInterface removeChildAt(int index) {
-    DisplayInterface child = getChildAt(index);
+    DisplayObject child = getChildAt(index);
     if (_stage != null && child is DisplayObjectContainer)
-      child.removeStageReference();
+      child._removeStageReference();
 
     child._parent = null;
     children.removeAt(index);
@@ -115,6 +121,7 @@ class DisplayObjectContainer extends DisplayObject {
   }
 
 
+  /// Removes all child instances from the child list of the container.
   List<DisplayInterface> removeChildren([int begin=0, int end]) {
     end = end == null ? children.length : end;
     int range = end - begin;
@@ -122,7 +129,7 @@ class DisplayObjectContainer extends DisplayObject {
     if (range > 0 && range <= end) {
       var removed = children.getRange(begin, range);
       children.removeRange(begin, range);
-      for (DisplayInterface child in removed) {
+      for (DisplayObject child in removed) {
         child._stage = null;
         //if (stage != null)
         //  child.removeStageReference();
@@ -135,20 +142,22 @@ class DisplayObjectContainer extends DisplayObject {
     }
   }
 
-  updateTransform() {
+  /// Updates the container's childrens transform for rendering
+  _updateTransform() {
     //this._currentBounds = null;
 
     if (!this.visible) return;
 
-    super.updateTransform();
+    super._updateTransform();
 
     if (this._cacheAsBitmap) return;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
-      this.children[i].updateTransform();
+      this.children[i]._updateTransform();
     }
   }
 
+  /// Retrieves the bounds of the displayObjectContainer as a rectangle object
   Rectangle getBounds([Matrix matrix]) {
     if (this.children.length == 0)return EmptyRectangle;
 
@@ -156,7 +165,7 @@ class DisplayObjectContainer extends DisplayObject {
     if (matrix != null) {
       Matrix matrixCache = this._worldTransform;
       this._worldTransform = matrix;
-      this.updateTransform();
+      this._updateTransform();
       this._worldTransform = matrixCache;
     }
 
@@ -173,13 +182,13 @@ class DisplayObjectContainer extends DisplayObject {
     bool childVisible = false;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
-      DisplayInterface child = this.children[i];
+      DisplayObject child = this.children[i];
 
       if (!child.visible)continue;
 
       childVisible = true;
 
-      childBounds = this.children[i].getBounds(matrix);
+      childBounds = child.getBounds(matrix);
 
       minX = minX < childBounds.x ? minX : childBounds.x;
       minY = minY < childBounds.y ? minY : childBounds.y;
@@ -207,13 +216,14 @@ class DisplayObjectContainer extends DisplayObject {
     return bounds;
   }
 
-  Rectangle getLocalBounds() {
+  /// 
+  Rectangle _getLocalBounds() {
     Matrix matrixCache = this._worldTransform;
 
     this._worldTransform = IdentityMatrix;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
-      this.children[i].updateTransform();
+      this.children[i]._updateTransform();
     }
 
     Rectangle bounds = this.getBounds();
@@ -223,28 +233,31 @@ class DisplayObjectContainer extends DisplayObject {
     return bounds;
   }
 
-  void setStageReference(Stage stage) {
+  /// Sets the container's stage reference, the stage this object is connected to
+  void _setStageReference(Stage stage) {
     this._stage = stage;
-    if (this._interactive)this._stage.dirty = true;
+    if (this._interactive)this._stage._dirty = true;
 
     for (int i = 0, j = this.children.length; i < j; i++) {
-      DisplayInterface child = this.children[i];
-      child.setStageReference(stage);
+      DisplayObject child = this.children[i];
+      child._setStageReference(stage);
     }
   }
 
-  void removeStageReference() {
+  /// removes the current stage reference of the container
+  void _removeStageReference() {
 
     for (int i = 0, j = this.children.length; i < j; i++) {
       DisplayObjectContainer child = this.children[i];
-      child.removeStageReference();
+      child._removeStageReference();
     }
 
-    if (this._interactive) this._stage.dirty = true;
+    if (this._interactive) this._stage._dirty = true;
 
     this._stage = null;
   }
 
+  /// Renders the object using the WebGL renderer
   void _renderWebGL(RenderSession renderSession) {
     if (!this.visible || this.alpha <= 0)return;
 
@@ -289,6 +302,7 @@ class DisplayObjectContainer extends DisplayObject {
     }
   }
 
+  /// Renders the object using the Canvas renderer
   void _renderCanvas(RenderSession renderSession) {
     if (this.visible == false || this.alpha == 0)return;
 
@@ -303,7 +317,7 @@ class DisplayObjectContainer extends DisplayObject {
     }
 
     for (int i = 0, j = this.children.length; i < j; i++) {
-      DisplayObject child = this.children[i];
+      DisplayInterface child = this.children[i];
       child._renderCanvas(renderSession);
     }
 

@@ -146,7 +146,7 @@ class WebGLRenderer extends Renderer {
     WebGLRenderer.updateTextures(gl);
 
     // update the scene graph
-    stage.updateTransform();
+    stage._updateTransform();
 
 
 //    // interaction
@@ -217,7 +217,7 @@ class WebGLRenderer extends Renderer {
   }
 
 
-  renderDisplayObject(DisplayObject displayObject, [Point projection, buffer]) {
+  renderDisplayObject(DisplayInterface displayObject, [Point projection, buffer]) {
     this.renderSession.blendModeManager.setBlendMode(BlendModes.NORMAL);
     // reset the render session data..
     this.renderSession.drawCount = 0;

@@ -4,8 +4,7 @@ class InteractionManager {
   Stage stage;
   InteractionData mouse = new InteractionData();
 
-  Map<int, InteractionData> touchs = {
-  };
+  Map<int, InteractionData> touchs = {};
 
   Point tempPoint = new Point();
 
@@ -28,7 +27,7 @@ class InteractionManager {
 
   }
 
-  void collectInteractiveSprite(DisplayObjectContainer displayObject, iParent) {
+  void collectInteractiveSprite(DisplayObjectContainer displayObject, DisplayObjectContainer iParent) {
 
 
     List<DisplayObjectContainer> children = displayObject.children;
@@ -47,9 +46,8 @@ class InteractionManager {
         if (child.children.length > 0) {
           this.collectInteractiveSprite(child, child);
         }
-      }
-      else {
-        child.__iParent = null;
+      } else {
+        //child.__iParent = null;
 
         if (child.children.length > 0) {
           this.collectInteractiveSprite(child, iParent);
@@ -76,14 +74,14 @@ class InteractionManager {
     this.removeEvents();
 
 
-//    if (window.navigator.msPointerEnabled)
-//    {
-//      // time to remove some of that zoom in ja..
-//      domElement.style['-ms-content-zooming'] = 'none';
-//      domElement.style['-ms-touch-action'] = 'none';
-//
-//      // DO some window specific touch!
-//    }
+    //    if (window.navigator.msPointerEnabled)
+    //    {
+    //      // time to remove some of that zoom in ja..
+    //      domElement.style['-ms-content-zooming'] = 'none';
+    //      domElement.style['-ms-touch-action'] = 'none';
+    //
+    //      // DO some window specific touch!
+    //    }
 
     this.interactionDOMElement = domElement;
 
@@ -102,8 +100,8 @@ class InteractionManager {
   void removeEvents() {
     if (this.interactionDOMElement == null) return;
 
-//    this.interactionDOMElement.style['-ms-content-zooming'] = '';
-//    this.interactionDOMElement.style['-ms-touch-action'] = '';
+    //    this.interactionDOMElement.style['-ms-content-zooming'] = '';
+    //    this.interactionDOMElement.style['-ms-touch-action'] = '';
 
     this.interactionDOMElement.removeEventListener('mousemove', this.onMouseMove, true);
     this.interactionDOMElement.removeEventListener('mousedown', this.onMouseDown, true);
@@ -120,13 +118,13 @@ class InteractionManager {
   }
 
   void update() {
-    if (this.target == null)return;
+    if (this.target == null) return;
 
     // frequency of 30fps??
     DateTime now = new DateTime.now();
     num diff = now.difference(this.last).inMilliseconds;
-    diff = (diff * INTERACTION_FREQUENCY ) / 1000;
-    if (diff < 1)return;
+    diff = (diff * INTERACTION_FREQUENCY) / 1000;
+    if (diff < 1) return;
     this.last = now;
 
     int i = 0;
@@ -135,19 +133,19 @@ class InteractionManager {
     // yes for now :)
     // OPTIMISE - how often to check??
     if (this.dirty) {
-//      this.dirty = false;
-//
-//      int len = this.interactiveItems.length;
-//
-//      for (i = 0; i < len; i++) {
-//        this.interactiveItems[i].interactiveChildren = false;
-//      }
-//
-//      this.interactiveItems.clear();
-//
-//      if (this.stage.interactive)this.interactiveItems.add(this.stage);
-//      // go through and collect all the objects that are interactive..
-//      this.collectInteractiveSprite(this.stage, this.stage);
+      //      this.dirty = false;
+      //
+      //      int len = this.interactiveItems.length;
+      //
+      //      for (i = 0; i < len; i++) {
+      //        this.interactiveItems[i].interactiveChildren = false;
+      //      }
+      //
+      //      this.interactiveItems.clear();
+      //
+      //      if (this.stage.interactive)this.interactiveItems.add(this.stage);
+      //      // go through and collect all the objects that are interactive..
+      //      this.collectInteractiveSprite(this.stage, this.stage);
       this.rebuildInteractiveGraph();
     }
 
@@ -174,7 +172,7 @@ class InteractionManager {
 
         if (item.buttonMode) cursor = item.defaultCursor;
 
-        if (!item.interactiveChildren)over = true;
+        if (item is DisplayObjectContainer && !item.interactiveChildren) over = true;
 
         if (!item.__isOver) {
           //print(item);
@@ -182,8 +180,7 @@ class InteractionManager {
           if (item.mouseover != null) item.mouseover(this.mouse);
           item.__isOver = true;
         }
-      }
-      else {
+      } else {
         if (item.__isOver) {
           // roll out!
           if (item.mouseout != null) item.mouseout(this.mouse);
@@ -204,12 +201,15 @@ class InteractionManager {
     int len = this.interactiveItems.length;
 
     for (int i = 0; i < len; i++) {
-      this.interactiveItems[i].interactiveChildren = false;
+      DisplayInterface item = this.interactiveItems[i];
+      if (item is DisplayObjectContainer) {
+        item.interactiveChildren = false;
+      }
     }
 
     this.interactiveItems = [];
 
-    if (this.stage.interactive)this.interactiveItems.add(this.stage);
+    if (this.stage.interactive) this.interactiveItems.add(this.stage);
     // go through and collect all the objects that are interactive..
     this.collectInteractiveSprite(this.stage, this.stage);
   }
@@ -217,8 +217,7 @@ class InteractionManager {
 
 
   onMouseMove(MouseEvent event) {
-    if(this.dirty)
-    {
+    if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
 
@@ -227,12 +226,12 @@ class InteractionManager {
     var rect = this.interactionDOMElement.getBoundingClientRect();
 
     this.mouse.global.x = (event.client.x - rect.left) * (this.target.width / rect.width);
-    this.mouse.global.y = (event.client.y - rect.top) * ( this.target.height / rect.height);
+    this.mouse.global.y = (event.client.y - rect.top) * (this.target.height / rect.height);
 
     var length = this.interactiveItems.length;
 
     for (var i = 0; i < length; i++) {
-      var item = this.interactiveItems[i];
+      DisplayObject item = this.interactiveItems[i];
 
       if (item.mousemove != null) {
         //call the function!
@@ -242,8 +241,7 @@ class InteractionManager {
   }
 
   void onMouseDown(MouseEvent event) {
-    if(this.dirty)
-    {
+    if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
 
@@ -268,19 +266,18 @@ class InteractionManager {
 
         if (item.__hit) {
           //call the function!
-          if (item.mousedown != null)item.mousedown(this.mouse);
+          if (item.mousedown != null) item.mousedown(this.mouse);
           item.__isDown = true;
 
           // just the one!
-          if (!item.interactiveChildren)break;
+          if (item is DisplayObjectContainer && !item.interactiveChildren) break;
         }
       }
     }
   }
 
   void onMouseOut(MouseEvent event) {
-    if(this.dirty)
-    {
+    if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
 
@@ -292,7 +289,7 @@ class InteractionManager {
       DisplayObject item = this.interactiveItems[i];
       if (item.__isOver) {
         this.mouse.target = item;
-        if (item.mouseout != null)item.mouseout(this.mouse);
+        if (item.mouseout != null) item.mouseout(this.mouse);
         item.__isOver = false;
       }
     }
@@ -305,8 +302,7 @@ class InteractionManager {
   }
 
   onMouseUp(MouseEvent event) {
-    if(this.dirty)
-    {
+    if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
 
@@ -326,12 +322,11 @@ class InteractionManager {
           item.mouseup(this.mouse);
         }
         if (item.__isDown) {
-          if (item.click != null)item.click(this.mouse);
+          if (item.click != null) item.click(this.mouse);
         }
 
-        if (!item.interactiveChildren)up = true;
-      }
-      else {
+        if (item is DisplayObjectContainer && !item.interactiveChildren) up = true;
+      } else {
         if (item.__isDown) {
           if (item.mouseupoutside != null) item.mouseupoutside(this.mouse);
         }
@@ -346,17 +341,21 @@ class InteractionManager {
   bool hitTest(DisplayObjectContainer item, InteractionData interactionData) {
     Point global = interactionData.global;
 
-    if (!item.worldVisible)return false;
+    if (!item.worldVisible) return false;
 
     // temp fix for if the element is in a non visible
 
     bool isSprite = (item is Sprite);
     Matrix worldTransform = item._worldTransform;
-    num a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
-    a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
-    id = 1 / (a00 * a11 + a01 * -a10),
-    x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
-    y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+    num a00 = worldTransform.a,
+        a01 = worldTransform.b,
+        a02 = worldTransform.tx,
+        a10 = worldTransform.c,
+        a11 = worldTransform.d,
+        a12 = worldTransform.ty,
+        id = 1 / (a00 * a11 + a01 * -a10),
+        x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
+        y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
 
     interactionData.target = item;
 
@@ -373,15 +372,14 @@ class InteractionManager {
       }
 
       return false;
-    }
-    // a sprite with no hitarea defined
+    } // a sprite with no hitarea defined
     else if (isSprite) {
 
       Sprite sprite = item as Sprite;
       var width = sprite.texture.frame.width,
-      height = sprite.texture.frame.height,
-      x1 = -width * sprite.anchor.x,
-      y1;
+          height = sprite.texture.frame.height,
+          x1 = -width * sprite.anchor.x,
+          y1;
 
       if (x > x1 && x < x1 + width) {
         y1 = -height * sprite.anchor.y;
@@ -411,8 +409,7 @@ class InteractionManager {
   }
 
   void onTouchMove(event) {
-    if(this.dirty)
-    {
+    if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
 
@@ -432,8 +429,7 @@ class InteractionManager {
       if (window.navigator.appVersion.contains("CocoonJS")) {
         touchData.global.x = touchEvent["clientX"];
         touchData.global.y = touchEvent["clientY"];
-      }
-      else {
+      } else {
         var rect = this.interactionDOMElement.getBoundingClientRect();
         // update the touch position
         touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
@@ -448,8 +444,7 @@ class InteractionManager {
   }
 
   void onTouchStart(event) {
-    if(this.dirty)
-    {
+    if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
 
@@ -473,15 +468,14 @@ class InteractionManager {
 
       this.touchs[touchEvent['identifier']] = touchData;
 
-//      if (navigator.isCocoonJS) {
-//        touchData.global.x = touchEvent.clientX;
-//        touchData.global.y = touchEvent.clientY;
-//      }
+      //      if (navigator.isCocoonJS) {
+      //        touchData.global.x = touchEvent.clientX;
+      //        touchData.global.y = touchEvent.clientY;
+      //      }
       if (window.navigator.appVersion.contains("CocoonJS")) {
         touchData.global.x = touchEvent["clientX"];
         touchData.global.y = touchEvent["clientY"];
-      }
-      else {
+      } else {
         var rect = this.interactionDOMElement.getBoundingClientRect();
         touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
         touchData.global.y = (touchEvent["clientY"] - rect.top) * (this.target.height / rect.height);
@@ -500,13 +494,12 @@ class InteractionManager {
             if (item.touchstart != null) item.touchstart(touchData);
             item.__isDown = true;
             if (item.__touchData == null) {
-              item.__touchData = {
-              };
+              item.__touchData = {};
             }
 
             item.__touchData[touchEvent['identifier']] = touchData;
 
-            if (!item.interactiveChildren)break;
+            if (item is DisplayObjectContainer && !item.interactiveChildren) break;
           }
         }
       }
@@ -514,8 +507,7 @@ class InteractionManager {
   }
 
   void onTouchEnd(event) {
-    if(this.dirty)
-    {
+    if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
 
@@ -530,8 +522,7 @@ class InteractionManager {
       if (window.navigator.appVersion.contains("CocoonJS")) {
         touchData.global.x = touchEvent["clientX"];
         touchData.global.y = touchEvent["clientY"];
-      }
-      else {
+      } else {
         var rect = this.interactionDOMElement.getBoundingClientRect();
         touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
         touchData.global.y = (touchEvent["clientY"] - rect.top) * (this.target.height / rect.height);
@@ -551,16 +542,15 @@ class InteractionManager {
 
           if (item.touchend != null || item.tap != null) {
             if (item.__hit && !up) {
-              if (item.touchend != null)item.touchend(touchData);
+              if (item.touchend != null) item.touchend(touchData);
               if (item.__isDown) {
-                if (item.tap != null)item.tap(touchData);
+                if (item.tap != null) item.tap(touchData);
               }
 
-              if (!item.interactiveChildren)up = true;
-            }
-            else {
+              if (item is DisplayObjectContainer && !item.interactiveChildren) up = true;
+            } else {
               if (item.__isDown) {
-                if (item.touchendoutside != null)item.touchendoutside(touchData);
+                if (item.touchendoutside != null) item.touchendoutside(touchData);
               }
             }
 
