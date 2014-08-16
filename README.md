@@ -8,7 +8,7 @@ A Dart port of pixi.js
 
 Want to build a game? Please check the Dart port of Phaser game engine naming [play_phaser][1].
 
-Pub: [https://pub.dartlang.org/packages/play_pixi]
+Pub: [play_pixi][https://pub.dartlang.org/packages/play_pixi]
 
 Demo and Examples
 ==========
