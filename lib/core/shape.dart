@@ -1,6 +1,6 @@
 part of PIXI;
 
 abstract class Shape {
-  clone();
-  contains(num x, num y);
+  Shape clone();
+  bool contains(num x, num y);
 }
