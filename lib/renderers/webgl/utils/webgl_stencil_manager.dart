@@ -284,7 +284,7 @@ class WebGLStencilManager {
         }
 
 
-        gl.drawElements(TRIANGLE_STRIP,  webGLData.indices.length, gl.UNSIGNED_SHORT, 0 );
+        gl.drawElements(TRIANGLE_STRIP,  webGLData.indices.length, UNSIGNED_SHORT, 0 );
 
 
         if(!this.reverse)
