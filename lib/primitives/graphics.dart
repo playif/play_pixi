@@ -66,7 +66,7 @@ class Graphics extends DisplayObjectContainer {
   Rectangle bounds = null;
 
   /// the bounds' padding used for bounds calculation
-  int boundsPadding = 10;
+  int boundsPadding = 0;
 
   //bool dirty = false;
   bool clearDirty = false;
@@ -536,7 +536,7 @@ class Graphics extends DisplayObjectContainer {
    * Useful function that returns a texture of the graphics object that can then be used to create sprites
    * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
    */
-  RenderTexture generateTexture([Renderer renderer]) {
+  Texture generateTexture([Renderer renderer]) {
     Rectangle bounds = this.getBounds();
 
     CanvasBuffer canvasBuffer = new CanvasBuffer(bounds.width, bounds.height);
@@ -572,7 +572,7 @@ class Graphics extends DisplayObjectContainer {
       renderSession.spriteBatch.stop();
       renderSession.blendModeManager.setBlendMode(this.blendMode);
 
-      if (this._mask != null) renderSession.maskManager.pushMask(this.mask, renderSession);
+      if (this._mask != null) renderSession.maskManager.pushMask(this._mask, renderSession);
       if (this._filters != null) renderSession.filterManager.pushFilter(this._filterBlock);
 
       // check blend mode
@@ -599,7 +599,7 @@ class Graphics extends DisplayObjectContainer {
 
       if (this._filters != null) renderSession.filterManager.popFilter();
       //if (this._mask != null)renderSession.maskManager.popMask(renderSession);
-      if (this._mask != null) renderSession.maskManager.popMask(this.mask, renderSession);
+      if (this._mask != null) renderSession.maskManager.popMask(this._mask, renderSession);
 
       renderSession.drawCount++;
 
@@ -727,7 +727,7 @@ class Graphics extends DisplayObjectContainer {
 
       points = data.points;
 
-      if (type == Graphics.RECT) {
+      if (type == Graphics.RECT || type == Graphics.RREC) {
         x = points[0] - lineWidth / 2;
         y = points[1] - lineWidth / 2;
         w = points[2] + lineWidth;
@@ -770,7 +770,7 @@ class Graphics extends DisplayObjectContainer {
 
   /// Generates the cached sprite when the sprite has cacheAsBitmap = true
   _generateCachedSprite() {
-    var bounds = this._getLocalBounds();
+    var bounds = this.getLocalBounds();
 
     if (this._cachedSprite == null) {
       var canvasBuffer = new CanvasBuffer(bounds.width, bounds.height);

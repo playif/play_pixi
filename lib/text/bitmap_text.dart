@@ -199,11 +199,11 @@ class BitmapText extends DisplayObjectContainer {
   }
 
   /// Updates the transform of this object
-  _updateTransform() {
+  updateTransform() {
     if (this._dirty) {
       this.updateText();
       this._dirty = false;
     }
-    super._updateTransform();
+    super.updateTransform();
   }
 }

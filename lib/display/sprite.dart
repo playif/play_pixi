@@ -169,6 +169,7 @@ class Sprite extends DisplayObjectContainer {
     maxY = y3 > maxY ? y3 : maxY;
     maxY = y4 > maxY ? y4 : maxY;
 
+
     Rectangle bounds = this._bounds;
 
     bounds.x = minX;
@@ -204,7 +205,7 @@ class Sprite extends DisplayObjectContainer {
 
       if (this._mask != null) {
         spriteBatch.stop();
-        renderSession.maskManager.pushMask(this.mask, renderSession);
+        renderSession.maskManager.pushMask(this._mask, renderSession);
         spriteBatch.start();
       }
 
@@ -222,7 +223,7 @@ class Sprite extends DisplayObjectContainer {
       spriteBatch.stop();
 
 
-      if (this._mask != null) renderSession.maskManager.popMask(renderSession);
+      if (this._mask != null) renderSession.maskManager.popMask(this._mask, renderSession);
       if (this._filters != null) renderSession.filterManager.popFilter();
 
       spriteBatch.start();

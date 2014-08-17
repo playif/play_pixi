@@ -41,7 +41,9 @@ class FilterTexture {
     gl.clear(COLOR_BUFFER_BIT);
   }
 
-  resize(int width, int height) {
+  resize(num width, num height) {
+    width=width.toInt();
+    height=height.toInt();
     if (this.width == width && this.height == height) return;
 
     this.width = width;

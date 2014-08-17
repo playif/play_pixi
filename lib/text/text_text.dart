@@ -116,7 +116,7 @@ class Text extends Sprite {
   num get width {
 
     if (this._dirty) {
-      this._updateText();
+      this.updateText();
       this._dirty = false;
     }
     return this.scale.x * this.texture.frame.width;
@@ -132,7 +132,7 @@ class Text extends Sprite {
   num get height {
 
     if (this._dirty) {
-      this._updateText();
+      this.updateText();
       this._dirty = false;
     }
     return this.scale.y * this.texture.frame.height;
@@ -144,7 +144,7 @@ class Text extends Sprite {
   }
 
   /// Renders text and updates it when needed
-  _updateText() {
+  updateText() {
     this._context.font = this.style.font;
 
     var outputText = this.text;
@@ -266,12 +266,12 @@ class Text extends Sprite {
   }
 
   /// Updates the transform of this object
-  _updateTransform() {
+  updateTransform() {
     if (this._dirty) {
-      this._updateText();
+      this.updateText();
       this._dirty = false;
     }
-    super._updateTransform();
+    super.updateTransform();
   }
 
   /*
@@ -305,7 +305,7 @@ class Text extends Sprite {
    * Applies newlines to a [text] to have it optimally fit into the horizontal
    * bounds set by the Text object's wordWrapWidth property.
    */
-  wordWrap(String text) {
+  String wordWrap(String text) {
     // Greedy wrapping algorithm that will wrap words as the line grows longer
     // than its horizontal bounds.
     String result = '';

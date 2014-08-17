@@ -66,8 +66,8 @@ class MovieClip extends Sprite {
   }
 
   /// Updates the object transform for rendering
-  _updateTransform() {
-    super._updateTransform();
+  updateTransform() {
+    super.updateTransform();
 
     if (!this._playing) return;
 

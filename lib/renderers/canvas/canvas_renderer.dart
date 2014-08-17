@@ -117,7 +117,7 @@ class CanvasRenderer extends Renderer {
     texturesToUpdate.length = 0;
     texturesToDestroy.length = 0;
 
-    stage._updateTransform();
+    stage.updateTransform();
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.globalAlpha = 1;
@@ -254,8 +254,8 @@ class CanvasBuffer {
   CanvasBuffer(this.width, this.height) {
 
     this.canvas = document.createElement("canvas");
-    this.canvas.width = width;
-    this.canvas.height = height;
+    this.canvas.width = width.toInt();
+    this.canvas.height = height.toInt();
     this.context = this.canvas.getContext("2d");
 
   }

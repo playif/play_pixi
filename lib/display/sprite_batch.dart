@@ -35,9 +35,9 @@ class SpriteBatch extends DisplayObjectContainer {
   }
 
   /// Updates the object transform for rendering
-  _updateTransform() {
+  updateTransform() {
     // TODO dont need to!
-    super._updateTransform();
+    super.updateTransform();
     //  PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
   }
 
@@ -66,7 +66,7 @@ class SpriteBatch extends DisplayObjectContainer {
     CanvasRenderingContext2D context = renderSession._context;
     context.globalAlpha = this._worldAlpha;
 
-    super._updateTransform();
+    super.updateTransform();
 
     Matrix transform = this._worldTransform;
     // alow for trimming
@@ -104,7 +104,7 @@ class SpriteBatch extends DisplayObjectContainer {
       else {
         if (!isRotated) isRotated = true;
 
-        child._updateTransform();
+        child.updateTransform();
 
         var childTransform = child._worldTransform;
 

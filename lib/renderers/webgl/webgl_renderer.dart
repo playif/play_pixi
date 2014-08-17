@@ -146,7 +146,7 @@ class WebGLRenderer extends Renderer {
     WebGLRenderer.updateTextures(gl);
 
     // update the scene graph
-    stage._updateTransform();
+    stage.updateTransform();
 
 
 //    // interaction
@@ -430,7 +430,9 @@ createWebGLTexture(BaseTexture texture, RenderingContext gl) {
   return texture._glTextures[gl];
 }
 
+
 updateWebGLTexture(BaseTexture texture, RenderingContext gl) {
+
   if (texture._glTextures[gl] != null) {
     gl.bindTexture(TEXTURE_2D, texture._glTextures[gl]);
     gl.pixelStorei(UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha ? 1 : 0);
@@ -453,5 +455,8 @@ updateWebGLTexture(BaseTexture texture, RenderingContext gl) {
     //gl.bindTexture(TEXTURE_2D, null);
     texture._dirty[gl] = false;
   }
+//  else{
+//    createWebGLTexture(texture, gl);
+//  }
 
 }

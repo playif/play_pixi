@@ -4,7 +4,7 @@ typedef void Render(DisplayInterface displayObject, Point position, [bool clear]
 
 class RenderTexture extends Texture {
   Renderer renderer;
-  num width, height;
+  int width, height;
   Rectangle frame;
   scaleModes scaleMode;
 
@@ -19,7 +19,7 @@ class RenderTexture extends Texture {
 
   bool valid;
 
-  RenderTexture([num this.width=100, num this.height=100, this.renderer, scaleModes this.scaleMode=scaleModes.DEFAULT]):super._() {
+  RenderTexture([num this.width = 100, num this.height = 100, this.renderer, scaleModes this.scaleMode = scaleModes.DEFAULT]) : super._() {
     if (renderer == null) {
       renderer = defaultRenderer;
     }
@@ -42,8 +42,7 @@ class RenderTexture extends Texture {
 
       this.render = this.renderWebGL;
       this.projection = new Point(this.width / 2, -this.height / 2);
-    }
-    else {
+    } else {
       this.render = this.renderCanvas;
       this.textureBuffer = new CanvasBuffer(this.width, this.height);
       this.baseTexture.source = this.textureBuffer._canvas;
@@ -65,6 +64,9 @@ class RenderTexture extends Texture {
   }
 
   resize(num width, num height, [bool updateBase = false]) {
+    width = width.toInt();
+    height = height.toInt();
+    
     if (width == this.width && height == this.height) {
       return;
     }
@@ -92,7 +94,7 @@ class RenderTexture extends Texture {
     //Texture.frameUpdates.add(this);
   }
 
-  renderWebGL(DisplayObjectContainer displayObject, Point position, [bool clear=false]) {
+  renderWebGL(DisplayObjectContainer displayObject, Point position, [bool clear = false]) {
     //TOOD replace position with matrix..
     var gl = this.renderer.gl;
 
@@ -115,12 +117,13 @@ class RenderTexture extends Texture {
     displayObject._worldTransform.ty = this.projection.y * -2.0;
 
     if (position != null) {
-      displayObject._worldTransform.tx = position.x;
-      displayObject._worldTransform.ty -= position.y;
+      displayObject._worldTransform.tx = position.x.toDouble();
+      displayObject._worldTransform.ty -= position.y.toDouble();
     }
 
-    for (int i = 0, j = children.length; i < j; i++) {
-      children[i]._updateTransform();
+    for (int i = 0,
+        j = children.length; i < j; i++) {
+      children[i].updateTransform();
     }
 
     // update the textures!
@@ -135,7 +138,7 @@ class RenderTexture extends Texture {
     this.renderer.spriteBatch.dirty = true;
   }
 
-  void renderCanvas(DisplayObjectContainer displayObject, Point position, [bool clear=false]) {
+  void renderCanvas(DisplayObjectContainer displayObject, Point position, [bool clear = false]) {
     var children = displayObject.children;
 
     var originalWorldTransform = displayObject._worldTransform;
@@ -145,18 +148,18 @@ class RenderTexture extends Texture {
     if (position != null) {
       displayObject._worldTransform.tx = position.x;
       displayObject._worldTransform.ty = position.y;
-    }
-    else {
+    } else {
       displayObject._worldTransform.tx = 0.0;
       displayObject._worldTransform.ty = 0.0;
     }
 
 
-    for (var i = 0, j = children.length; i < j; i++) {
-      children[i]._updateTransform();
+    for (var i = 0,
+        j = children.length; i < j; i++) {
+      children[i].updateTransform();
     }
 
-    if (clear)this.textureBuffer.clear();
+    if (clear) this.textureBuffer.clear();
 
     var context = this.textureBuffer._context;
 

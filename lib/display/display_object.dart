@@ -3,7 +3,7 @@ part of PIXI;
 typedef void InteractionHandler(InteractionData data);
 
 abstract class DisplayInterface {
-  _updateTransform();
+  updateTransform();
   _renderWebGL(RenderSession renderSession);
   _renderCanvas(RenderSession renderSession);
   //getBounds(Matrix matrix);
@@ -251,7 +251,7 @@ class DisplayObject implements DisplayInterface {
   num _rotationCache = 0;
 
   /// Updates the object transform for rendering
-  void _updateTransform() {
+  void updateTransform() {
     // TODO OPTIMIZE THIS!! with dirty
     if (this.rotation != this._rotationCache) {
 
@@ -298,7 +298,7 @@ class DisplayObject implements DisplayInterface {
   }
 
   /// Retrieves the local bounds of the displayObject as a rectangle object
-  Rectangle _getLocalBounds() {
+  Rectangle getLocalBounds() {
     return this.getBounds(IdentityMatrix);
   }
 
@@ -309,7 +309,7 @@ class DisplayObject implements DisplayInterface {
   }
 
   RenderTexture generateTexture(Renderer renderer) {
-    Rectangle bounds = this._getLocalBounds();
+    Rectangle bounds = this.getLocalBounds();
 
     RenderTexture renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor(), renderer);
     renderTexture.render(this, new Point(-bounds.x, -bounds.y));
@@ -337,7 +337,7 @@ class DisplayObject implements DisplayInterface {
 
   void _generateCachedSprite() {
     this._cacheAsBitmap = false;
-    var bounds = this._getLocalBounds();
+    var bounds = this.getLocalBounds();
 
     if (this._cachedSprite == null) {
       var renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor());//, renderSession.renderer);
