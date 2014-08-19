@@ -84,6 +84,8 @@ class InteractionManager {
     //    }
 
     this.interactionDOMElement = domElement;
+    
+    //print("PIXI interactive");
 
     domElement.addEventListener('mousemove', this.onMouseMove, true);
     domElement.addEventListener('mousedown', this.onMouseDown, true);
@@ -447,6 +449,8 @@ class InteractionManager {
     if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
+    
+    print("PIXI touch started");
 
     //window.console.log(event);
     JsObject ev = new JsObject.fromBrowserObject(event);

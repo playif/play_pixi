@@ -21,7 +21,8 @@ class DisplayObjectContainer extends DisplayObject {
 
     num width = this.getLocalBounds().width;
     if (width != 0) {
-      this.scale.x = value / (width / this.scale.x);
+      //this.scale.x = value / (width / this.scale.x);
+      this.scale.x = value / (width);
     } else {
       this.scale.x = 1;
     }
@@ -39,7 +40,8 @@ class DisplayObjectContainer extends DisplayObject {
 
     num height = this.getLocalBounds().height;
     if (height != 0) {
-      this.scale.y = value / (height / this.scale.y);
+      // this.scale.y = value / (height / this.scale.y);
+      this.scale.y = value / (height);
     } else {
       this.scale.y = 1;
     }

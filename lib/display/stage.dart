@@ -44,6 +44,7 @@ class Stage extends DisplayObjectContainer {
     this.interactive = interactive;
     interactionManager = new InteractionManager(this);
     setBackgroundColor(backgroundColor);
+
   }
 
   /**
@@ -70,6 +71,7 @@ class Stage extends DisplayObjectContainer {
     }
 
     if (this.interactive) {
+
       this.interactionManager.update();
     }
   }

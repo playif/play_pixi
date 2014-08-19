@@ -3,18 +3,18 @@ part of PIXI;
 Set glContexts = new Set();
 
 class WebGLRenderer extends Renderer {
-//  static int glContextId = 0;
+  //  static int glContextId = 0;
 
   //num width, height;
-//  bool transparent=false;
-//  bool antialias=false;
+  //  bool transparent=false;
+  //  bool antialias=false;
 
 
-  WebGLRenderer([int width=800, int height=600, CanvasElement view, bool transparent=false, bool antialias=false, bool preserveDrawingBuffer=false]) {
+  WebGLRenderer([num width = 800, num height = 600, CanvasElement view, bool transparent = false, bool antialias = false, bool preserveDrawingBuffer = false]) {
     if (defaultRenderer == null) defaultRenderer = this;
     type = WEBGL_RENDERER;
-    this.width = width;
-    this.height = height;
+    this.width = width.toInt();
+    this.height = height.toInt();
     this.transparent = transparent;
     this.antialias = antialias;
     this.preserveDrawingBuffer = preserveDrawingBuffer;
@@ -32,16 +32,17 @@ class WebGLRenderer extends Renderer {
     // deal with losing context..
     //this.contextLost = this.handleContextLost.bind(this);
     //this.contextRestoredLost = this.handleContextRestored.bind(this);
-
-    this.view.addEventListener('webglcontextlost', this.handleContextLost, false);
-    this.view.addEventListener('webglcontextrestored', this.handleContextRestored, false);
+    this.view.onWebGlContextLost.listen(this.handleContextLost);
+    this.view.onWebGlContextRestored.listen(this.handleContextRestored);
+    //this.view.addEventListener('webglcontextlost', this.handleContextLost, false);
+    //this.view.addEventListener('webglcontextrestored', this.handleContextRestored, false);
 
     this.options = {
-        'alpha': this.transparent,
-        'antialias':this.antialias, // SPEED UP??
-        'premultipliedAlpha':transparent,
-        'stencil':true,
-        'preserveDrawingBuffer': preserveDrawingBuffer
+      'alpha': this.transparent,
+      'antialias': this.antialias, // SPEED UP??
+      'premultipliedAlpha': transparent,
+      'stencil': true,
+      'preserveDrawingBuffer': preserveDrawingBuffer
     };
 
     //try 'experimental-webgl'
@@ -67,8 +68,7 @@ class WebGLRenderer extends Renderer {
     if (blendModesWebGL == null) {
 
       //TODO improve the performance
-      blendModesWebGL = {
-      };
+      blendModesWebGL = {};
 
       blendModesWebGL[BlendModes.NORMAL] = [ONE, ONE_MINUS_SRC_ALPHA];
       blendModesWebGL[BlendModes.ADD] = [SRC_ALPHA, DST_ALPHA];
@@ -135,7 +135,7 @@ class WebGLRenderer extends Renderer {
 
     // if rendering a new stage clear the batches..
     if (this.__stage != stage) {
-      if (stage.interactive)stage.interactionManager.removeEvents();
+      if (stage.interactive) stage.interactionManager.removeEvents();
 
       // TODO make this work
       // dont think this is needed any more?
@@ -149,14 +149,14 @@ class WebGLRenderer extends Renderer {
     stage.updateTransform();
 
 
-//    // interaction
-//    if (stage._interactive) {
-//      //need to add some events!
-//      if (!stage._interactiveEventsAdded) {
-//        stage._interactiveEventsAdded = true;
-//        stage.interactionManager.setTarget(this);
-//      }
-//    }
+    //    // interaction
+    //    if (stage._interactive) {
+    //      //need to add some events!
+    //      if (!stage._interactiveEventsAdded) {
+    //        stage._interactiveEventsAdded = true;
+    //        stage.interactionManager.setTarget(this);
+    //      }
+    //    }
 
 
     // -- Does this need to be set every frame? -- //
@@ -169,8 +169,7 @@ class WebGLRenderer extends Renderer {
 
     if (this.transparent == true) {
       gl.clearColor(0, 0, 0, 0);
-    }
-    else {
+    } else {
       gl.clearColor(stage.backgroundColorSplit[0], stage.backgroundColorSplit[1], stage.backgroundColorSplit[2], 1);
     }
 
@@ -186,8 +185,7 @@ class WebGLRenderer extends Renderer {
         stage._interactiveEventsAdded = true;
         stage.interactionManager.setTarget(this);
       }
-    }
-    else {
+    } else {
       if (stage._interactiveEventsAdded) {
         stage._interactiveEventsAdded = false;
         stage.interactionManager.setTarget(this);
@@ -253,11 +251,9 @@ class WebGLRenderer extends Renderer {
     //    PIXI.WebGLRenderer.updateTexture(PIXI.texturesToUpdate[i]);
 
     //print(Texture.frameUpdates);
-    for (i = 0; i < Texture.frameUpdates.length; i++)
-      WebGLRenderer.updateTextureFrame(Texture.frameUpdates[i]);
+    for (i = 0; i < Texture.frameUpdates.length; i++) WebGLRenderer.updateTextureFrame(Texture.frameUpdates[i]);
 
-    for (i = 0; i < texturesToDestroy.length; i++)
-      WebGLRenderer.destroyTexture(texturesToDestroy[i], gl);
+    for (i = 0; i < texturesToDestroy.length; i++) WebGLRenderer.destroyTexture(texturesToDestroy[i], gl);
 
     texturesToUpdate.length = 0;
     texturesToDestroy.length = 0;
@@ -271,16 +267,16 @@ class WebGLRenderer extends Renderer {
       gl.deleteTexture(t);
     }
     texture._glTextures.clear();
-//    for (int i = texture._glTextures.length - 1; i >= 0; i--) {
-//      var glTexture = texture._glTextures[i];
-//      var gl = glContexts[i];
-//
-//      if (gl && glTexture) {
-//        gl.deleteTexture(glTexture);
-//      }
-//    }
-//
-//    texture._glTextures.length = 0;
+    //    for (int i = texture._glTextures.length - 1; i >= 0; i--) {
+    //      var glTexture = texture._glTextures[i];
+    //      var gl = glContexts[i];
+    //
+    //      if (gl && glTexture) {
+    //        gl.deleteTexture(glTexture);
+    //      }
+    //    }
+    //
+    //    texture._glTextures.length = 0;
   }
 
   static updateTextureFrame(Texture texture) {
@@ -301,7 +297,9 @@ class WebGLRenderer extends Renderer {
     this.view.width = width;
     this.view.height = height;
 
-    this.gl.viewport(0, 0, this.width, this.height);
+    if(this.gl != null){
+      this.gl.viewport(0, 0, this.width, this.height);
+    }
 
     this.projection.x = this.width / 2;
     this.projection.y = -this.height / 2;
@@ -341,17 +339,17 @@ class WebGLRenderer extends Renderer {
 
     this.renderSession.gl = this.gl;
 
-    gl.disable(gl.DEPTH_TEST);
-    gl.disable(gl.CULL_FACE);
+    gl.disable(DEPTH_TEST);
+    gl.disable(CULL_FACE);
 
-    gl.enable(gl.BLEND);
+    gl.enable(BLEND);
     gl.colorMask(true, true, true, this.transparent);
 
     this.gl.viewport(0, 0, this.width, this.height);
 
-    for (var key in TextureCache) {
-      var texture = TextureCache[key].baseTexture;
-      texture._glTextures = [];
+    for (var key in TextureCache.keys) {
+      BaseTexture texture = TextureCache[key].baseTexture;
+      texture._glTextures = {};
     }
 
     /**
@@ -417,8 +415,7 @@ createWebGLTexture(BaseTexture texture, RenderingContext gl) {
     if (!texture._powerOf2) {
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
-    }
-    else {
+    } else {
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, REPEAT);
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT);
     }
@@ -446,16 +443,15 @@ updateWebGLTexture(BaseTexture texture, RenderingContext gl) {
     if (!texture._powerOf2) {
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
-    }
-    else {
+    } else {
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, REPEAT);
       gl.texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT);
     }
 
     //gl.bindTexture(TEXTURE_2D, null);
     texture._dirty[gl] = false;
-  }
-//  else{
+  } 
+//  else {
 //    createWebGLTexture(texture, gl);
 //  }
 

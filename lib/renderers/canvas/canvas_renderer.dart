@@ -8,13 +8,13 @@ class CanvasRenderer extends Renderer {
   bool refresh = true;
   int count = 0;
 
-  CanvasRenderer([int width=800, int height=600, CanvasElement view, bool transparent=false, bool antialias=false]) {
+  CanvasRenderer([num width=800, num height=600, CanvasElement view, bool transparent=false, bool antialias=false]) {
     defaultRenderer = this;
 //    this.width=width;
 //    this.height=height;
     type = CANVAS_RENDERER;
-    this.width = width;
-    this.height = height;
+    this.width = width.toInt();
+    this.height = height.toInt();
     this.transparent = transparent;
     this.antialias = antialias;
 

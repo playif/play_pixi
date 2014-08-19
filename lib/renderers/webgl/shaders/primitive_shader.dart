@@ -64,7 +64,8 @@ class PrimitiveShader extends Shader {
 
   init() {
 
-    var gl = this.gl;
+    //var gl = this.gl;
+    //if(gl == null) return;
 
     Program program = compileProgram(gl, this.vertexSrc, this.fragmentSrc);
     gl.useProgram(program);

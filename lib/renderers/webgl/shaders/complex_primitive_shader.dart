@@ -72,7 +72,7 @@ class ComplexPrimitiveShader extends Shader  {
 
   init()
   {
-
+    //if(gl == null) return;
     var program = compileProgram(gl, this.vertexSrc, this.fragmentSrc);
     gl.useProgram(program);
 

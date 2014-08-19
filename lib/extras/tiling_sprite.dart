@@ -288,8 +288,8 @@ class TilingSprite extends Sprite {
       if (frame.width != targetWidth || frame.height != targetHeight) newTextureRequired = true;
     }
 
-
-    if (newTextureRequired) {
+//TODO newTextureRequired?
+    if (forcePowerOfTwo || isFrame) {
 
       CanvasBuffer canvasBuffer;
 

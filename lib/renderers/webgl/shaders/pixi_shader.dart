@@ -94,6 +94,7 @@ class PixiShader extends Shader {
 
 
   init() {
+    //if(gl == null) return;
     Program program = compileProgram(gl, (this.vertexSrc == null) ? PixiShader.defaultVertexSrc : this.vertexSrc, this.fragmentSrc);
 
     //window.console.log(1);

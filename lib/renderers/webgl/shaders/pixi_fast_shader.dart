@@ -70,7 +70,7 @@ class PixiFastShader extends Shader {
 
   init() {
 
-    var gl = this.gl;
+    //if(gl == null) return;
 
     var program = compileProgram(gl, this.vertexSrc, this.fragmentSrc);
 

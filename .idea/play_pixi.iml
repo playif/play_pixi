@@ -2,6 +2,12 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://E:/pixi_dart/example/example_02_sprite_sheet/packages" />
+      <excludeFolder url="file://E:/pixi_dart/example/example_20_rope/data/packages" />
+      <excludeFolder url="file://E:/pixi_dart/example/example_20_rope/packages" />
+      <excludeFolder url="file://E:/pixi_dart/example/example_21_complex_graphics/packages" />
+      <excludeFolder url="file://E:/pixi_dart/examples/packages" />
+      <excludeFolder url="file://E:/pixi_dart/lib/examples/example_1_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_01_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_02_sprite_sheet/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_03_movie_clip/packages" />
@@ -80,12 +86,6 @@
       <excludeFolder url="file://$MODULE_DIR$/web/examples/example_9_tiling_texture/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/examples/packages" />
       <excludeFolder url="file://$MODULE_DIR$/web/packages" />
-      <excludeFolder url="file://E:/pixi_dart/example/example_02_sprite_sheet/packages" />
-      <excludeFolder url="file://E:/pixi_dart/example/example_20_rope/data/packages" />
-      <excludeFolder url="file://E:/pixi_dart/example/example_20_rope/packages" />
-      <excludeFolder url="file://E:/pixi_dart/example/example_21_complex_graphics/packages" />
-      <excludeFolder url="file://E:/pixi_dart/examples/packages" />
-      <excludeFolder url="file://E:/pixi_dart/lib/examples/example_1_basics/packages" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

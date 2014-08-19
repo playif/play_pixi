@@ -23,7 +23,7 @@ class WebGLShaderManager {
     for (var i = 0; i < this.maxAttibs; i++) {
       this.attribState[i] = false;
     }
-
+//    if(gl == null) return;
     this.setContext(gl);
   }
 

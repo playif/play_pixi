@@ -86,7 +86,7 @@ class Text extends Sprite {
     this._text=text;
     this._style=style;
 
-    this._canvas = document.createElement('canvas');
+    this._canvas = new CanvasElement(); //document.createElement('canvas');
 
     this._context = this._canvas.getContext('2d');
 

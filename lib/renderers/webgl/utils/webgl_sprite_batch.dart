@@ -243,7 +243,7 @@ class WebGLSpriteBatch {
     // set the textures uvs temporarily
     // TODO create a separate texture so that we can tile part of a texture
 
-    if (tilingSprite._uvs == null)tilingSprite._uvs = new TextureUvs();
+    if (tilingSprite._uvs == null) tilingSprite._uvs = new TextureUvs();
 
     TextureUvs uvs = tilingSprite._uvs;
 
