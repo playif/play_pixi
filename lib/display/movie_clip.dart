@@ -21,9 +21,9 @@ class MovieClip extends Sprite {
   Function onComplete = null;
 
 
-  int _currentFrame = 0;
+  num _currentFrame = 0;
   /// [read-only] The MovieClips current frame index (this may not have to be a whole number)
-  int get currentFrame => _currentFrame;
+  num get currentFrame => _currentFrame;
 
   bool _playing = false;
 
