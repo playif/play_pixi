@@ -36,6 +36,9 @@ Demo and Examples
 
 Change log
 ==========
+0.10.1
+ * Changed type of _currentFrame as it can be a double too (thanks to [#1](https://github.com/playif/play_pixi/pull/1))
+
 0.10.0
  * Refactor the code.
 
