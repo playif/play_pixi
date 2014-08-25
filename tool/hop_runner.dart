@@ -11,15 +11,13 @@ main(List<String> args) {
 
 Task createUnitTestTask() {
   return new Task((TaskContext tcontext) {
+    final allPassedRegExp = new RegExp('All \\d+ tests passed');
     tcontext.info("Running Unit Tests....");
     var result = Process.run('./content_shell',
     ['--dump-render-tree','test/test.html'])
     .then((ProcessResult process) {
       tcontext.info(process.stdout);
-      tcontext.fail(process.stderr);
-    }, onError:(e){
-      print("here");
-      print(e);
+      return allPassedRegExp.hasMatch(process.stdout);
     });
     return result;
   });
