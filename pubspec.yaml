@@ -6,6 +6,10 @@ author: playif <playif@gmail.com>
 homepage: https://github.com/playif/play_pixi
 dependencies:
   browser: ">=0.10.0+2 <0.11.0"
+
+dev_dependencies:
+  unittest: any
+
 transformers:
 - $dart2js:
     checked: true
