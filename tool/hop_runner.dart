@@ -16,6 +16,8 @@ Task createUnitTestTask() {
     ['--dump-render-tree','test/test.html'])
     .then((ProcessResult process) {
       tcontext.info(process.stdout);
+    }, onError:(e){
+      print(e);
     });
     return result;
   });
