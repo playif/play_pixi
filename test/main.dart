@@ -34,7 +34,7 @@ main() {
       expect(cloneCircle.contains(100,20), equals(false));
 
     });
-
+ 
 //    test('Extract collections to map', () {
 //      var model = new CollectionsModel()
 //        ..map	= { 'first': 42, 'second': 123 }
