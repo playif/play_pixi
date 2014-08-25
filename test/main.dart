@@ -13,19 +13,17 @@ main() {
 
   group('circle', () {
     Circle circle = new Circle();
-
-    test('instance', () {
-      expect(circle.x, equals(0));
-      expect(circle.y, equals(0));
-      expect(circle.radius, equals(0));
-    });
-
     Circle circle2 = new Circle();
     circle2.x=10;
     circle2.y=20;
     circle2.radius=20;
-
     Circle cloneCircle=circle2.clone();
+
+    test('instance', () {
+      expect(circle.x, equals(10));
+      expect(circle.y, equals(0));
+      expect(circle.radius, equals(0));
+    });
 
     test('clone', () {
 
