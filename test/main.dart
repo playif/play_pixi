@@ -19,7 +19,8 @@ main() {
       expect(circle.y, equals(0));
       expect(circle.radius, equals(0));
     });
-
+    
+    circle = new Circle();
     circle.x=10;
     circle.y=20;
     circle.radius=20;
