@@ -1,7 +1,6 @@
 play_pixi
 =========
-[![Build Status](https://drone.io/github.com/playif/play_pixi/status.png)](https://drone.io/github.com/playif/play_pixi/latest)
-A Dart port of pixi.js
+A Dart port of pixi.js [![Build Status](https://drone.io/github.com/playif/play_pixi/status.png)](https://drone.io/github.com/playif/play_pixi/latest)
 
 * All features were implemented.
 * All examples that were only minimally modified from original examples.
