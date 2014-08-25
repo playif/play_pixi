@@ -2,10 +2,15 @@ library model_map_test;
 
 import 'dart:convert';
 import 'package:unittest/unittest.dart';
+import 'package:unittest/html_enhanced_config.dart';
 import 'package:play_pixi/pixi.dart';
 
 
 main() {
+
+  print('Running unit tests for play_pixi library.');
+  useHtmlEnhancedConfiguration();
+
   group('circle', () {
     Circle circle = new Circle();
 
