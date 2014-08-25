@@ -20,7 +20,7 @@ main() {
     Circle cloneCircle=circle2.clone();
 
     test('instance', () {
-      expect(circle.x, equals(10));
+      expect(circle.x, equals(0));
       expect(circle.y, equals(0));
       expect(circle.radius, equals(0));
     });
