@@ -19,13 +19,13 @@ main() {
       expect(circle.y, equals(0));
       expect(circle.radius, equals(0));
     });
-    
-    circle = new Circle();
-    circle.x=10;
-    circle.y=20;
-    circle.radius=20;
 
-    Circle cloneCircle=circle.clone();
+    Circle circle2 = new Circle();
+    circle2.x=10;
+    circle2.y=20;
+    circle2.radius=20;
+
+    Circle cloneCircle=circle2.clone();
 
     test('clone', () {
 
