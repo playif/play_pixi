@@ -5,8 +5,8 @@ import "../../lib/pixi.dart" as PIXI;
 class Button extends PIXI.Sprite {
   Button(PIXI.Texture texture):super(texture);
 
-  bool isOver;
-  bool isDown;
+  bool isOver=false;
+  bool isDown=false;
 }
 
 main() {
