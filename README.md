@@ -37,11 +37,11 @@ Demo and Examples
 Change log
 ==========
 0.10.2
- * Touch Events are not working in Chrome (thanks to [#2](https://github.com/playif/play_pixi/issues/2)).
+ * Fix: Touch Events are not working in Chrome (thanks to [#2](https://github.com/playif/play_pixi/issues/2)).
 
 
 0.10.1
- * Changed type of _currentFrame as it can be a double too (thanks to [#1](https://github.com/playif/play_pixi/pull/1)).
+ * Fix: Changed type of _currentFrame as it can be a double too (thanks to [#1](https://github.com/playif/play_pixi/pull/1)).
 
 0.10.0
  * Refactor the code.
