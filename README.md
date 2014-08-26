@@ -65,6 +65,12 @@ Change log
  * Fix example 11 (RenderingTexture) and example 15 (Filter) example in chrome.
  * Add Spine implementation and examples
 
+TODO
+=========
+* Complete the document.
+* Ensure all nun-used fields should be private.
+
+
 [1]: https://github.com/playif/play_phaser
 [2]: http://playif.github.io/pixi_example/example_01_basics/index.html
 [3]: http://playif.github.io/pixi_example/example_02_sprite_sheet/index.html
