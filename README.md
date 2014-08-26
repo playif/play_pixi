@@ -36,6 +36,10 @@ Demo and Examples
 
 Change log
 ==========
+0.10.2
+ * Touch Events are not working (thanks to [#2](https://github.com/playif/play_pixi/issues/2)).
+
+
 0.10.1
  * Changed type of _currentFrame as it can be a double too (thanks to [#1](https://github.com/playif/play_pixi/pull/1)).
 

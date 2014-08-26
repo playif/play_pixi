@@ -2,6 +2,13 @@ import "dart:html";
 import "dart:math";
 import "../../lib/pixi.dart" as PIXI;
 
+class Button extends PIXI.Sprite {
+  Button(PIXI.Texture texture):super(texture);
+
+  bool isOver;
+  bool isDown;
+}
+
 main() {
   // create an new instance of a pixi stage
   // the second parameter is interactivity...
@@ -14,8 +21,8 @@ main() {
   // add the renderer view element to the DOM
   document.body.append(renderer.view);
   renderer.view.style.display = "block";
-  renderer.view.style.width="${window.innerWidth}px";
-  renderer.view.style.height="${window.innerHeight}px";
+  renderer.view.style.width = "${window.innerWidth}px";
+  renderer.view.style.height = "${window.innerHeight}px";
 
   // create a background..
   var background = PIXI.Sprite.fromImage("button_test_BG.jpg");
@@ -38,7 +45,7 @@ main() {
 
 
   for (var i = 0; i < 5; i++) {
-    PIXI.Sprite button = new PIXI.Sprite(textureButton);
+    Button button = new Button(textureButton);
     button.buttonMode = true;
 
     button.anchor.x = 0.5;
@@ -53,7 +60,7 @@ main() {
     // set the mousedown and touchstart callback..
     button.mousedown = button.touchstart = (data) {
       print("mousedown");
-      //button.isdown = true;
+      button.isDown = true;
       button.setTexture(textureButtonDown);
       button.alpha = 1;
     };
@@ -61,46 +68,44 @@ main() {
     // set the mouseup and touchend callback..
     button.mouseup = button.mouseupoutside = button.touchend = button.touchendoutside = (data) {
       print("mouseup");
-      //button.isdown = false;
+      button.isDown = false;
 
-      //if (button.isOver) {
-      button.setTexture(textureButtonOver);
-      //}
-      //else {
-      //    button.setTexture(textureButton);
-      //}
+      if (button.isOver) {
+        button.setTexture(textureButtonOver);
+      }
+      else {
+        button.setTexture(textureButton);
+      }
     };
 
     // set the mouseover callback..
     button.mouseover = button.touchmove = (data) {
       print("over");
-      //button.isOver = true;
+      button.isOver = true;
 
-      //if (button.isdown)
-      //    return;
+      if (button.isDown)
+        return;
 
       button.setTexture(textureButtonOver);
     };
 
     // set the mouseout callback..
-    button.mouseout = button.touchend = (data) {
+    button.mouseout = (data) {
       print("mouseout");
-      //button.isOver = false;
-      //if (button.isdown)
-      //    return
+      button.isOver = false;
+      if (button.isDown)
+        return;
+
       button.setTexture(textureButton);
     };
 
-
     button.click = (data) {
-      print("click");
-      window.console.log("CLICK!");
+      print("CLICK!");
     };
 
-
-//            button.tap = (data) {
-//                window. console.log("TAP!!");
-//            };
+    button.tap = (data) {
+      print("TAP!!");
+    };
 
 
     // add it to the stage

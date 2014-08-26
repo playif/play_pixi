@@ -4,7 +4,8 @@ class InteractionManager {
   Stage stage;
   InteractionData mouse = new InteractionData();
 
-  Map<int, InteractionData> touchs = {};
+  Map<int, InteractionData> touchs = {
+  };
 
   Point tempPoint = new Point();
 
@@ -23,8 +24,11 @@ class InteractionManager {
 
   bool mouseOut = false;
 
-  InteractionManager(this.stage) {
+  bool isCocoonJS;
 
+  InteractionManager(this.stage) {
+    //TODO check this.
+    isCocoonJS = window.navigator.appVersion.contains("CocoonJS");
   }
 
   void collectInteractiveSprite(DisplayObjectContainer displayObject, DisplayObjectContainer iParent) {
@@ -84,7 +88,7 @@ class InteractionManager {
     //    }
 
     this.interactionDOMElement = domElement;
-    
+
     //print("PIXI interactive");
 
     domElement.addEventListener('mousemove', this.onMouseMove, true);
@@ -215,7 +219,6 @@ class InteractionManager {
     // go through and collect all the objects that are interactive..
     this.collectInteractiveSprite(this.stage, this.stage);
   }
-
 
 
   onMouseMove(MouseEvent event) {
@@ -350,14 +353,14 @@ class InteractionManager {
     bool isSprite = (item is Sprite);
     Matrix worldTransform = item._worldTransform;
     num a00 = worldTransform.a,
-        a01 = worldTransform.b,
-        a02 = worldTransform.tx,
-        a10 = worldTransform.c,
-        a11 = worldTransform.d,
-        a12 = worldTransform.ty,
-        id = 1 / (a00 * a11 + a01 * -a10),
-        x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
-        y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+    a01 = worldTransform.b,
+    a02 = worldTransform.tx,
+    a10 = worldTransform.c,
+    a11 = worldTransform.d,
+    a12 = worldTransform.ty,
+    id = 1 / (a00 * a11 + a01 * -a10),
+    x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
+    y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
 
     interactionData.target = item;
 
@@ -374,14 +377,15 @@ class InteractionManager {
       }
 
       return false;
-    } // a sprite with no hitarea defined
+    }
+    // a sprite with no hitarea defined
     else if (isSprite) {
 
       Sprite sprite = item as Sprite;
       var width = sprite.texture.frame.width,
-          height = sprite.texture.frame.height,
-          x1 = -width * sprite.anchor.x,
-          y1;
+      height = sprite.texture.frame.height,
+      x1 = -width * sprite.anchor.x,
+      y1;
 
       if (x > x1 && x < x1 + width) {
         y1 = -height * sprite.anchor.y;
@@ -415,32 +419,45 @@ class InteractionManager {
       this.rebuildInteractiveGraph();
     }
 
-    JsObject ev = new JsObject.fromBrowserObject(event);
-
-    JsArray changedTouches = new JsArray.from(ev["changedTouches"]);
+    var changedTouches;
     InteractionData touchData;
     int i = 0;
 
+    if (isCocoonJS) {
+      JsObject ev = new JsObject.fromBrowserObject(event);
+      changedTouches = new JsArray.from(ev["changedTouches"]);
+    }
+    else {
+      changedTouches = event.changedTouches;
+    }
+
 
     for (i = 0; i < changedTouches.length; i++) {
-      JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
-      touchData = this.touchs[touchEvent['identifier']];
-      touchData.originalEvent = event;
+      int identifier = -1;
 
-
-      if (window.navigator.appVersion.contains("CocoonJS")) {
+      if (isCocoonJS) {
+        JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
+        identifier = touchEvent['identifier'];
+        touchData = this.touchs[identifier];
+        touchData.originalEvent = event;
         touchData.global.x = touchEvent["clientX"];
         touchData.global.y = touchEvent["clientY"];
       } else {
+
         var rect = this.interactionDOMElement.getBoundingClientRect();
+        Touch touchEvent = changedTouches[i];
+        identifier = touchEvent.identifier;
+        touchData = this.touchs[identifier];
+
+        touchData.originalEvent = event;
         // update the touch position
-        touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
-        touchData.global.y = (touchEvent["clientY"] - rect.top) * (this.target.height / rect.height);
+        touchData.global.x = (touchEvent.client.x - rect.left) * (this.target.width / rect.width);
+        touchData.global.y = (touchEvent.client.y - rect.top) * (this.target.height / rect.height);
       }
 
       for (var j = 0; j < this.interactiveItems.length; j++) {
         DisplayObject item = this.interactiveItems[j];
-        if (item.touchmove != null && item.__touchData[touchEvent['identifier']] != null) item.touchmove(touchData);
+        if (item.touchmove != null && item.__touchData[identifier] != null) item.touchmove(touchData);
       }
     }
   }
@@ -449,41 +466,48 @@ class InteractionManager {
     if (this.dirty) {
       this.rebuildInteractiveGraph();
     }
-    
-    print("PIXI touch started");
 
-    //window.console.log(event);
-    JsObject ev = new JsObject.fromBrowserObject(event);
+    var changedTouches;
 
-    if (AUTO_PREVENT_DEFAULT) event.preventDefault();
 
-    JsArray changedTouches = new JsArray.from(ev["changedTouches"]);
+    if (isCocoonJS) {
+      JsObject ev = new JsObject.fromBrowserObject(event);
+      changedTouches = new JsArray.from(ev["changedTouches"]);
+      if (AUTO_PREVENT_DEFAULT) {
+        JsFunction func = ev['preventDefault'];
+        func.apply([], thisArg:ev);
+      }
+    }
+    else {
+      changedTouches = event.changedTouches;
+      if (AUTO_PREVENT_DEFAULT) event.preventDefault();
+    }
+
+
     for (var i = 0; i < changedTouches.length; i++) {
-      JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
       InteractionData touchData;
+      int identifier = -1;
       if (this.pool.length > 0) {
         touchData = this.pool.removeLast();
       }
-
-
       if (touchData == null) touchData = new InteractionData();
-
       touchData.originalEvent = event;
 
-      this.touchs[touchEvent['identifier']] = touchData;
 
-      //      if (navigator.isCocoonJS) {
-      //        touchData.global.x = touchEvent.clientX;
-      //        touchData.global.y = touchEvent.clientY;
-      //      }
-      if (window.navigator.appVersion.contains("CocoonJS")) {
+      if (isCocoonJS) {
+        JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
+        identifier = touchEvent['identifier'];
         touchData.global.x = touchEvent["clientX"];
         touchData.global.y = touchEvent["clientY"];
       } else {
+        Touch touchEvent = changedTouches[i];
+        identifier = touchEvent.identifier;
         var rect = this.interactionDOMElement.getBoundingClientRect();
-        touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
-        touchData.global.y = (touchEvent["clientY"] - rect.top) * (this.target.height / rect.height);
+        touchData.global.x = (touchEvent.client.x - rect.left) * (this.target.width / rect.width);
+        touchData.global.y = (touchEvent.client.y - rect.top) * (this.target.height / rect.height);
       }
+
+      this.touchs[identifier] = touchData;
 
       int length = this.interactiveItems.length;
 
@@ -498,10 +522,11 @@ class InteractionManager {
             if (item.touchstart != null) item.touchstart(touchData);
             item.__isDown = true;
             if (item.__touchData == null) {
-              item.__touchData = {};
+              item.__touchData = {
+              };
             }
 
-            item.__touchData[touchEvent['identifier']] = touchData;
+            item.__touchData[identifier] = touchData;
 
             if (item is DisplayObjectContainer && !item.interactiveChildren) break;
           }
@@ -515,30 +540,44 @@ class InteractionManager {
       this.rebuildInteractiveGraph();
     }
 
-    JsObject ev = new JsObject.fromBrowserObject(event);
+    var changedTouches;
 
-    JsArray changedTouches = new JsArray.from(ev["changedTouches"]);
+    if (isCocoonJS) {
+      JsObject ev = new JsObject.fromBrowserObject(event);
+      changedTouches = new JsArray.from(ev["changedTouches"]);
+    }
+    else {
+      changedTouches = event.changedTouches;
+    }
+
+
     for (int i = 0; i < changedTouches.length; i++) {
-      JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
-      InteractionData touchData = this.touchs[touchEvent['identifier']];
+      InteractionData touchData;
+      int identifier = -1;
       bool up = false;
 
-      if (window.navigator.appVersion.contains("CocoonJS")) {
+      if (isCocoonJS) {
+        JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
+        identifier = touchEvent['identifier'];
+        touchData = this.touchs[identifier];
         touchData.global.x = touchEvent["clientX"];
         touchData.global.y = touchEvent["clientY"];
       } else {
+        Touch touchEvent = changedTouches[i];
+        identifier = touchEvent.identifier;
+        touchData = this.touchs[identifier];
         var rect = this.interactionDOMElement.getBoundingClientRect();
-        touchData.global.x = (touchEvent["clientX"] - rect.left) * (this.target.width / rect.width);
-        touchData.global.y = (touchEvent["clientY"] - rect.top) * (this.target.height / rect.height);
+        touchData.global.x = (touchEvent.client.x - rect.left) * (this.target.width / rect.width);
+        touchData.global.y = (touchEvent.client.y - rect.top) * (this.target.height / rect.height);
       }
 
       int length = this.interactiveItems.length;
       for (int j = 0; j < length; j++) {
         DisplayObject item = this.interactiveItems[j];
 
-        if (item.__touchData != null && item.__touchData[touchEvent['identifier']] != null) {
+        if (item.__touchData != null && item.__touchData[identifier] != null) {
 
-          item.__hit = this.hitTest(item, item.__touchData[touchEvent['identifier']]);
+          item.__hit = this.hitTest(item, item.__touchData[identifier]);
 
           // so this one WAS down...
           touchData.originalEvent = event;
@@ -561,12 +600,12 @@ class InteractionManager {
             item.__isDown = false;
           }
 
-          item.__touchData[touchEvent['identifier']] = null;
+          item.__touchData[identifier] = null;
         }
       }
       // remove the touch..
       this.pool.add(touchData);
-      this.touchs[touchEvent['identifier']] = null;
+      this.touchs[identifier] = null;
     }
   }
 }
