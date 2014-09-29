@@ -584,15 +584,15 @@ class WebGLGraphics {
     int i = 0;
 
     List points = graphicsData.points;
-    if (points.length == 0) return;
+    if (points.length < 4) return;
 
 
     // if the line width is an odd number add 0.5 to align to a whole pixel
-    if (graphicsData.lineWidth % 2 != 0) {
-      for (i = 0; i < points.length; i++) {
-        points[i] += 0.5;
-      }
-    }
+//    if (graphicsData.lineWidth>1 && graphicsData.lineWidth % 2 != 0) {
+//      for (i = 0; i < points.length; i++) {
+//        points[i] += 0.5;
+//      }
+//    }
 
 
     // get first and last point.. figure out the middle!

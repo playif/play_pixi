@@ -383,11 +383,11 @@ class WebGLFilterManager {
     0.0, 1.0,
     1.0, 1.0]);
 
-    gl.bindBuffer(RenderingContext.ARRAY_BUFFER, this.vertexBuffer);
+    gl.bindBuffer(ARRAY_BUFFER, this.vertexBuffer);
     gl.bufferData(
-        RenderingContext.ARRAY_BUFFER,
+        ARRAY_BUFFER,
         this.vertexArray,
-        RenderingContext.STATIC_DRAW);
+        STATIC_DRAW);
 
 
     // bind and upload the uv buffer
@@ -396,29 +396,29 @@ class WebGLFilterManager {
     0.0, 1.0,
     1.0, 1.0]);
 
-    gl.bindBuffer(RenderingContext.ARRAY_BUFFER, this.uvBuffer);
+    gl.bindBuffer(ARRAY_BUFFER, this.uvBuffer);
     gl.bufferData(
-        RenderingContext.ARRAY_BUFFER,
+        ARRAY_BUFFER,
         this.uvArray,
-        RenderingContext.STATIC_DRAW);
+        STATIC_DRAW);
 
     this.colorArray = new Float32List.fromList([1.0, 16777215.0,
     1.0, 16777215.0,
     1.0, 16777215.0,
     1.0, 16777215.0]);
 
-    gl.bindBuffer(RenderingContext.ARRAY_BUFFER, this.colorBuffer);
+    gl.bindBuffer(ARRAY_BUFFER, this.colorBuffer);
     gl.bufferData(
-        RenderingContext.ARRAY_BUFFER,
+        ARRAY_BUFFER,
         this.colorArray,
-        RenderingContext.STATIC_DRAW);
+        STATIC_DRAW);
 
     // bind and upload the index
-    gl.bindBuffer(RenderingContext.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+    gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this.indexBuffer);
     gl.bufferData(
-        RenderingContext.ELEMENT_ARRAY_BUFFER,
+        ELEMENT_ARRAY_BUFFER,
         new Uint16List.fromList([0, 1, 2, 1, 3, 2]),
-        RenderingContext.STATIC_DRAW);
+        STATIC_DRAW);
   }
 
   destroy() {

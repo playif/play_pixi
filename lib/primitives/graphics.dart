@@ -97,7 +97,7 @@ class Graphics extends DisplayObjectContainer {
   }
 
   /// Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
-  Graphics lineStyle([int lineWidth = 0, num color = 0, num alpha = 1]) {
+  Graphics lineStyle([num lineWidth = 0, num color = 0, num alpha = 1]) {
     if (this._currentPath.points.length == 0) {
       if (this._graphicsData.length > 0) {
         this._graphicsData.removeLast();
@@ -649,38 +649,38 @@ class Graphics extends DisplayObjectContainer {
 
     if (this.bounds == null) this._updateBounds();
 
-    var w0 = this.bounds.x;
-    var w1 = this.bounds.width + this.bounds.x;
+    num w0 = this.bounds.x;
+    num w1 = this.bounds.width + this.bounds.x;
 
-    var h0 = this.bounds.y;
-    var h1 = this.bounds.height + this.bounds.y;
+    num h0 = this.bounds.y;
+    num h1 = this.bounds.height + this.bounds.y;
 
-    var worldTransform = matrix;
+    Matrix worldTransform = matrix;
 
-    var a = worldTransform.a;
-    var b = worldTransform.c;
-    var c = worldTransform.b;
-    var d = worldTransform.d;
-    var tx = worldTransform.tx;
-    var ty = worldTransform.ty;
+    num a = worldTransform.a;
+    num b = worldTransform.c;
+    num c = worldTransform.b;
+    num d = worldTransform.d;
+    num tx = worldTransform.tx;
+    num ty = worldTransform.ty;
 
-    var x1 = a * w1 + c * h1 + tx;
-    var y1 = d * h1 + b * w1 + ty;
+    num x1 = a * w1 + c * h1 + tx;
+    num y1 = d * h1 + b * w1 + ty;
 
-    var x2 = a * w0 + c * h1 + tx;
-    var y2 = d * h1 + b * w0 + ty;
+    num x2 = a * w0 + c * h1 + tx;
+    num y2 = d * h1 + b * w0 + ty;
 
-    var x3 = a * w0 + c * h0 + tx;
-    var y3 = d * h0 + b * w0 + ty;
+    num x3 = a * w0 + c * h0 + tx;
+    num y3 = d * h0 + b * w0 + ty;
 
-    var x4 = a * w1 + c * h0 + tx;
-    var y4 = d * h0 + b * w1 + ty;
+    num x4 = a * w1 + c * h0 + tx;
+    num y4 = d * h0 + b * w1 + ty;
 
-    var maxX = x1;
-    var maxY = y1;
+    num maxX = x1;
+    num maxY = y1;
 
-    var minX = x1;
-    var minY = y1;
+    num minX = x1;
+    num minY = y1;
 
     minX = x2 < minX ? x2 : minX;
     minX = x3 < minX ? x3 : minX;
@@ -698,7 +698,7 @@ class Graphics extends DisplayObjectContainer {
     maxY = y3 > maxY ? y3 : maxY;
     maxY = y4 > maxY ? y4 : maxY;
 
-    var bounds = this._bounds;
+    Rectangle bounds = this._bounds;
 
     bounds.x = minX;
     bounds.width = maxX - minX;
@@ -712,11 +712,11 @@ class Graphics extends DisplayObjectContainer {
   /// Update the bounds of the object
   _updateBounds() {
 
-    var minX = double.INFINITY;
-    var maxX = -double.INFINITY;
+    num minX = double.INFINITY;
+    num maxX = -double.INFINITY;
 
-    var minY = double.INFINITY;
-    var maxY = -double.INFINITY;
+    num minY = double.INFINITY;
+    num maxY = -double.INFINITY;
 
     var points, x, y, w, h;
 

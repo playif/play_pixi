@@ -155,11 +155,11 @@ class CanvasRenderer extends Renderer {
   }
 
   resize(num width, num height) {
-    this.width = width;
-    this.height = height;
+    this.width = width.toInt();
+    this.height = height.toInt();
 
-    this.view.width = width;
-    this.view.height = height;
+    this.view.width = width.toInt();
+    this.view.height = height.toInt();
   }
 
   renderDisplayObject(DisplayInterface displayObject, [CanvasRenderingContext2D context, buffer]) {

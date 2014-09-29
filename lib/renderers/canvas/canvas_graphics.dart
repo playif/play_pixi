@@ -9,8 +9,11 @@ class CanvasGraphics {
     String color = '';
 
     for (var i = 0; i < graphics._graphicsData.length; i++) {
-      var data = graphics._graphicsData[i];
-      var points = data.points;
+      GraphicsData data = graphics._graphicsData[i];
+      List points = data.points;
+      if(points.isEmpty){
+        continue;
+      }
 
       context.strokeStyle = color = '#' + "${data.lineColor.floor().toRadixString(16)}".padLeft(6, '0');
       //print(color);
@@ -20,7 +23,7 @@ class CanvasGraphics {
         context.beginPath();
 
         context.moveTo(points[0], points[1]);
-
+ 
         for (var j = 1; j < points.length / 2; j++) {
           context.lineTo(points[j * 2], points[j * 2 + 1]);
         }

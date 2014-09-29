@@ -8,7 +8,7 @@ class WebGLRenderer extends Renderer {
   //num width, height;
   //  bool transparent=false;
   //  bool antialias=false;
-
+ 
 
   WebGLRenderer([num width = 800, num height = 600, CanvasElement view, bool transparent = false, bool antialias = false, bool preserveDrawingBuffer = false]) {
     if (defaultRenderer == null) defaultRenderer = this;
@@ -122,10 +122,10 @@ class WebGLRenderer extends Renderer {
 
     gl.useProgram(this.shaderManager.defaultShader.program);
 
-    gl.disable(RenderingContext.DEPTH_TEST);
-    gl.disable(RenderingContext.CULL_FACE);
+    gl.disable(DEPTH_TEST);
+    gl.disable(CULL_FACE);
 
-    gl.enable(RenderingContext.BLEND);
+    gl.enable(BLEND);
     gl.colorMask(true, true, true, this.transparent);
   }
 
@@ -288,7 +288,9 @@ class WebGLRenderer extends Renderer {
     texture._updateWebGLuvs();
   }
 
-  resize(int width, int height) {
+  resize(num width, num height) {
+    width=width.toInt();
+    height=height.toInt();
     window.console.log(width);
 
     this.width = width;

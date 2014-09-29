@@ -5,7 +5,6 @@ List<num> hex2rgb(int hex) {
 }
 
 int rgb2hex(List<num> rgb) {
-
   return (((rgb[0] * 255).floor() << 16) + ((rgb[1] * 255).floor() << 8) + rgb[2] * 255);
 }
 

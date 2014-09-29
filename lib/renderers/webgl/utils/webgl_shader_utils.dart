@@ -6,11 +6,11 @@ class WebGLShaderUtils {
 }
 
 CompileVertexShader(RenderingContext gl, List<String> shaderSrc) {
-  return _CompileShader(gl, shaderSrc, RenderingContext.VERTEX_SHADER);
+  return _CompileShader(gl, shaderSrc, VERTEX_SHADER);
 }
 
 CompileFragmentShader(RenderingContext gl, List<String> shaderSrc) {
-  return _CompileShader(gl, shaderSrc, RenderingContext.FRAGMENT_SHADER);
+  return _CompileShader(gl, shaderSrc, FRAGMENT_SHADER);
 }
 
 _CompileShader(RenderingContext gl, List<String> shaderSrc, int shaderType) {
@@ -20,7 +20,7 @@ _CompileShader(RenderingContext gl, List<String> shaderSrc, int shaderType) {
   gl.shaderSource(shader, src);
   gl.compileShader(shader);
 
-  if (gl.getShaderParameter(shader, RenderingContext.COMPILE_STATUS) == null) {
+  if (gl.getShaderParameter(shader, COMPILE_STATUS) == null) {
     window.console.log(gl.getShaderInfoLog(shader));
     return null;
   }
@@ -38,7 +38,7 @@ compileProgram(RenderingContext gl, List<String> vertexSrc, List<String> fragmen
   gl.attachShader(shaderProgram, fragmentShader);
   gl.linkProgram(shaderProgram);
 
-  if (gl.getProgramParameter(shaderProgram, RenderingContext.LINK_STATUS) == null) {
+  if (gl.getProgramParameter(shaderProgram, LINK_STATUS) == null) {
     window.console.log("Could not initialise shaders");
   }
 
