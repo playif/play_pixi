@@ -24,5 +24,5 @@ class RenderSession {
 
   CanvasRenderingContext2D context;
 
-  var roundPixels = null;
+  bool roundPixels = false;
 }

@@ -88,7 +88,7 @@ class WebGLSpriteBatch {
   end() {
     this.flush();
   }
-
+ 
   render(Sprite sprite) {
     Texture texture = sprite.texture;
     //var blendChange = this.renderSession.blendModeManager.currentBlendMode != sprite.blendMode;

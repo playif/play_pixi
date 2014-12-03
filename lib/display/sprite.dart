@@ -63,6 +63,8 @@ class Sprite extends DisplayObjectContainer {
 
   //  bool renderable = true;
 
+  Shader shader = null;
+
   /// The blend mode to be applied to the sprite
   BlendModes blendMode = BlendModes.NORMAL;
 
@@ -80,7 +82,7 @@ class Sprite extends DisplayObjectContainer {
     if (texture.baseTexture.hasLoaded) {
       this._onTextureUpdate(null);
     } else {
-      this.texture.addEventListener('update', this._onTextureUpdate);
+      this.texture.on('update', this._onTextureUpdate);
     }
   }
 
@@ -125,8 +127,8 @@ class Sprite extends DisplayObjectContainer {
     Matrix worldTransform = (matrix == null) ? this._worldTransform : matrix;
 
     double a = worldTransform.a;
-    double b = worldTransform.c;
-    double c = worldTransform.b;
+    double b = worldTransform.b;
+    double c = worldTransform.c;
     double d = worldTransform.d;
     double tx = worldTransform.tx;
     double ty = worldTransform.ty;
@@ -246,7 +248,7 @@ class Sprite extends DisplayObjectContainer {
   /// Renders the object using the Canvas renderer
   void _renderCanvas(RenderSession renderSession) {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible == false || this.alpha == 0) return;
+    if (this.visible == false || this.alpha == 0 || this.texture.crop.width <= 0 || this.texture.crop.height <= 0) return;
 
 
     //    Rectangle frame = this.texture.frame;
@@ -260,13 +262,14 @@ class Sprite extends DisplayObjectContainer {
     }
 
     if (this._mask != null) {
-      renderSession.maskManager.pushMask(this._mask, renderSession.context);
+      renderSession.maskManager.pushMask(this._mask, renderSession);
     }
 
 
     //ignore null sources
     //    if (frame != null && frame.width != 0 && frame.height != 0 && texture.baseTexture.source != null) {
     if (this.texture.valid) {
+      num resolution = this.texture.baseTexture.resolution / renderSession.resolution;
       renderSession.context.globalAlpha = this._worldAlpha;
 
       //Matrix transform = this.worldTransform;
@@ -274,10 +277,10 @@ class Sprite extends DisplayObjectContainer {
       // allow for trimming
       if (renderSession.roundPixels != null) {
         //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());
-        renderSession.context.setTransform(this._worldTransform.a, this._worldTransform.c, this._worldTransform.b, this._worldTransform.d, this._worldTransform.tx.floor(), this._worldTransform.ty.floor());
+        renderSession.context.setTransform(this._worldTransform.a, this._worldTransform.c, this._worldTransform.b, this._worldTransform.d, (this._worldTransform.tx* renderSession.resolution).floor(), (this._worldTransform.ty* renderSession.resolution).floor());
       } else {
         //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
-        renderSession.context.setTransform(this._worldTransform.a, this._worldTransform.c, this._worldTransform.b, this._worldTransform.d, this._worldTransform.tx == null ? 0 : this._worldTransform.tx, this._worldTransform.ty == null ? 0 : this._worldTransform.ty);
+        renderSession.context.setTransform(this._worldTransform.a, this._worldTransform.c, this._worldTransform.b, this._worldTransform.d, (this._worldTransform.tx* renderSession.resolution).floor(), (this._worldTransform.ty* renderSession.resolution).floor());
       }
 
 
@@ -301,7 +304,7 @@ class Sprite extends DisplayObjectContainer {
 
         }
 
-        renderSession.context.drawImageScaledFromSource(this.tintedTexture, 0, 0, this.texture.crop.width, this.texture.crop.height, dx, dy, this.texture.crop.width, this.texture.crop.height);
+        renderSession.context.drawImageScaledFromSource(this.tintedTexture, 0, 0, this.texture.crop.width, this.texture.crop.height, dx / resolution, dy / resolution, this.texture.crop.width / resolution, this.texture.crop.height / resolution);
       } else {
 
 
@@ -330,7 +333,7 @@ class Sprite extends DisplayObjectContainer {
         //          frame.width,
         //          frame.height);
         //        }
-        renderSession.context.drawImageScaledFromSource(this.texture.baseTexture.source, this.texture.crop.x, this.texture.crop.y, this.texture.crop.width, this.texture.crop.height, dx, dy, this.texture.crop.width, this.texture.crop.height);
+        renderSession.context.drawImageScaledFromSource(this.texture.baseTexture.source, this.texture.crop.x, this.texture.crop.y, this.texture.crop.width, this.texture.crop.height, dx / resolution, dy / resolution, this.texture.crop.width / resolution, this.texture.crop.height / resolution);
 
       }
     }
@@ -342,7 +345,7 @@ class Sprite extends DisplayObjectContainer {
     }
 
     if (this._mask != null) {
-      renderSession.maskManager.popMask(renderSession.context);
+      renderSession.maskManager.popMask(renderSession);
     }
   }
 

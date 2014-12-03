@@ -63,6 +63,8 @@ class SpriteBatch extends DisplayObjectContainer {
 
   /// Renders the object using the Canvas renderer
   void _renderCanvas(renderSession) {
+    if(!this.visible || this.alpha <= 0 || this.children.length == 0)return;
+
     CanvasRenderingContext2D context = renderSession._context;
     context.globalAlpha = this._worldAlpha;
 
@@ -86,7 +88,7 @@ class SpriteBatch extends DisplayObjectContainer {
 
       if (child.rotation % (PI * 2) == 0) {
         if (isRotated) {
-          context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+          context.setTransform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
           isRotated = false;
         }
 
@@ -111,10 +113,10 @@ class SpriteBatch extends DisplayObjectContainer {
         // allow for trimming
 
         if (renderSession.roundPixels) {
-          context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx.floor(), childTransform.ty.floor());
+          context.setTransform(childTransform.a, childTransform.b, childTransform.c, childTransform.d, childTransform.tx.floor(), childTransform.ty.floor());
         }
         else {
-          context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx, childTransform.ty);
+          context.setTransform(childTransform.a, childTransform.b, childTransform.c, childTransform.d, childTransform.tx, childTransform.ty);
         }
 
         context.drawImageScaledFromSource(texture.baseTexture.source,

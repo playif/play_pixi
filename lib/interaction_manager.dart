@@ -1,16 +1,22 @@
 part of PIXI;
 
 class InteractionManager {
+  /// A reference to the stage
   Stage stage;
+
+  /// The mouse data
   InteractionData mouse = new InteractionData();
 
-  Map<int, InteractionData> touchs = {
+  /// An object that stores current touches (InteractionData) by id reference
+  Map<int, InteractionData> touches = {
   };
 
-  Point tempPoint = new Point();
+  /// tempPoint
+  Point _tempPoint = new Point();
 
   bool mouseoverEnabled = true;
 
+  /// Tiny little interactiveData pool !
   final List<InteractionData> pool = [];
   List<DisplayInterface> interactiveItems = [];
   CanvasElement interactionDOMElement;
@@ -26,9 +32,12 @@ class InteractionManager {
 
   bool isCocoonJS;
 
+  num resolution;
+
   InteractionManager(this.stage) {
     //TODO check this.
     isCocoonJS = window.navigator.appVersion.contains("CocoonJS");
+    this.resolution = 1;
   }
 
   void collectInteractiveSprite(DisplayObjectContainer displayObject, DisplayObjectContainer iParent) {
@@ -63,14 +72,14 @@ class InteractionManager {
 
   void setTarget(Renderer target) {
     this.target = target;
-
+    this.resolution = target.resolution;
     //check if the dom element has been set. If it has don't do anything
-    if (this.interactionDOMElement == null) {
-
-      this.setTargetDomElement(target.view);
-    }
-
-
+//    if (this.interactionDOMElement == null) {
+//
+//      this.setTargetDomElement(target.view);
+//    }
+    if (this.interactionDOMElement != null) return;
+    this.setTargetDomElement (target.view);
   }
 
   void setTargetDomElement(Element domElement) {
@@ -230,8 +239,8 @@ class InteractionManager {
     // TODO optimize by not check EVERY TIME! maybe half as often? //
     var rect = this.interactionDOMElement.getBoundingClientRect();
 
-    this.mouse.global.x = (event.client.x - rect.left) * (this.target.width / rect.width);
-    this.mouse.global.y = (event.client.y - rect.top) * (this.target.height / rect.height);
+    this.mouse.global.x = (event.client.x - rect.left) * (this.target.width / rect.width) / this.resolution;
+    this.mouse.global.y = (event.client.y - rect.top) * (this.target.height / rect.height) / this.resolution;
 
     var length = this.interactiveItems.length;
 
@@ -262,7 +271,7 @@ class InteractionManager {
 
     // while
     // hit test
-    for (var i = 0; i < length; i++) {
+    for (int i = 0; i < length; i++) {
       DisplayObject item = this.interactiveItems[i];
 
       if (item.mousedown != null || item.click != null) {
@@ -350,17 +359,26 @@ class InteractionManager {
 
     // temp fix for if the element is in a non visible
 
-    bool isSprite = (item is Sprite);
-    Matrix worldTransform = item._worldTransform;
-    num a00 = worldTransform.a,
-    a01 = worldTransform.b,
-    a02 = worldTransform.tx,
-    a10 = worldTransform.c,
-    a11 = worldTransform.d,
-    a12 = worldTransform.ty,
-    id = 1 / (a00 * a11 + a01 * -a10),
-    x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
-    y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+//    bool isSprite = (item is Sprite);
+//    Matrix worldTransform = item._worldTransform;
+//    num a00 = worldTransform.a,
+//    a01 = worldTransform.b,
+//    a02 = worldTransform.tx,
+//    a10 = worldTransform.c,
+//    a11 = worldTransform.d,
+//    a12 = worldTransform.ty,
+//    id = 1 / (a00 * a11 + a01 * -a10),
+//    x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
+//    y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+
+    Matrix worldTransform = item.worldTransform;
+    num i, a = worldTransform.a, b = worldTransform.b,
+    c = worldTransform.c, tx = worldTransform.tx,
+    d = worldTransform.d, ty = worldTransform.ty,
+    id = 1 / (a * d + c * -b),
+    x = d * id * global.x + -c * id * global.y + (ty * c - tx * d) * id,
+    y = a * id * global.y + -b * id * global.x + (-ty * a + tx * b) * id;
+
 
     interactionData.target = item;
 
@@ -379,10 +397,10 @@ class InteractionManager {
       return false;
     }
     // a sprite with no hitarea defined
-    else if (isSprite) {
+    else if (item is Sprite) {
 
-      Sprite sprite = item as Sprite;
-      var width = sprite.texture.frame.width,
+      Sprite sprite = item;
+      num width = sprite.texture.frame.width,
       height = sprite.texture.frame.height,
       x1 = -width * sprite.anchor.x,
       y1;
@@ -398,6 +416,25 @@ class InteractionManager {
         }
       }
     }
+    else if(item is Graphics)
+      {
+        List<GraphicsData> graphicsData = item.graphicsData;
+          for (i = 0; i < graphicsData.length; i++)
+          {
+            GraphicsData data = graphicsData[i];
+              if(!data.fill)continue;
+
+              // only deal with fills..
+              if(data.shape != null)
+              {
+                  if(data.shape.contains(x, y))
+                  {
+                      interactionData.target = item;
+                      return true;
+                  }
+              }
+          }
+      }
 
     int length = item.children.length;
 
@@ -438,7 +475,7 @@ class InteractionManager {
       if (isCocoonJS) {
         JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
         identifier = touchEvent['identifier'];
-        touchData = this.touchs[identifier];
+        touchData = this.touches[identifier];
         touchData.originalEvent = event;
         touchData.global.x = touchEvent["clientX"];
         touchData.global.y = touchEvent["clientY"];
@@ -447,7 +484,7 @@ class InteractionManager {
         var rect = this.interactionDOMElement.getBoundingClientRect();
         Touch touchEvent = changedTouches[i];
         identifier = touchEvent.identifier;
-        touchData = this.touchs[identifier];
+        touchData = this.touches[identifier];
 
         touchData.originalEvent = event;
         // update the touch position
@@ -507,7 +544,7 @@ class InteractionManager {
         touchData.global.y = (touchEvent.client.y - rect.top) * (this.target.height / rect.height);
       }
 
-      this.touchs[identifier] = touchData;
+      this.touches[identifier] = touchData;
 
       int length = this.interactiveItems.length;
 
@@ -559,13 +596,13 @@ class InteractionManager {
       if (isCocoonJS) {
         JsObject touchEvent = new JsObject.fromBrowserObject(changedTouches[i]);
         identifier = touchEvent['identifier'];
-        touchData = this.touchs[identifier];
+        touchData = this.touches[identifier];
         touchData.global.x = touchEvent["clientX"];
         touchData.global.y = touchEvent["clientY"];
       } else {
         Touch touchEvent = changedTouches[i];
         identifier = touchEvent.identifier;
-        touchData = this.touchs[identifier];
+        touchData = this.touches[identifier];
         var rect = this.interactionDOMElement.getBoundingClientRect();
         touchData.global.x = (touchEvent.client.x - rect.left) * (this.target.width / rect.width);
         touchData.global.y = (touchEvent.client.y - rect.top) * (this.target.height / rect.height);
@@ -605,7 +642,7 @@ class InteractionManager {
       }
       // remove the touch..
       this.pool.add(touchData);
-      this.touchs[identifier] = null;
+      this.touches[identifier] = null;
     }
   }
 }

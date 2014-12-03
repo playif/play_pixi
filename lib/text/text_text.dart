@@ -74,7 +74,7 @@ class Text extends Sprite {
   CanvasRenderingContext2D _context;
   CanvasRenderingContext2D get context => _context;
   
-  bool _dirty;
+  bool _dirty = false;
   bool _requiresUpdate;
 
   String get text=>_text;

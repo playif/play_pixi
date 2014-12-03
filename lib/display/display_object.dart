@@ -4,8 +4,11 @@ typedef void InteractionHandler(InteractionData data);
 
 abstract class DisplayInterface {
   updateTransform();
+
   _renderWebGL(RenderSession renderSession);
+
   _renderCanvas(RenderSession renderSession);
+
   //getBounds(Matrix matrix);
   //Matrix get _worldTransform;
   //num _worldAlpha;
@@ -31,8 +34,9 @@ abstract class DisplayInterface {
 //  InteractionHandler tap;
 //  InteractionHandler touchendoutside;
 
+
   Shape hitArea = null;
-  //bool get worldVisible;
+//bool get worldVisible;
 }
 
 
@@ -41,7 +45,7 @@ abstract class DisplayInterface {
  */
 
 /**
- * The base class for all objects that are rendered on the screen. 
+ * The base class for all objects that are rendered on the screen.
  * This is an abstract class and should not be used on its own rather it should be extended.
  *
  */
@@ -109,12 +113,15 @@ class DisplayObject implements DisplayInterface {
   InteractionHandler tap;
   InteractionHandler touchendoutside;
 
-  Map<int, InteractionData> __touchData = {};
+  Map<int, InteractionData> __touchData = {
+  };
+
   //bool buttonMode = false;
   //DisplayObjectContainer get parent => _parent;
 
 
   Stage _stage = null;
+
   /// [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
   Stage get stage => _stage;
 
@@ -252,54 +259,103 @@ class DisplayObject implements DisplayInterface {
 
   /// Updates the object transform for rendering
   void updateTransform() {
-    // TODO OPTIMIZE THIS!! with dirty
-    if (this.rotation != this._rotationCache) {
-
-      this._rotationCache = this.rotation;
-      this._sr = sin(this.rotation);
-      this._cr = cos(this.rotation);
-    }
+//    // TODO OPTIMIZE THIS!! with dirty
+//    if (this.rotation != this._rotationCache) {
+//
+//      this._rotationCache = this.rotation;
+//      this._sr = sin(this.rotation);
+//      this._cr = cos(this.rotation);
+//    }
+    Matrix pt = (this._parent as DisplayObject)._worldTransform;
+    Matrix wt = this.worldTransform;
     //print("updated");
 
-    DisplayObject parent = this._parent;
+    num a, b, c, d, tx, ty;
 
-    Matrix parentTransform = parent._worldTransform;
-    Matrix worldTransform = this._worldTransform;
+//    DisplayObject parent = this._parent;
+//
+//    Matrix parentTransform = parent._worldTransform;
+//    Matrix worldTransform = this._worldTransform;
 
-    num px = this.pivot.x;
-    num py = this.pivot.y;
+//    num px = this.pivot.x;
+//    num py = this.pivot.y;
+//
+//    num a00 = this._cr * this.scale.x,
+//        a01 = -this._sr * this.scale.y,
+//        a10 = this._sr * this.scale.x,
+//        a11 = this._cr * this.scale.y,
+//        a02 = this.position.x - a00 * px - py * a01,
+//        a12 = this.position.y - a11 * py - px * a10,
+//        b00 = parentTransform.a,
+//        b01 = parentTransform.b,
+//        b10 = parentTransform.c,
+//        b11 = parentTransform.d;
 
-    num a00 = this._cr * this.scale.x,
-        a01 = -this._sr * this.scale.y,
-        a10 = this._sr * this.scale.x,
-        a11 = this._cr * this.scale.y,
-        a02 = this.position.x - a00 * px - py * a01,
-        a12 = this.position.y - a11 * py - px * a10,
-        b00 = parentTransform.a,
-        b01 = parentTransform.b,
-        b10 = parentTransform.c,
-        b11 = parentTransform.d;
+    if (this.rotation % PI_2 != 0) {
+      // check to see if the rotation is the same as the previous render. This means we only need to use sin and cos when rotation actually changes
+      if (this.rotation != this.rotationCache) {
+        this.rotationCache = this.rotation;
+        this._sr = sin(this.rotation);
+        this._cr = cos(this.rotation);
+      }
 
-    worldTransform.a = b00 * a00 + b01 * a10;
-    worldTransform.b = b00 * a01 + b01 * a11;
-    worldTransform.tx = b00 * a02 + b01 * a12 + parentTransform.tx;
+//    worldTransform.a = b00 * a00 + b01 * a10;
+//    worldTransform.b = b00 * a01 + b01 * a11;
+//    worldTransform.tx = b00 * a02 + b01 * a12 + parentTransform.tx;
+//
+//    worldTransform.c = b10 * a00 + b11 * a10;
+//    worldTransform.d = b10 * a01 + b11 * a11;
+//    worldTransform.ty = b10 * a02 + b11 * a12 + parentTransform.ty;
 
-    worldTransform.c = b10 * a00 + b11 * a10;
-    worldTransform.d = b10 * a01 + b11 * a11;
-    worldTransform.ty = b10 * a02 + b11 * a12 + parentTransform.ty;
+      // get the matrix values of the displayobject based on its transform properties..
+      a = this._cr * this.scale.x;
+      b = this._sr * this.scale.x;
+      c = -this._sr * this.scale.y;
+      d = this._cr * this.scale.y;
+      tx = this.position.x;
+      ty = this.position.y;
+      // check for pivot.. not often used so geared towards that fact!
+      if (this.pivot.x || this.pivot.y) {
+        tx -= this.pivot.x * a + this.pivot.y * c;
+        ty -= this.pivot.x * b + this.pivot.y * d;
+      }
 
-    this._worldAlpha = this.alpha * parent._worldAlpha;
+// concat the parent matrix with the objects transform.
+      wt.a = a * pt.a + b * pt.c;
+      wt.b = a * pt.b + b * pt.d;
+      wt.c = c * pt.a + d * pt.c;
+      wt.d = c * pt.b + d * pt.d;
+      wt.tx = tx * pt.a + ty * pt.c + pt.tx;
+      wt.ty = tx * pt.b + ty * pt.d + pt.ty;
+    }
+    else {
+      // lets do the fast version as we know there is no rotation..
+      a = this.scale.x;
+      d = this.scale.y;
+
+      tx = this.position.x - this.pivot.x * a;
+      ty = this.position.y - this.pivot.y * d;
+
+      wt.a = a * pt.a;
+      wt.b = a * pt.b;
+      wt.c = d * pt.c;
+      wt.d = d * pt.d;
+      wt.tx = tx * pt.a + ty * pt.c + pt.tx;
+      wt.ty = tx * pt.b + ty * pt.d + pt.ty;
+    }
+
+    this._worldAlpha = this.alpha * (parent as DisplayObject)._worldAlpha;
   }
 
   /// Retrieves the bounds of the displayObject as a rectangle object
-  Rectangle getBounds([Matrix matrix]) {
-    matrix = matrix;//just to get passed js hinting (and preserve inheritance)
+  Rectangle getBounds() {
+    //matrix = matrix;//just to get passed js hinting (and preserve inheritance)
     return EmptyRectangle;
   }
 
   /// Retrieves the local bounds of the displayObject as a rectangle object
   Rectangle getLocalBounds() {
-    return this.getBounds(IdentityMatrix);
+    return this.getBounds();
   }
 
   /// Sets the object's [stage] reference, the stage this object is connected to
@@ -308,11 +364,17 @@ class DisplayObject implements DisplayInterface {
     if (this._interactive) this._stage._dirty = true;
   }
 
-  RenderTexture generateTexture(Renderer renderer) {
+  RenderTexture generateTexture(num resolution, scaleModes scaleMode, Renderer renderer) {
     Rectangle bounds = this.getLocalBounds();
 
-    RenderTexture renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor(), renderer);
-    renderTexture.render(this, new Point(-bounds.x, -bounds.y));
+    //RenderTexture renderTexture = new RenderTexture(bounds.width.floor(), bounds.height.floor(), renderer);
+    //renderTexture.render(this, new Point(-bounds.x, -bounds.y));
+
+    RenderTexture renderTexture = new RenderTexture(bounds.width, bounds.height, renderer, scaleMode, resolution);
+    DisplayObject._tempMatrix.tx = -bounds.x;
+    DisplayObject._tempMatrix.ty = -bounds.y;
+
+    renderTexture.render(this, _tempMatrix);
 
     return renderTexture;
   }
@@ -321,6 +383,41 @@ class DisplayObject implements DisplayInterface {
   updateCache() {
     this._generateCachedSprite();
   }
+
+
+  /**
+      + * Calculates the global position of the display object
+      + *
+      + * @method toGlobal
+      + * @param position {Point} The world origin to calculate from
+      + * @return {Point} A point object representing the position of this object
+      + */
+  Point toGlobal (Point position)
+  {
+      this.updateTransform();
+      return this.worldTransform.apply(position);
+  }
+
+  /**
+      + * Calculates the local position of the display object relative to another point
+      + *
+      + * @method toLocal
+      + * @param position {Point} The world origin to calculate from
+      + * @param [from] {DisplayObject} The DisplayObject to calculate the global position from
+      + * @return {Point} A point object representing the position of this object
+      + */
+  Point toLocal (Point position, DisplayObject from)
+  {
+      if (from != null)
+      {
+          position = from.toGlobal(position);
+      }
+
+      this.updateTransform();
+
+      return this.worldTransform.applyInverse(position);
+  }
+
 
   _renderCachedSprite(RenderSession renderSession) {
     this._cachedSprite._worldAlpha = this._worldAlpha;
@@ -356,7 +453,12 @@ class DisplayObject implements DisplayInterface {
     this._cachedSprite.filters = tempFilters;
 
     RenderTexture texture = _cachedSprite.texture as RenderTexture;
-    texture.render(this, new Point(-bounds.x, -bounds.y), false);
+
+    _tempMatrix.tx = -bounds.x;
+    _tempMatrix.ty = -bounds.y;
+    texture.render(this, _tempMatrix );
+
+    //texture.render(this, new Point(-bounds.x, -bounds.y), false);
 
     this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
     this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
@@ -365,6 +467,8 @@ class DisplayObject implements DisplayInterface {
 
     this._cacheAsBitmap = true;
   }
+
+  static Matrix _tempMatrix= new Matrix();
 
   void _destroyCachedSprite() {
     if (this._cachedSprite == null) return;

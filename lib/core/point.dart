@@ -15,7 +15,7 @@ class Point {
   ///property y
   num y;
 
-
+  
   Point([num x = 0, num y = 0]) {
     this.x = x;
     this.y = y;

@@ -8,6 +8,7 @@
       <excludeFolder url="file://E:/pixi_dart/example/example_21_complex_graphics/packages" />
       <excludeFolder url="file://E:/pixi_dart/examples/packages" />
       <excludeFolder url="file://E:/pixi_dart/lib/examples/example_1_basics/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_01_basics/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_02_sprite_sheet/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/example_03_movie_clip/packages" />
@@ -46,4 +47,3 @@
     <orderEntry type="library" name="Dart SDK" level="application" />
   </component>
 </module>
-

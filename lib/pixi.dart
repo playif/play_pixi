@@ -150,13 +150,26 @@ Map blendModesWebGL = null;
 Map blendModesCanvas = null;
 const int WEBGL_RENDERER = 0;
 const int CANVAS_RENDERER = 1;
-const String VERSION = "v1.6.１";
+const String VERSION = "v2.1.0";
 
 const int INTERACTION_FREQUENCY = 30;
 const bool AUTO_PREVENT_DEFAULT = true;
 
+const num PI_2 = PI * 2;
 const num RAD_TO_DEG = 180 / PI;
 const num DEG_TO_RAD = PI / 180;
+
+const String RETINA_PREFIX = "@2x";
+
+//PIXI.defaultRenderOptions = {
+//+    view:null,
+//+    transparent:false,
+//+    antialias:false,
+//+    preserveDrawingBuffer:false,
+//+    resolution:1,
+//+    clearBeforeRender:true,
+//+    autoResize:false
+//+}
 
 int _UID = 0;
 

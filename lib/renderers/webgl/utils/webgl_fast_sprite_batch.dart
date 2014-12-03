@@ -124,7 +124,7 @@ class WebGLFastSpriteBatch {
 
     if (sprite.texture.trim != null) {
       // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
-      var trim = sprite.texture.trim;
+      Rectangle trim = sprite.texture.trim;
 
       w1 = trim.x - sprite.anchor.x * trim.width;
       w0 = w1 + sprite.texture.frame.width;

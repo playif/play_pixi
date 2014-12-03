@@ -17,6 +17,7 @@ class Strip extends DisplayObjectContainer {
   Buffer _colorBuffer;
 
   int count = 0;
+  num padding;
 
 //  num tint=0xFFFFFF;
 
@@ -27,6 +28,8 @@ class Strip extends DisplayObjectContainer {
     this.colors = new Float32List.fromList([1.0, 1.0, 1.0, 1.0]);
     this.indices = new Uint16List.fromList([0, 1, 2, 3]);
     this._dirty = true;
+    this.blendMode = BlendModes.NORMAL;
+    this.padding = 0;
 //    // load the texture!
 //    if (texture.baseTexture.hasLoaded) {
 //      this.width = this.texture.frame.width;
@@ -107,12 +110,13 @@ class Strip extends DisplayObjectContainer {
 
 
     // gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mat4Real);
-    gl.blendFunc(ONE, ONE_MINUS_SRC_ALPHA);
+    //gl.blendFunc(ONE, ONE_MINUS_SRC_ALPHA);
+    renderSession.blendModeManager.setBlendMode(this.blendMode);
     // set uniforms
     gl.uniformMatrix3fv(shader.translationMatrix, false, this._worldTransform.toArray(true));
     gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
     gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
-    gl.uniform1f(shader.alpha, 1.0);
+    gl.uniform1f(shader.alpha, this.worldAlpha);
 
     if (!this._dirty) {
       gl.bindBuffer(ARRAY_BUFFER, this._vertexBuffer);
@@ -125,9 +129,18 @@ class Strip extends DisplayObjectContainer {
 
       gl.activeTexture(TEXTURE0);
       // bind the current texture
-      gl.bindTexture(TEXTURE_2D, this.texture.baseTexture._glTextures[gl] == null ?
-      createWebGLTexture(this.texture.baseTexture, gl) :
-      this.texture.baseTexture._glTextures[gl]);
+      //gl.bindTexture(TEXTURE_2D, this.texture.baseTexture._glTextures[gl] == null ?
+      //createWebGLTexture(this.texture.baseTexture, gl) :
+      //this.texture.baseTexture._glTextures[gl]);
+
+      // check if a texture is dirty..
+      if (this.texture.baseTexture._dirty[gl.id]) {
+        renderSession.renderer.updateTexture(this.texture.baseTexture);
+      }
+      else {
+        // bind the current texture
+        gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
+      }
 
       // dont need to upload!
       gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this._indexBuffer);
@@ -146,10 +159,18 @@ class Strip extends DisplayObjectContainer {
       gl.vertexAttribPointer(shader.aTextureCoord, 2, FLOAT, false, 0, 0);
 
       gl.activeTexture(TEXTURE0);
-      gl.bindTexture(TEXTURE_2D,
-      this.texture.baseTexture._glTextures[gl] == null ?
-      createWebGLTexture(this.texture.baseTexture, gl) :
-      this.texture.baseTexture._glTextures[gl]);
+//      gl.bindTexture(TEXTURE_2D,
+//      this.texture.baseTexture._glTextures[gl] == null ?
+//      createWebGLTexture(this.texture.baseTexture, gl) :
+//      this.texture.baseTexture._glTextures[gl]);
+
+      // check if a texture is dirty..
+      if (this.texture.baseTexture._dirty[gl.id]) {
+        renderSession.renderer.updateTexture(this.texture.baseTexture);
+      }
+      else {
+        gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
+      }
 
       // dont need to upload!
       gl.bindBuffer(ELEMENT_ARRAY_BUFFER, this._indexBuffer);
@@ -171,10 +192,10 @@ class Strip extends DisplayObjectContainer {
     var transform = this._worldTransform;
 
     if (renderSession.roundPixels) {
-      context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx.floor(), transform.ty.floor());
+      context.setTransform(transform.a, transform.b, transform.c, transform.d, transform.tx.floor(), transform.ty.floor());
     }
     else {
-      context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+      context.setTransform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
     }
 
     var strip = this;
@@ -185,14 +206,14 @@ class Strip extends DisplayObjectContainer {
     var length = verticies.length / 2;
     this.count++;
 
-    for (var i = 0; i < length - 2; i++) {
+    for (int i = 0; i < length - 2; i++) {
       // draw some triangles!
-      var index = i * 2;
+      int index = i * 2;
 
       var x0 = verticies[index], x1 = verticies[index + 2], x2 = verticies[index + 4];
       var y0 = verticies[index + 1], y1 = verticies[index + 3], y2 = verticies[index + 5];
 
-      if (true) {
+      if (this.padding > 0) {
 
         //expand();
         var centerX = (x0 + x1 + x2) / 3;
@@ -254,6 +275,33 @@ class Strip extends DisplayObjectContainer {
       context.drawImage(strip.texture.baseTexture.source, 0, 0);
       context.restore();
     }
+  }
+
+  renderStripFlat(Strip strip)
+  {
+      var context = this.context;
+      var verticies = strip.verticies;
+
+      var length = verticies.length/2;
+      this.count++;
+
+      context.beginPath();
+      for (var i=1; i < length-2; i++)
+      {
+          // draw some triangles!
+          var index = i*2;
+
+          var x0 = verticies[index],   x1 = verticies[index+2], x2 = verticies[index+4];
+          var y0 = verticies[index+1], y1 = verticies[index+3], y2 = verticies[index+5];
+
+          context.moveTo(x0, y0);
+          context.lineTo(x1, y1);
+          context.lineTo(x2, y2);
+      }
+
+      context.fillStyle = "#FF0000";
+      context.fill();
+      context.closePath();
   }
 
 }

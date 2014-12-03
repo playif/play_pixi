@@ -7,8 +7,9 @@ class Rope extends Strip {
 //  num width;
 //  num height;
 
-  Rope(Texture texture, this.points)
+  Rope(Texture texture, List points)
   :super(texture) {
+    this.points = points;
 //    this.width = width;
 //    this.height = height;
 
